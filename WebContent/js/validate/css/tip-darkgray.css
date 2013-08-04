@@ -1,0 +1,90 @@
+ 
+.tip_bg{
+	background-image:url(tip-darkgray.png);
+}
+
+.tip-darkgray {
+	opacity: 0.95;
+	z-index: 1000;
+	position: absolute;
+	text-shadow: #444 0 1px 1px;
+	color: #fff;
+}
+
+.tip-darkgray .tip-inner {
+	font: bold 12px/18px arial, helvetica, sans-serif;
+	margin-top: -1px;
+	padding: 0 4px 3px 4px;
+	background-image: url(tip-darkgray.png);
+	background-position: 0 10%;
+}
+
+/* Configure an arrow image - the script will automatically position it on the correct side of the tip */
+.tip-darkgray .tip-arrow-top {
+	position: relative;
+	top: 3px;
+	left: 50%;
+	width: 16px;
+	height: 10px;
+	background: url(tip-darkgray_arrows.png) no-repeat;
+}
+
+.tip-darkgray .tip-arrow-right {
+	margin-left: -5px;
+	top: 50%;
+	left: 100%;
+	width: 11px;
+	height: 21px;
+	background: url(tip-darkgray_arrows.png) no-repeat -22px 0;
+}
+
+.tip-darkgray .tip-arrow-bottom {
+	margin-top: -7px;
+	margin-left: 15px;
+	top: 100%;
+	left: 0;
+	width: 22px;
+	height: 13px;
+	background: url(tip-darkgray_arrows.png) no-repeat -44px 0;
+}
+
+.tip-darkgray .tip-arrow-left {
+	position: relative;
+	top: 0%;
+	left: 45%;
+	width: 11px;
+	height: 21px;
+	background: url(tip-darkgray_arrows.png) no-repeat -66px 0;
+}
+
+.tip-darkgray .td1111 {
+	background-image: url(tip-darkgray.png);
+	height: 10px;
+}
+
+.tip-darkgray .td2222 {
+	background-position: 100% 0;
+	background-image: url(tip-darkgray.png);
+	height: 10px;
+	width: 10px;
+}
+
+.tip-darkgray .td3333 {
+	background-position: 100% 10%;
+	background-image: url(tip-darkgray.png);
+	height: 10px;
+	width: 10px;
+}
+
+.tip-darkgray .td4444 {
+	background-position: 0 100%;
+	background-image: url(tip-darkgray.png);
+	height: 10px;
+}
+
+.tip-darkgray .td5555 {
+	background-position: 100% 100%;
+	background-image: url(tip-darkgray.png);
+	height: 10px;
+	width: 10px;
+}

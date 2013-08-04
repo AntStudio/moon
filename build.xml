@@ -1,0 +1,51 @@
+<project name="Spring-rbac-1.0" default="jar">
+	<property name="src.dir" value="src/"/>
+	<property name="build.dir" value="bin/"/>
+	<property name="dist.dir" value="dist/"/>
+	<property name="lib.dir" value="WebContent/WEB-INF/lib/"/>
+
+	<path id="classPath">
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="jar" depends="build">
+		
+		<jar destfile="${dist.dir}/${ant.project.name}.jar"  >
+			<fileset dir="${build.dir}" defaultexcludes="true">
+				<include name="**/*.class" />
+				<include name="**/*.xml" />
+		        <include name="*.log" />
+				<include name="*.proerties" />
+				<exclude name="**/test/*.class" />
+			</fileset>
+		</jar>
+	</target>
+
+
+
+	<target name="build" depends="clean">
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${build.dir}"/>
+		<javac  srcdir ="${src.dir}" debug="on" debuglevel="lines,source" encoding="UTF-8" includeantruntime="true" destdir="${build.dir}" extDirs="${lib.dir}"   source="1.6">
+			<compilerarg value="-Xlint:unchecked"/> 
+			<exclude name="**/test/*.java"/>
+		</javac>
+		
+		<copy todir="${build.dir}">
+		           <fileset dir="${src.dir}">
+		              <include name="**/*.xml" />
+		              <include name="*.log" />
+		           	  <include name="*.proerties" />
+		          </fileset>
+		       </copy>
+	</target>
+	
+	
+	<target name="clean">
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+		<echo>Removed the ${build.dir} and ${dist.dir} directories.</echo>
+	</target>
+</project>

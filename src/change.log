@@ -1,0 +1,33 @@
+2013-01
+封装spring mvc,编写rbac管理模块(菜单、用户、角色、权限).
+
+2013-02-18
+增加@FormParam对上传文件的支持
+
+2013-02-24
+增加@Hessian,支持hessian服务导出
+(使用<bean class="com.greejoy.support.spring.hessian.HessianScanner"/>进行hessian服务扫描,
+然后在spring servlet的配置文件中加载<bean  class="com.greejoy.support.spring.hessian.HessianExporter"></bean>
+对hessian进行服务导出。需在web.xml中加入servlet的配置,如下：
+  <servlet>  
+    <servlet-name>remote</servlet-name>  
+    <!-- 使用Spring的代理Servlet -->  
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>  
+    <init-param>  
+        <param-name>namespace</param-name>  
+        <param-value>classes/remote-servlet</param-value>  
+    </init-param>  
+</servlet>  
+  
+<servlet-mapping>  
+    <servlet-name>remote</servlet-name>  
+    <url-pattern>/remote/*</url-pattern>  
+</servlet-mapping>  
+)
+
+2012-03-01
+增加平台启动时自动创建平台必须的表接口
+删除部分打印信息，迁移到log
+
+2012-01-11
+增加面向对象的sql查询条件(Criteria)
