@@ -86,12 +86,17 @@ $(function(){
 		});
 		
 		$('#myModal').modal({backdrop:false});
+		
+		$('#myModal').on('shown', function () {
+			  $(this).css("top","50%");
+		});
 	});
 </script>
 <style type="text/css">
  
- .modal{
- 	margin-top:100px;
+ #myModal.modal{
+	margin-top: -130px;
+	top:-200px;
  }
 .loginForm span{
 	text-align: right;
