@@ -6,9 +6,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
- <script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery-1.8.3.js"></script>
- <script type="text/javascript" src="${pageContext.request.contextPath}/jquery/ui/jquery-ui-1.9.2.custom.js"></script>
- <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/jquery/ui/css/ext/jquery-ui-1.9.2.ext.min.css"/>
+ <m:require src="jquery,bootstrap"/>
+<m:require src="bootstrap" type="css"/>
 <title>电力双视监控</title>
 <script>
 //***********************************************<公用方法(提取到公用js文件中)>*******************************************************
@@ -68,9 +67,7 @@ $.fn.reset = function(){
 //***********************************************</公用方法(提取到公用js文件中)>*******************************************************
  
 $(function(){
-	$( "input[type='button']" ).button();
 	$("#submit").click(function(){
-		
 	$("#loginForm").ajaxSubmitForm("${pageContext.request.contextPath}/user/login/validate",
 			function(result) {
 		if("${from}")
@@ -87,37 +84,57 @@ $(function(){
 		$("#reset").click(function() {
 			$("#loginForm").reset();
 		});
+		
+		$('#myModal').modal({backdrop:false});
 	});
 </script>
 <style type="text/css">
-.loginForm {
- float:left;
- width:300px;
-}
+ 
+ .modal{
+ 	margin-top:100px;
+ }
 .loginForm span{
-text-align: right;
-font-size: 20px;
+	text-align: right;
+	font-size: 20px;
+	width:100px;
+	display: inline-block;
 }
-.loginForm div{
-padding-left: 50px;
+
+.form-inline{
+	margin-top:20px;
 }
-.loginForm .btn{
-margin-left: 10px;
+.modal-header{
+	text-align: center;
 }
 </style>
-<m:require src="jquery,bootstrap"/>
-<m:require src="bootstrap" type="css"/>
+
 </head>
 <body style="background: url('${pageContext.request.contextPath}/css/images/login_bg.jpg')">
-    <div style="margin-top:200px;margin-left:auto;margin-right:auto;width:300px; height:200px;">
-    ${info}
-    <form id="loginForm" class="loginForm">
-       <p> <span>用户名：</span><input type="text" name="user.userName" value="system_user"/> </p>
-     <p>  <span>密&nbsp;&nbsp;码：</span><input  name="user.password" type="password" value="system_user"/> <span class="errorImg"></span><span
-						class="errorMsg"></span>  </p>
-						<div><input  type="button" id="submit" class="btn" value="登录"/>
-						<input  type="button" id="reset" class="btn" value="重置"/></div>
-     </form>
+
+<div class="modal hide fade" id="myModal">
+  <div class="modal-header">
+    <h3>登&nbsp;&nbsp;录</h3>
+  </div>
+ 
+  <div class="modal-body">
+   <form id="loginForm" class="loginForm">
+   ${info}
+    
+     <div class="form-inline">
+     	<span>用户名：</span>
+     	<input type="text" name="user.userName" value="system_user"/>
      </div>
+     <div class="form-inline">
+     	<span>密&nbsp;&nbsp;码：</span>
+     	<input  name="user.password" type="password" value="system_user"/>
+     </div> 
+</form>
+</div>
+  <div class="modal-footer">
+    <input  type="button" id="submit" class="btn" value="登录"/>
+	<input  type="button" id="reset" class="btn" value="重置"/>
+	</div>
+  
+</div>
 </body>
 </html>
