@@ -8,7 +8,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
  <m:require src="jquery,bootstrap"/>
 <m:require src="bootstrap" type="css"/>
-<title>电力双视监控</title>
+<title>Moon</title>
 <script>
 //***********************************************<公用方法(提取到公用js文件中)>*******************************************************
 
