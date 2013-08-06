@@ -30,9 +30,12 @@ public class Require extends TagSupport{
 		if(type==null||"js".equals(type)){//for js
 			for(String s:src.split(",")){
 				if("jquery".equals(s)){
-					sb.append("<script type=\"text/javascript\" src=\""+contextPath+"jquery/jquery-1.8.3.js\"></script>\n");
+					sb.append("<script type=\"text/javascript\" src=\""+contextPath+"plugin/jquery/jquery-1.8.3.js\"></script>\n");
 				}else if("bootstrap".equals(s)){
-					sb.append("<script type=\"text/javascript\" src=\""+contextPath+"bootstrap/js/bootstrap.min.js\"></script>\n");
+					sb.append("<script type=\"text/javascript\" src=\""+contextPath+"plugin/bootstrap/js/bootstrap.min.js\"></script>\n");
+				}else if("ev".equals(s)||"easyValidation".equals(s)){//ev==easyValidation
+					sb.append("<script type=\"text/javascript\" src=\""+contextPath+"plugin/easyValidation/easyValidation-1.0.js\"></script>\n");
+					sb.append(" <link rel=\"stylesheet\" href=\""+contextPath+"plugin/easyValidation/css/tooltip.css\" type=\"text/css\" />\n");
 				}else{
 					sb.append("<script type=\"text/javascript\" src=\""+contextPath+s+"\"/>");
 				}
@@ -40,7 +43,7 @@ public class Require extends TagSupport{
 		}else{//for css
 			for(String s:src.split(",")){
 				if("bootstrap".equals(s)){
-					sb.append(" <link rel=\"stylesheet\" href=\""+contextPath+"bootstrap/css/bootstrap.min.css\" type=\"text/css\" />\n");
+					sb.append(" <link rel=\"stylesheet\" href=\""+contextPath+"plugin/bootstrap/css/bootstrap.min.css\" type=\"text/css\" />\n");
 				}else{
 					sb.append(" <link rel=\"stylesheet\" href=\""+contextPath+s+"\" type=\"text/css\" />\n");
 				}

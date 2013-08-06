@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
- <m:require src="jquery,bootstrap"/>
+<m:require src="jquery,bootstrap,ev"/>
 <m:require src="bootstrap" type="css"/>
 <title>Moon</title>
 <script>
