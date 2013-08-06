@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"%>
-     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="m" uri="/moon"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -104,6 +105,8 @@ padding-left: 50px;
 margin-left: 10px;
 }
 </style>
+<m:require src="jquery,bootstrap"/>
+<m:require src="bootstrap" type="css"/>
 </head>
 <body style="background: url('${pageContext.request.contextPath}/css/images/login_bg.jpg')">
     <div style="margin-top:200px;margin-left:auto;margin-right:auto;width:300px; height:200px;">
