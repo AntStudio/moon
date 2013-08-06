@@ -6,3 +6,6 @@
 *.ear
 /target
 /WebContent/WEB-INF/classes
+.classpath
+.project
+/.settings
