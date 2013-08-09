@@ -33,9 +33,13 @@ public class Require extends TagSupport{
 					sb.append("<script type=\"text/javascript\" src=\""+contextPath+"plugin/jquery/jquery-1.8.3.js\"></script>\n");
 				}else if("bootstrap".equals(s)){
 					sb.append("<script type=\"text/javascript\" src=\""+contextPath+"plugin/bootstrap/js/bootstrap.min.js\"></script>\n");
+					sb.append(" <link rel=\"stylesheet\" href=\""+contextPath+"plugin/bootstrap/css/bootstrap.min.css\" type=\"text/css\" />\n");
 				}else if("ev".equals(s)||"easyValidation".equals(s)){//ev==easyValidation
 					sb.append("<script type=\"text/javascript\" src=\""+contextPath+"plugin/easyValidation/easyValidation-1.0.js\"></script>\n");
 					sb.append(" <link rel=\"stylesheet\" href=\""+contextPath+"plugin/easyValidation/css/tooltip.css\" type=\"text/css\" />\n");
+				}else if("zt".equals(s)||"ztree".equals(s)){//zt==ztree
+					sb.append("<script type=\"text/javascript\" src=\""+contextPath+"plugin/ztree/jquery.ztree.all-3.5.js\"></script>\n");
+					sb.append(" <link rel=\"stylesheet\" href=\""+contextPath+"plugin/ztree/css/zTreeStyle.css\" type=\"text/css\" />\n");
 				}else{
 					sb.append("<script type=\"text/javascript\" src=\""+contextPath+s+"\"/>");
 				}
