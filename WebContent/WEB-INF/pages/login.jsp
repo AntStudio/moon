@@ -10,6 +10,7 @@
 <m:require src="bootstrap" type="css"/>
 <title>Moon</title>
 <script>
+
 //***********************************************<公用方法(提取到公用js文件中)>*******************************************************
 
 /**
@@ -90,6 +91,8 @@ $(function(){
 		$('#myModal').on('shown', function () {
 			  $(this).css("top","50%");
 		});
+		
+		$("#loginForm").validate({align:'right',theme:"darkblue"});
 	});
 </script>
 <style type="text/css">
@@ -127,11 +130,11 @@ $(function(){
     
      <div class="form-inline">
      	<span>用户名：</span>
-     	<input type="text" name="user.userName" value="system_user"/>
+     	<input type="text" name="user.userName" value="system_user" validate="validate[minsize(6),maxsize(15)]" errMsg="用户名为6~15个字符"/>
      </div>
      <div class="form-inline">
      	<span>密&nbsp;&nbsp;码：</span>
-     	<input  name="user.password" type="password" value="system_user"/>
+     	<input  name="user.password" type="password" value="system_user" validate="validate[minsize(6)]" errMsg="密码须6位以上"/>
      </div> 
 </form>
 </div>

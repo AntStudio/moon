@@ -339,7 +339,7 @@
 			});
 			var gdfd = $.Deferred();
 			method.when(dfds1).done(function(){
-				options1.align = 'right';
+				options1.align = field.attr("msgAlign")||$.fn.defaults.align;
 				options1.msg = msg;
 				options1.field = field;
 				result = method.showOrHideMsg(options1);
@@ -456,11 +456,11 @@
 					case "right": top=$(opts.field).offset().top-$msgDiv.height() / 2 + $(opts.field).height() / 2;
 								  left=($(opts.field).offset().left + 50 +$(opts.field).width());
 								  break;
-					case "top"  : top=$(opts.field).offset().top- $(opts.field).height()-50;
-								  left=($(opts.field).offset().left+$(opts.field).width()/2);
+					case "top"  : top=$(opts.field).offset().top- $msgDiv.height()-50;
+								  left=($(opts.field).offset().left+$(opts.field).width()/2-50);
 								  break;
-					case "down" : top=$(opts.field).offset().top+ $(opts.field).height()+50;
-								  left=($(opts.field).offset().left+$(opts.field).width()/2);
+					case "bottom" : top=$(opts.field).offset().top+ $(opts.field).height()+50;
+								  left=$(opts.field).offset().left+$(opts.field).width()/2-50;
 								  break;
 				}
 				$msgDiv.css("top",top).css("left",left);
@@ -469,16 +469,16 @@
 			/**
 			**动画显示提示信息
 			**/
-			function show(align){
+			function show($msgDiv,align){
 				var top,left;
 				switch(align){
-					case "left" : left=($(opts.field).offset().left + 20 -$(opts.field).width());
+					case "left" : left=($(opts.field).offset().left -10 -$msgDiv.width());
 								  break;
 					case "right": left=($(opts.field).offset().left + 20 +$(opts.field).width());
 								  break;
-					case "top"  : top=$(opts.field).offset().top- $(opts.field).height()-20;
+					case "top"  : top=$(opts.field).offset().top- $msgDiv.height()-10;
 								  break;
-					case "down" : top=$(opts.field).offset().top+ $(opts.field).height()+20;
+					case "bottom" : top=$(opts.field).offset().top+ $(opts.field).height()+20;
 								  break;
 				}
 				$("#msg_index_" + opts.index).animate({
@@ -489,17 +489,18 @@
 			}
 
 			if (opts.msg.replace(/<br\/>/g, "") != '') {
+					var $msgDiv;
 				var timeout = ($("#msg_index_" + opts.index).length==0)?0:1000;
 				if ($("#msg_index_" + opts.index).length == 0||($("#msg_index_" + opts.index).css("opacity")<1&&$("#msg_index_" + opts.index).css("opacity")>0)) {// 未创建提示信息
 					opts.msg = opts.msg.substring(0, opts.msg.length - 5);//取消</br>
-					var $msgDiv = $(method.getMsgDiv(opts));
+				    $msgDiv =  $(method.getMsgDiv(opts));
 					$('body').append($msgDiv);
 					setMsgPostion($msgDiv,opts.align);
 				} else {
 					$("#msg_index_" + opts.index + " .tip-inner").html(opts.msg);
 				}
 				setTimeout(function(){
-					show(opts.align);
+					show($msgDiv,opts.align);
 				},timeout);
 				result = false;
 			} else {
@@ -520,7 +521,7 @@
 		 * @returns {String}
 		 */
 		getMsgDiv : function(opts) {
-			var theme = "darkblue";
+			var theme = $.fn.defaults.theme;
 			function getByAlign(align){
 				return  "<div class=\" easyValidation transparent "
 						+theme
@@ -586,34 +587,32 @@
 	         }
 	};
 
-	/**
-	 * 默认的提示信息
-	 */
-	$.fn.errorMsg = {
-		'required' : '*该输入项为必填项',
-		'number' : '*该输入项应为数字',
-		'email' : '*邮箱格式不正确',
-		'phoneNumber' : '*电话号码格式不正确',
-		'eq' : '*两次输入不能匹配',
-		'gt' : '*大小有问题gt',
-		'ge' : '*大小有问题ge',
-		'lt' : '*大小有问题lt',
-		'le' : '*大小有问题le',
-		'minsize' : '*至少输入${0}个字符',
-		'maxsize' : '*最多输入${0}个字符',
-		'size' : '*该输入项长度应在${0}和${1}之间',
-		'date' : '*日期不正确',
-		'precision' : "*请输入${0}位小数",
-		'custom' : '*自定义正则表达式验证失败',
-		'mincheckbox' : '*至少选中${0}项',
-		'maxcheckbox' : '*最多选中${0}项'
-	};
+	
 	/**
 	 * 默认值
 	 */
 	$.fn.defaults = {
-		css : 'darkgray',
-		align : 'top'
+		theme : 'darkgray',
+		align : 'top',
+		errorMsg : {
+			'required' : '*该输入项为必填项',
+			'number' : '*该输入项应为数字',
+			'email' : '*邮箱格式不正确',
+			'phoneNumber' : '*电话号码格式不正确',
+			'eq' : '*两次输入不能匹配',
+			'gt' : '*大小有问题gt',
+			'ge' : '*大小有问题ge',
+			'lt' : '*大小有问题lt',
+			'le' : '*大小有问题le',
+			'minsize' : '*至少输入${0}个字符',
+			'maxsize' : '*最多输入${0}个字符',
+			'size' : '*该输入项长度应在${0}和${1}之间',
+			'date' : '*日期不正确',
+			'precision' : "*请输入${0}位小数",
+			'custom' : '*自定义正则表达式验证失败',
+			'mincheckbox' : '*至少选中${0}项',
+			'maxcheckbox' : '*最多选中${0}项'
+	    }
 	};
 
 	/**
@@ -625,14 +624,15 @@
 			return;
 		}
 		var $form = $(this);
-		
+		$.fn.defaults.align =options.align|| $.fn.defaults.align;
+		$.fn.defaults.theme =options.theme|| $.fn.defaults.theme;
 		var fields = new Array();
 		function getFields(){
 			fields = new Array();
 			$form.find("[validate]:not(:hidden)").each(function(index, value) {
 				var options1 = $.extend({}, $.fn.defaults, options);
 				options1.index = index;
-				options1.errorMsg = $.extend({}, $.fn.errorMsg, options.errorMsg);
+				options1.errorMsg = $.extend({}, $.fn.defaults.errorMsg, options.errorMsg);
 				var opts = $(value).attr("validate");
 				var field = $(this);
 				opts = /validate\[(.*)\]/.exec(opts);
