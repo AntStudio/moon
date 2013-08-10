@@ -12,7 +12,7 @@ import com.greejoy.rbac.domain.Role;
 import com.greejoy.rbac.repository.MenuRepository;
 import com.greejoy.rbac.repository.RoleRepository;
 import com.greejoy.rbac.service.RoleService;
-import com.greejoy.utils.PropertiesUtil;
+import com.greejoy.utils.ClassPropertiesUtil;
 import com.reeham.component.ddd.model.ModelContainer;
 import com.reeham.component.ddd.model.ModelUtils;
 
@@ -90,7 +90,7 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	public boolean update(Role role) {
 		Role oldRole = getModel(role.getId());
-		oldRole = (Role) PropertiesUtil.copyProperties(role,oldRole,true,"roleName");
+		oldRole = (Role) ClassPropertiesUtil.copyProperties(role,oldRole,true,"roleName");
 		oldRole.update();
 		//test(oldUser);
 		return true;

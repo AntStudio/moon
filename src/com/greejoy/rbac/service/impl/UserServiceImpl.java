@@ -16,7 +16,7 @@ import com.greejoy.rbac.repository.MenuRepository;
 import com.greejoy.rbac.repository.UserRepository;
 import com.greejoy.rbac.service.UserService;
 import com.greejoy.utils.Constants;
-import com.greejoy.utils.PropertiesUtil;
+import com.greejoy.utils.ClassPropertiesUtil;
 import com.reeham.component.ddd.annotation.Introduce;
 import com.reeham.component.ddd.annotation.Send;
 import com.reeham.component.ddd.message.DomainMessage;
@@ -153,7 +153,7 @@ public boolean update(User user) {
 	if(user==null||user.getId()==null)
 		return false;
 	User oldUser = getModel(user.getId());
-	oldUser = (User) PropertiesUtil.copyProperties(user,oldUser,true,"userName","password","realName");
+	oldUser = (User) ClassPropertiesUtil.copyProperties(user,oldUser,true,"userName","password","realName");
 	oldUser.updateUser();
 	//test(oldUser);
 	return true;

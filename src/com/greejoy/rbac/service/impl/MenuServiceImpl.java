@@ -14,7 +14,7 @@ import com.greejoy.rbac.repository.MenuRepository;
 import com.greejoy.rbac.service.MenuService;
 import com.greejoy.utils.Constants;
 import com.greejoy.utils.ParamUtils;
-import com.greejoy.utils.PropertiesUtil;
+import com.greejoy.utils.ClassPropertiesUtil;
 import com.reeham.component.ddd.model.ModelContainer;
 import com.reeham.component.ddd.model.ModelUtils;
 @Service

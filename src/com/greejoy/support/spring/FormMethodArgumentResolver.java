@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.greejoy.support.spring.annotation.FormParam;
-import com.greejoy.utils.FileUtil;
+import com.greejoy.utils.FileUtils;
 import com.reeham.component.ddd.model.ModelContainer;
 import com.reeham.component.ddd.model.ModelUtils;
 
@@ -130,7 +130,7 @@ public class FormMethodArgumentResolver implements HandlerMethodArgumentResolver
 	    				File dir = new File(request.getSession().getServletContext().getRealPath("/upload"));
 	    				if(!dir.exists())
 	    					dir.mkdir();
-	    				FileUtil.save(((MultipartFile)value).getInputStream(), new File(request.getSession().getServletContext().getRealPath("/upload/")+((MultipartFile)value).getOriginalFilename()));
+	    				FileUtils.save(((MultipartFile)value).getInputStream(), new File(request.getSession().getServletContext().getRealPath("/upload/")+((MultipartFile)value).getOriginalFilename()));
 	    				field.set(instance, "/upload/"+((MultipartFile)value).getOriginalFilename());
 	    			}
 	    			else

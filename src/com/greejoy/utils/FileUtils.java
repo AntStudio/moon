@@ -10,7 +10,7 @@ import java.io.InputStream;
  * @version 1.0
  * @date 2013-2-18
  */
-public class FileUtil {
+public class FileUtils {
 
 	/**
 	 * 根据属于刘保存文件

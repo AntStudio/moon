@@ -11,7 +11,7 @@ import com.greejoy.rbac.domain.User;
  * @version 1.0
  * @date 2012-12-7
  */
-public class PropertiesUtil {
+public class ClassPropertiesUtil {
 
 	/**
 	 * copy the properties from src to dest,if copy is false,when the field is null

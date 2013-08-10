@@ -22,7 +22,7 @@ import com.greejoy.rbac.service.MenuService;
 import com.greejoy.rbac.service.UserService;
 import com.greejoy.support.spring.annotation.FormParam;
 import com.greejoy.utils.MessageUtils;
-import com.greejoy.utils.PropertiesUtil;
+import com.greejoy.utils.ClassPropertiesUtil;
 import com.reeham.component.ddd.model.ModelContainer;
 
 /**
@@ -122,7 +122,7 @@ public class MenuAction {
 		
 		if(menu.getId()!=null){
 			Menu oldMenu = menuService.getModel(menu.getId());
-			menu = (Menu) PropertiesUtil.copyProperties(menu, oldMenu, true, "menuName","url");
+			menu = (Menu) ClassPropertiesUtil.copyProperties(menu, oldMenu, true, "menuName","url");
 			menuService.update(menu);
 		}
 		return MessageUtils.getMapMessage(true);
