@@ -14,12 +14,12 @@ var setting = {
 		callback: {
 			onRightClick: function(event, treeId, treeNode){
 				$.fn.zTree.getZTreeObj("roleTree").selectNode(treeNode);
-				if ($.fn.zTree.getZTreeObj("roleTree").getSelectedNodes()[0]&&$.fn.zTree.getZTreeObj("roleTree").getSelectedNodes()[0].id!=-1){
-				$("*:not('.ztree')").one("click",function(e){
-					 $("#rmenu").css("display","none");
-					// $("*:not('.ztree')").unbind("click");
-				});
-				$("#rmenu").css("left",event.pageX).css("top",event.pageY).css("display","inline");
+				if ($.fn.zTree.getZTreeObj("roleTree").getSelectedNodes()[0]){
+					$("*:not('.ztree')").one("click",function(e){
+						 $("#rmenu").css("display","none");
+						// $("*:not('.ztree')").unbind("click");
+					});
+					$("#rmenu").css("left",event.pageX).css("top",event.pageY).css("display","inline");
 				}
 				else{
 					$("#rmenu").css("display","none");
