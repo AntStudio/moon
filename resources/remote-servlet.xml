@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">  
 <beans>  
-	<bean  class="com.greejoy.support.spring.hessian.HessianExporter"></bean>
+	<bean  class="org.antstudio.support.spring.hessian.HessianExporter"></bean>
 </beans>   

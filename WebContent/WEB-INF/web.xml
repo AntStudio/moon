@@ -27,7 +27,7 @@
   </context-param>
   <filter>
   <filter-name>sessionFilter</filter-name>
-  <filter-class>com.greejoy.support.session.SessionFilter</filter-class>
+  <filter-class>org.antstudio.support.session.SessionFilter</filter-class>
   </filter>
   <filter-mapping>
   <filter-name>sessionFilter</filter-name>

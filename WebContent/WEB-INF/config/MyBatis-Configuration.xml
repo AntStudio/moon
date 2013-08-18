@@ -3,11 +3,11 @@
 "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <mappers>
-        <mapper resource="com/greejoy/rbac/mapper/MenuMapper.xml" />
-        <mapper resource="com/greejoy/rbac/mapper/UserMapper.xml" />
-        <mapper resource="com/greejoy/rbac/mapper/RoleMapper.xml" />
-        <mapper resource="com/greejoy/rbac/mapper/PermissionMapper.xml" />
-        <mapper resource="com/greejoy/log/mapper/LogMapper.xml" />
-        <mapper resource="com/greejoy/base/init/repository/mapper/TableCreatorMapper.xml" />
+        <mapper resource="org/antstudio/rbac/mapper/MenuMapper.xml" />
+        <mapper resource="org/antstudio/rbac/mapper/UserMapper.xml" />
+        <mapper resource="org/antstudio/rbac/mapper/RoleMapper.xml" />
+        <mapper resource="org/antstudio/rbac/mapper/PermissionMapper.xml" />
+        <mapper resource="org/antstudio/log/mapper/LogMapper.xml" />
+        <mapper resource="org/antstudio/base/init/repository/mapper/TableCreatorMapper.xml" />
     </mappers>
 </configuration>

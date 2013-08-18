@@ -97,31 +97,31 @@ http://www.springframework.org/schema/cache http://www.springframework.org/schem
 
 
 <bean id="menuRepository" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="com.greejoy.rbac.repository.MenuRepository"></property>
+        <property name="mapperInterface" value="org.antstudio.rbac.repository.MenuRepository"></property>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
     </bean>
     
     <bean id="userRepository" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="com.greejoy.rbac.repository.UserRepository"></property>
+        <property name="mapperInterface" value="org.antstudio.rbac.repository.UserRepository"></property>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
     </bean>
     
      <bean id="roleRepository" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="com.greejoy.rbac.repository.RoleRepository"></property>
+        <property name="mapperInterface" value="org.antstudio.rbac.repository.RoleRepository"></property>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
     </bean>
     
      <bean id="permissionRepository" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="com.greejoy.rbac.repository.PermissionRepository"></property>
+        <property name="mapperInterface" value="org.antstudio.rbac.repository.PermissionRepository"></property>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
     </bean>
        <bean id="logRepository" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="com.greejoy.log.repository.LogRepository"></property>
+        <property name="mapperInterface" value="org.antstudio.log.repository.LogRepository"></property>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
     </bean>
     
         <bean id="tableCreatorRepository" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="com.greejoy.base.init.repository.TableCreatorRepository"></property>
+        <property name="mapperInterface" value="org.antstudio.base.init.repository.TableCreatorRepository"></property>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
     </bean>
     
