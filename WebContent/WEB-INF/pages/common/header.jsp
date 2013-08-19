@@ -20,6 +20,6 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/jquery/ui/flexigrid/css/flexigrid.css"/>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/jquery/ui/ztree/css/zTreeStyle.css"/>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/icon/icon.css"/>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/js/validate/css/tip-darkgray.css"/>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/js/validate/css/tip-darkgray.css"/> 
 </head>
 </html>

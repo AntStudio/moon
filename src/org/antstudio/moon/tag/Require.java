@@ -41,7 +41,7 @@ public class Require extends TagSupport{
 					sb.append("<script type=\"text/javascript\" src=\""+contextPath+"plugin/ztree/jquery.ztree.all-3.5.js\"></script>\n");
 					sb.append(" <link rel=\"stylesheet\" href=\""+contextPath+"plugin/ztree/css/zTreeStyle.css\" type=\"text/css\" />\n");
 				}else{
-					sb.append("<script type=\"text/javascript\" src=\""+contextPath+s+"\"/>");
+					sb.append("<script type=\"text/javascript\" src=\""+contextPath+s+"\"></script>\n");
 				}
 			}
 		}else{//for css

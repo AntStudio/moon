@@ -5,93 +5,53 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <script type="text/javascript" src="${pageContext.request.contextPath}/jquery/ui/layout/jquery.layout-latest.js"></script>
- <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/jquery/ui/layout/layout-default-latest.css"/>
+ <m:require src="jquery,bootstrap"></m:require>
  <script type="text/javascript" src="${pageContext.request.contextPath}/js/pages/index.js"></script>
+ <m:require src="css/icon/icon.css,css/base.css" type="css"></m:require>
 <title>主页</title>
-<script>
-//***********************************************<公用方法(提取到公用js文件中)>*******************************************************
 
-/**
- * reset all the field of form,call like $("#loginForm").reset();
- */
-$.fn.reset = function(){
-	$(':input',this)  
-	 .not(':button, :submit, :reset, :hidden')  
-	 .val('')  
-	 .removeAttr('checked')  
-	 .removeAttr('selected'); 
-};
- 
- /**
-  * ajax submit form,use like this:
-  *	<p>  $("#loginForm").ajaxSubmitForm("login/validate",
-  *			 function(result) {
-  *		        // todo the code when success
-  *	             }, 
-  *	         function(result) {
-  *		        // todo the code when failure
-  *	        });
-  *</p>
-  * @param url        : the form submit url
-  * @param successFun : when ajax submit form success,also the response message 
-  *                     is success(means:the success propertity of responesText is true),
-  *                     call the successFun with the responesText parameter
-  * @param failureFun : if not call the successFun,then call the failureFun with responesText parameter 
-  */
- $.fn.ajaxSubmitForm = function(url,successFun,failureFun,errorFun){
-		$.ajax({
-			url:url,
-			data:$(this).serialize(),
-			type:'post',
-			dataType:'json',
-			success:function(result){
-				if(result.success){
-					successFun(result);
-				
-				}
-				else
-					failureFun(result);
-			},
-			failure:function(XMLHttpRequest, textStatus, errorThrown){
-				errorFun(XMLHttpRequest, textStatus, errorThrown);
-			}
-		});
- };
- $.href=function(url,type){
-	 if(typeof(type)=="undefined"||type=='current')
-	  window.location.href=url;
-	 else
-		 if(type=="new")
-			 window.open(url);
- };
-//***********************************************</公用方法(提取到公用js文件中)>*******************************************************
- 
-
-</script>
+<style type="text/css">
+  
+</style>
 </head>
 <body>
-<iframe id="main" name="main" class="ui-layout-center"
-	width="100%" height="600" frameborder="0" scrolling="auto"
-	src="${pageContext.request.contextPath}/user"></iframe><!-- http://ui.operamasks.org/demos/grid/simple.html -->
-
- <div class="ui-layout-north" style="padding:3px">
- <div style="background:url('${pageContext.request.contextPath}/css/images/bg.png');width:100%;height:100%;overflow:hidden;">
- <span style="color: #e6e6e6;font-family: serif;font-size: 40px;position:relative;left:40px;top:20px;" >电力双视监控平台</span>
- <span style="float:right;margin-top: 60px;margin-right: 40px;font-size: 20px;color:#121647;">欢迎您:
- ${currentUser.userName}
- <span style="padding-left: 10px;color:#475699;">|</span>
- <a href="${pageContext.request.contextPath}/user/loginOut" style="text-decoration: none;color: #AC294E;padding-left: 10px;" >退出</a></span>
- </div>
- </div>
- <div class="ui-layout-west">
-
- <div id="menu" >
- <c:forEach items="${menus}" var="s">
- <h3 id="${s.id}">${s.menuName}</h3>
-<ul></ul>
- </c:forEach>
-    </div>
- </div>    
+	<div class="navbar navbar-inverse" style="position: static;">
+		<div class="navbar-inner">
+			<div class="container">
+				<a class="btn btn-navbar" data-toggle="collapse"
+					data-target=".navbar-inverse-collapse"> <span class="icon-bar"></span>
+					<span class="icon-bar"></span> <span class="icon-bar"></span>
+				</a> <a class="brand" href="#">Moon</a>
+				<div class="nav-collapse collapse navbar-inverse-collapse">
+					<ul class="nav">
+						<c:forEach items="${menus}" var="s">
+							<li class="dropdown nav-menu" id="menu_${s.id}">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+									${s.menuName}
+									<b class="caret"></b>
+								</a>
+								<ul class="dropdown-menu">
+									<li class="h-center"><i class="loading"></i></li>
+								</ul>
+							</li>
+						</c:forEach>
+					</ul>
+					<ul class="nav pull-right">
+						<li class="dropdown"><a href="#" class="dropdown-toggle"
+							data-toggle="dropdown"> ${currentUser.userName} <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li><a href="${pageContext.request.contextPath}/user/loginOut">logout</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<!-- /.nav-collapse -->
+			</div>
+		</div>
+		<!-- /navbar-inner -->
+	</div>
+	<div class="mainIframeContainer">
+		<iframe id="main" class="mainIframe" src="${pageContext.request.contextPath}/user"></iframe>   
+	</div> 
 </body>
 </html>

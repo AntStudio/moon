@@ -18,7 +18,8 @@
 
 .loading{
 	background:  url(images/loading.gif) no-repeat center center;
-	width: 170px;
-	height: 80px;
+	width: 16px;
+	height: 16px;
 	margin: 0 auto;
+	display:inline-block;
 }
