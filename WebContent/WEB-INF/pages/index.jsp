@@ -5,9 +5,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
- <m:require src="jquery,bootstrap"></m:require>
- <script type="text/javascript" src="${pageContext.request.contextPath}/js/pages/index.js"></script>
- <m:require src="css/icon/icon.css,css/base.css" type="css"></m:require>
+ <m:require src="jquery,bootstrap,js/pages/index.js"></m:require>
+ <m:require src="css/base.css" type="css"></m:require>
 <title>主页</title>
 
 <style type="text/css">
