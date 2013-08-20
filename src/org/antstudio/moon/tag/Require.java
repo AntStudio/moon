@@ -1,12 +1,16 @@
 package org.antstudio.moon.tag;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Properties;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.antstudio.moon.tag.util.RequestUtils;
+import org.antstudio.utils.PropertiesUtils;
+import org.apache.log4j.Logger;
 /**
  * 
  * @author Gavin
@@ -19,9 +23,27 @@ public class Require extends TagSupport{
 	public int doStartTag() throws JspException {
 		return EVAL_PAGE;
 	}
-
+	private Logger log = Logger.getLogger(getClass());
 	private String type;
 	private String src;
+	private Properties p;
+	{
+		try {
+			p = PropertiesUtils.loadPropertiesFile("~system~requireTag.properties");
+			for(Object s:p.keySet()){
+				System.out.println(s);
+			}
+		} catch (FileNotFoundException e) {
+			log.error("require初始化失败,未找到配置文件");
+			e.printStackTrace();
+		} catch (IOException e1) {
+			log.error("require初始化失败,读取配置文件出错");
+			e1.printStackTrace();
+		}
+	}
+	
+	
+	
 	@Override
 	public int doEndTag() throws JspException {
 		JspWriter out = this.pageContext.getOut();
@@ -29,25 +51,19 @@ public class Require extends TagSupport{
 		String contextPath = RequestUtils.getContextPath(pageContext);
 		if(type==null||"js".equals(type)){//for js
 			for(String s:src.split(",")){
-				if("jquery".equals(s)){
-					sb.append("<script type=\"text/javascript\" src=\""+contextPath+"plugin/jquery/jquery-1.8.3.js\"></script>\n");
-				}else if("bootstrap".equals(s)){
-					sb.append("<script type=\"text/javascript\" src=\""+contextPath+"plugin/bootstrap/js/bootstrap.min.js\"></script>\n");
-					sb.append(" <link rel=\"stylesheet\" href=\""+contextPath+"plugin/bootstrap/css/bootstrap.min.css\" type=\"text/css\" />\n");
-				}else if("ev".equals(s)||"easyValidation".equals(s)){//ev==easyValidation
-					sb.append("<script type=\"text/javascript\" src=\""+contextPath+"plugin/easyValidation/easyValidation-1.0.js\"></script>\n");
-					sb.append(" <link rel=\"stylesheet\" href=\""+contextPath+"plugin/easyValidation/css/tooltip.css\" type=\"text/css\" />\n");
-				}else if("zt".equals(s)||"ztree".equals(s)){//zt==ztree
-					sb.append("<script type=\"text/javascript\" src=\""+contextPath+"plugin/ztree/jquery.ztree.all-3.5.js\"></script>\n");
-					sb.append(" <link rel=\"stylesheet\" href=\""+contextPath+"plugin/ztree/css/zTreeStyle.css\" type=\"text/css\" />\n");
+				if(p.containsKey("js."+s)){
+					sb.append("<script type=\"text/javascript\" src=\""+contextPath+p.getProperty("js."+s)+"\"></script>\n");
 				}else{
 					sb.append("<script type=\"text/javascript\" src=\""+contextPath+s+"\"></script>\n");
+				}
+				if(p.containsKey("css."+s)){
+					sb.append(" <link rel=\"stylesheet\" href=\""+contextPath+p.getProperty("css."+s)+"\" type=\"text/css\" />\n");
 				}
 			}
 		}else{//for css
 			for(String s:src.split(",")){
-				if("bootstrap".equals(s)){
-					sb.append(" <link rel=\"stylesheet\" href=\""+contextPath+"plugin/bootstrap/css/bootstrap.min.css\" type=\"text/css\" />\n");
+				if(p.containsKey("css."+s)){
+					sb.append(" <link rel=\"stylesheet\" href=\""+contextPath+p.getProperty("css."+s)+"\" type=\"text/css\" />\n");
 				}else{
 					sb.append(" <link rel=\"stylesheet\" href=\""+contextPath+s+"\" type=\"text/css\" />\n");
 				}
