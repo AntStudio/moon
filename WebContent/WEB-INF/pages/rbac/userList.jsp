@@ -5,10 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<m:require src="jquery,zt,js/ztree.extend.js,plugin/jqueryui/jquery-ui-1.9.2.custom.js"></m:require>
-<m:require src="plugin/flexigrid/flexigrid.js"></m:require>
-<m:require src="plugin/flexigrid/css/flexigrid.css" type="css"></m:require>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/pages/rbac/userList.js"></script>
+<m:require src="jquery,zt,js/ztree.extend.js,jqueryui,flexgrid,js/pages/rbac/userList.js"></m:require>
 <title>用户管理</title>
 
 <style type="text/css">

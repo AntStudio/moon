@@ -9,17 +9,6 @@
      <%-- 上下文路径--%>
      var contextPath = "${pageContext.request.contextPath}";
 </script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery-1.8.3.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/ui/jquery-ui-1.9.2.custom.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.extend.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/ui/flexigrid/flexigrid.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/ui/ztree/jquery.ztree.all-3.5.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/ztree.extend.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/validate/jquery.formValidation-1.0.js"></script>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/jquery/ui/css/ext/jquery-ui-1.9.2.ext.min.css"/>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/jquery/ui/flexigrid/css/flexigrid.css"/>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/jquery/ui/ztree/css/zTreeStyle.css"/>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/icon/icon.css"/>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/js/validate/css/tip-darkgray.css"/> 
+<m:require src="css/icon/icon.css" type="css"></m:require>
 </head>
 </html>
