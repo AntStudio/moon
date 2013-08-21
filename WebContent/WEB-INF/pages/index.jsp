@@ -9,9 +9,7 @@
  <m:require src="css/base.css" type="css"></m:require>
 <title>主页</title>
 
-<style type="text/css">
-  
-</style>
+ 
 </head>
 <body>
 	<div class="navbar navbar-inverse" style="position: static;">
@@ -50,7 +48,7 @@
 		<!-- /navbar-inner -->
 	</div>
 	<div class="mainIframeContainer">
-		<iframe id="main" class="mainIframe" src="${pageContext.request.contextPath}/user"></iframe>   
+		<%-- <iframe id="main" class="mainIframe" src="${pageContext.request.contextPath}/user"></iframe>    --%>
 	</div> 
 </body>
 </html>

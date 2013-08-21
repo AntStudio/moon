@@ -17,11 +17,20 @@
 					success:function(response){
 						var subMenus="";
 						$(eval(response)).each(function(index,e){
-							subMenus+="<li><a href='"+contextPath+e.url+"' target=\"main\">"+e.menuName+"</a></li>";
+							subMenus+="<li data-url='"+e.url+"'><a href='#'>"+e.menuName+"</a></li>";
 							
 						});
 						setTimeout(function(){
 							$(".dropdown-menu",$li).html(subMenus);
+							$(".dropdown-menu li",$li).click(function(){
+								 $.ajax({
+										dataType:'html',
+										type:'Get',
+										url:contextPath+$(this).attr("data-url")
+									}).done(function(data){
+										$(".mainIframeContainer").html(data);
+									});
+							});
 						},500);
 					}
 			 });
