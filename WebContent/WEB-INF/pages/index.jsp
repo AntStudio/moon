@@ -47,8 +47,13 @@
 		</div>
 		<!-- /navbar-inner -->
 	</div>
-	<div class="mainIframeContainer">
-		<%-- <iframe id="main" class="mainIframe" src="${pageContext.request.contextPath}/user"></iframe>    --%>
-	</div> 
+	<div class="mainContainer">
+		<div class="mainIframeContainer  fade in left ">
+			<%-- <iframe id="main" class="mainIframe" src="${pageContext.request.contextPath}/user"></iframe>    --%>
+		</div> 
+		<div class="mainIframeContainer  fade in right current" >
+			<%-- <iframe id="main" class="mainIframe" src="${pageContext.request.contextPath}/user"></iframe>    --%>
+		</div> 
+	</div>
 </body>
 </html>

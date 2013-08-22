@@ -11,9 +11,29 @@
 
 .mainIframeContainer{
 	position: absolute;
+	top: 0px;
+	right: 10px;
+	bottom: 5px;
+	left: 0px;
+	border: none;
+}
+
+.mainContainer{
+	position: absolute;
 	top: 50px;
 	right: 10px;
 	bottom: 5px;
 	left: 0px;
 	border: none;
+	overflow: hidden;
+}
+
+.mainIframeContainer.right{
+	right: auto;
+	left: 100%;
+	border: none;
+}
+
+.mainIframeContainer.current{
+	z-index:9999;
 }

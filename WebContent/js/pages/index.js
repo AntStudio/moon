@@ -28,7 +28,14 @@
 										type:'Get',
 										url:contextPath+$(this).attr("data-url")
 									}).done(function(data){
-										$(".mainIframeContainer").html(data);
+										$(".mainIframeContainer.current").html(data);
+										$(".mainIframeContainer").not(".current").animate({right:'100%'},500,'swing',function(){
+											 $(this).toggleClass("left").toggleClass("right").toggleClass("current").removeAttr("style").empty();;
+										 });
+										 $(".mainIframeContainer.current").animate({opacity:1,left:0,right:0},500,"swing",function(){
+											 $(this).toggleClass("left").toggleClass("right").toggleClass("current").removeAttr("style");
+											 
+										 });
 									});
 							});
 						},500);
