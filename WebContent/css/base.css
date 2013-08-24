@@ -3,22 +3,7 @@
 	text-align: center;
 }
 
-.mainIframe{
-	width:100%;
-	height: 100%;
-	border: none;
-}
-
-.mainIframeContainer{
-	position: absolute;
-	top: 0px;
-	right: 10px;
-	bottom: 5px;
-	left: 0px;
-	border: none;
-}
-
-.mainContainer{
+.main-container{
 	position: absolute;
 	top: 50px;
 	right: 10px;
@@ -28,12 +13,10 @@
 	overflow: hidden;
 }
 
-.mainIframeContainer.right{
-	right: auto;
-	left: 100%;
-	border: none;
-}
 
-.mainIframeContainer.current{
-	z-index:9999;
+.main-container iframe{
+	position: absolute;
+	border: none;
+	width: 100%;
+	height: 100%;
 }

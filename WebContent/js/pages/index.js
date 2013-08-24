@@ -1,5 +1,14 @@
- $(document).ready(function () {
-	 
+$(document).ready(function () {
+	
+	/**
+	 * 给iframe绑定load事件,load触发后给iframe的内容绑定点击事件,关闭bootstrap的dropdown菜单
+	 */
+	$("iframe#main").bind("load",function(){
+		$(this.contentDocument).click(function(){
+			$("[id^='menu_']").removeClass('open');
+		});
+	});
+	
 	 /**
 	  * 异步加载菜单
 	  */
@@ -9,7 +18,7 @@
 		 if($(".dropdown-menu",$li).find(".loading").length>0){
 			 $.ajax({
 				  url:contextPath+'/menu/getSubMenus',
-				  data:{
+				  data:{ 
 					  pid:id
 				  },
 					type:'post',
@@ -17,28 +26,10 @@
 					success:function(response){
 						var subMenus="";
 						$(eval(response)).each(function(index,e){
-							subMenus+="<li data-url='"+e.url+"'><a href='#'>"+e.menuName+"</a></li>";
-							
+							//subMenus+="<li data-url='"+e.url+"'><a href='#'>"+e.menuName+"</a></li>";
+							subMenus+="<li ><a href='"+contextPath+e.url+"' target='main'>"+e.menuName+"</a></li>";
 						});
-						setTimeout(function(){
-							$(".dropdown-menu",$li).html(subMenus);
-							$(".dropdown-menu li",$li).click(function(){
-								 $.ajax({
-										dataType:'html',
-										type:'Get',
-										url:contextPath+$(this).attr("data-url")
-									}).done(function(data){
-										$(".mainIframeContainer.current").html(data);
-										$(".mainIframeContainer").not(".current").animate({right:'100%'},500,'swing',function(){
-											 $(this).toggleClass("left").toggleClass("right").toggleClass("current").removeAttr("style").empty();;
-										 });
-										 $(".mainIframeContainer.current").animate({opacity:1,left:0,right:0},500,"swing",function(){
-											 $(this).toggleClass("left").toggleClass("right").toggleClass("current").removeAttr("style");
-											 
-										 });
-									});
-							});
-						},500);
+						$(".dropdown-menu",$li).html(subMenus);
 					}
 			 });
 		 }
