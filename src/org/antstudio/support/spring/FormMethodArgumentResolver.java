@@ -52,6 +52,7 @@ public class FormMethodArgumentResolver implements HandlerMethodArgumentResolver
 	                                        ModelAndViewContainer mavContainer,
 	                                        NativeWebRequest request,
 	                                        WebDataBinderFactory binderFactory) throws Exception {
+	    	try{
 	    	FormParam formParam = parameter.getParameterAnnotation(FormParam.class);
 	        String name = formParam.value();
 	        Object target = (mavContainer.containsAttribute(name)) ?
@@ -67,6 +68,9 @@ public class FormMethodArgumentResolver implements HandlerMethodArgumentResolver
 	       
 	        
 	        return target;
+	    	}catch(Exception e){
+	    		return null;
+	    	}
 	    }
 
 	    public Object createAttribute(MethodParameter parameter,NativeWebRequest request,boolean model) throws Exception{

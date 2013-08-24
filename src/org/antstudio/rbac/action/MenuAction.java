@@ -108,7 +108,8 @@ public class MenuAction {
 	@ResponseBody
 	@PermissionMapping(code="000001",name="添加菜单信息")
 	public Map<String,Object> addMenu(@FormParam("menu") Menu menu){
-		if(menu.getParentId()==-1){
+		Long menuId = -1L;
+		if(menuId.equals(menu.getParentId())){
 			menu.setParentId(null);
 		}
 		modelContainer.enhanceModel(menu).saveOrUpdate();
@@ -118,8 +119,6 @@ public class MenuAction {
 	@RequestMapping("/updateMenu")
 	@ResponseBody
 	public Map<String,Object> updateMenu(@FormParam("menu") Menu menu){
-		
-		
 		if(menu.getId()!=null){
 			Menu oldMenu = menuService.getModel(menu.getId());
 			menu = (Menu) ClassPropertiesUtil.copyProperties(menu, oldMenu, true, "menuName","url");

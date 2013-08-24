@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<m:require src="jquery"></m:require>
+<m:require src="jquery,common"></m:require>
 <title>修改密码</title>
 <style type="text/css">
 .form .label{

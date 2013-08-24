@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<m:require src="jquery,zt,js/ztree.extend.js,jqueryui,flexgrid,js/pages/rbac/menu.js"></m:require>
+<m:require src="jquery,common,zt,js/ztree.extend.js,jqueryui,flexgrid,js/pages/rbac/menu.js"></m:require>
 <title>菜单</title>
  
 <style type="text/css">
