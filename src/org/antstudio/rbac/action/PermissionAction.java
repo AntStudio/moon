@@ -1,12 +1,10 @@
 package org.antstudio.rbac.action;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
-import org.antstudio.rbac.domain.Permission;
 import org.antstudio.rbac.domain.annotation.MenuMapping;
 import org.antstudio.rbac.service.PermissionService;
 import org.antstudio.utils.MessageUtils;
@@ -42,8 +40,8 @@ public class PermissionAction {
 	 */
 	@RequestMapping("/getPermissionData")
 	@ResponseBody
-	public  Map<String,Object> getPermissionData(){
-		Map<String,Object> paramsMap = ParamUtils.getDefaultParamMap();
+	public  Map<String,Object> getPermissionData(HttpServletRequest request){
+		Map<String,Object> paramsMap = ParamUtils.getParamsMap(request);
 		
 		return permissionService.getPermissionsForPage(paramsMap).toMap();
 	}

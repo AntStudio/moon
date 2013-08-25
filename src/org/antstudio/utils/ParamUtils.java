@@ -24,11 +24,11 @@ public class ParamUtils {
 	
 	public static Map<String,Object> getParamsMap(HttpServletRequest request){
 		Map<String,Object> paramMap = getDefaultParamMap();
-		String page =request.getParameter("page");
+		String page =request.getParameter("pageIndex");
 		if(page!=null)
 		paramMap.put("cp", page);	
 		
-		String pageSize = request.getParameter("rp");
+		String pageSize = request.getParameter("pageSize");
 		if(pageSize!=null){
 			paramMap.put("ps", pageSize);
 		}

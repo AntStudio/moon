@@ -30,7 +30,7 @@ $(function(){
 });
 
 function checkOldPassword(){
-	var msg = "";
+  var msg = "";
   $.postData(contextPath+"/user/matchOldPassword",{password:$("#oldPassword").val()},
 			function(){
 	  
