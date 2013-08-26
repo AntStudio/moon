@@ -6,91 +6,31 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<m:require src="jquery,bootstrap,ev"/>
+<m:require src="jquery,bootstrap,common,ev"/>
 <title>Moon</title>
 <script>
-
-//***********************************************<公用方法(提取到公用js文件中)>*******************************************************
-
-/**
- * reset all the field of form,call like $("#loginForm").reset();
- */
-$.fn.reset = function(){
-	$(':input',this)  
-	 .not(':button, :submit, :reset, :hidden')  
-	 .val('')  
-	 .removeAttr('checked')  
-	 .removeAttr('selected'); 
-};
- 
- /**
-  * ajax submit form,use like this:
-  *	<p>  $("#loginForm").ajaxSubmitForm("login/validate",
-  *			 function(result) {
-  *		        // todo the code when success
-  *	             }, 
-  *	         function(result) {
-  *		        // todo the code when failure
-  *	        });
-  *</p>
-  * @param url        : the form submit url
-  * @param successFun : when ajax submit form success,also the response message 
-  *                     is success(means:the success propertity of responesText is true),
-  *                     call the successFun with the responesText parameter
-  * @param failureFun : if not call the successFun,then call the failureFun with responesText parameter 
-  */
- $.fn.ajaxSubmitForm = function(url,successFun,failureFun,errorFun){
-		$.ajax({
-			url:url,
-			data:$(this).serialize(),
-			type:'post',
-			dataType:'json',
-			success:function(result){
-				if(result.success){
-					successFun(result);
-				}
-				else
-					failureFun(result);
-			},
-			error:function(XMLHttpRequest, textStatus, errorThrown){
-				errorFun(XMLHttpRequest, textStatus, errorThrown);
-			}
-		});
- };
- $.href=function(url,type){
-	 if(typeof(type)=="undefined"||type=='current')
-	  window.location.href=url;
-	 else
-		 if(type=="new")
-			 window.open(url);
- };
-//***********************************************</公用方法(提取到公用js文件中)>*******************************************************
- 
 $(function(){
 	$("#submit").click(function(){
-	$("#loginForm").ajaxSubmitForm("${pageContext.request.contextPath}/user/login/validate",
+		$("#loginForm").ajaxSubmitForm("${pageContext.request.contextPath}/user/login/validate",
 			function(result) {
-		if("${from}")
-			$.href("${from}");
-		else
-			$.href("${pageContext.request.contextPath}/index");
-			}, 
-			function(result) {
-				alert(result.success);
-			});
-		
+			if("${from}")
+				$.href("${from}");
+			else
+				$.href("${pageContext.request.contextPath}/index");
+				}, 
+				function(result) {
+					alert(result.success);
+				});
 		});
 
 		$("#reset").click(function() {
 			$("#loginForm").reset();
 		});
 		
-		$('#myModal').modal({backdrop:false});
-		
-		$('#myModal').on('shown', function () {
-			  $(this).css("top","50%");
+		$('#myModal').animate({
+			top:"50%"
 		});
-		
+				
 		$("#loginForm").validate({align:'right',theme:"darkblue"});
 	});
 </script>
@@ -118,7 +58,7 @@ $(function(){
 </head>
 <body style="background: url('${pageContext.request.contextPath}/css/images/login_bg.jpg')">
 
-<div class="modal hide fade" id="myModal">
+<div class="modal" id="myModal">
   <div class="modal-header">
     <h3>登&nbsp;&nbsp;录</h3>
   </div>
