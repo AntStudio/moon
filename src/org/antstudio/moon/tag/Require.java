@@ -52,7 +52,9 @@ public class Require extends TagSupport{
 				if(p.containsKey("js."+s)){
 					sb.append("<script type=\"text/javascript\" src=\""+contextPath+p.getProperty("js."+s)+"\"></script>\n");
 				}else{
-					sb.append("<script type=\"text/javascript\" src=\""+contextPath+s+"\"></script>\n");
+					if(s.endsWith(".js")){
+						sb.append("<script type=\"text/javascript\" src=\""+contextPath+s+"\"></script>\n");
+					}
 				}
 				if(p.containsKey("css."+s)){
 					sb.append(" <link rel=\"stylesheet\" href=\""+contextPath+p.getProperty("css."+s)+"\" type=\"text/css\" />\n");
