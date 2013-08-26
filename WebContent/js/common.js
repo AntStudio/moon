@@ -32,6 +32,7 @@ $.fn.reset = function(){
 			type:'post',
 			dataType:'json',
 			success:function(result){
+				console.log(result);
 				if(result.permission=='noPermission')
 				{
 					alert("您没有权限执行此操作.");
@@ -39,10 +40,10 @@ $.fn.reset = function(){
 				}
 				if(result.success){
 					successFun(result);
-				
 				}
-				else
+				else{
 					failureFun(result);
+				}
 			},
 			failure:function(XMLHttpRequest, textStatus, errorThrown){
 				errorFun(XMLHttpRequest, textStatus, errorThrown);

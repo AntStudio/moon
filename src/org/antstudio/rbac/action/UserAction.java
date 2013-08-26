@@ -10,7 +10,6 @@ import org.antstudio.log.domain.Log;
 import org.antstudio.log.service.LogService;
 import org.antstudio.rbac.domain.Role;
 import org.antstudio.rbac.domain.User;
-import org.antstudio.rbac.domain.annotation.LogRecord;
 import org.antstudio.rbac.domain.annotation.LoginRequired;
 import org.antstudio.rbac.domain.annotation.MenuMapping;
 import org.antstudio.rbac.domain.annotation.PermissionMapping;
@@ -61,10 +60,12 @@ public class UserAction {
 	 public Map<String,Object> userValidate(@FormParam(value="user")User user,HttpServletRequest request){
 		 if(user==null)
 			 return MessageUtils.getMapMessage(false);
+		 String loginName = user.getUserName();
+		 String password = user.getPassword();
 		 user.setId(null);//设置id为null，此后用id是否为空判断是否成功登录
 		 user = userService.login(user);
-		 if(user.getId()==null){
-			 logService.log(new Log(user.getUserName(),-1L,"登录失败","{userName:"+user.getUserName()+",password:"+user.getPassword()+"}"));
+		 if(user==null||user.getId()==null){
+			 logService.log(new Log(loginName,-1L,"登录失败","{userName:"+loginName+",password:"+password+"}"));
 			return MessageUtils.getMapMessage(false);
 		 }
 		 else{

@@ -11,7 +11,7 @@
 <script>
 $(function(){
 	$("#submit").click(function(){
-		$("#loginForm").ajaxSubmitForm("${pageContext.request.contextPath}/user/login/validate",
+		$("#loginForm").ajaxSubmitForm("${pageContext.request.contextPath}/user/login/validate",{},
 			function(result) {
 			if("${from}")
 				$.href("${from}");
@@ -19,7 +19,7 @@ $(function(){
 				$.href("${pageContext.request.contextPath}/index");
 				}, 
 				function(result) {
-					alert(result.success);
+					$("#msg").html("用户名或密码错误.").show();
 				});
 		});
 
@@ -53,6 +53,10 @@ $(function(){
 .modal-header{
 	text-align: center;
 }
+
+#msg{
+	width:auto;
+}
 </style>
 
 </head>
@@ -62,11 +66,15 @@ $(function(){
   <div class="modal-header">
     <h3>登&nbsp;&nbsp;录</h3>
   </div>
- 
-  <div class="modal-body">
+  <div class="modal-body"> 
+
+ 	 <div id="msg" class="alert alert-error  <c:choose>
+   <c:when test="${info}">   
+   </c:when>
+   <c:otherwise>  hide
+   </c:otherwise>
+</c:choose>">${info}</div>
    <form id="loginForm" class="loginForm">
-   ${info}
-    
      <div class="form-inline">
      	<span>用户名：</span>
      	<input type="text" name="user.userName" value="system_user" validate="validate[minsize(6),maxsize(15)]" errMsg="用户名为6~15个字符"/>
@@ -76,6 +84,8 @@ $(function(){
      	<input  name="user.password" type="password" value="system_user" validate="validate[minsize(6)]" errMsg="密码须6位以上"/>
      </div> 
 </form>
+
+
 </div>
   <div class="modal-footer">
     <input  type="button" id="submit" class="btn" value="登录"/>
