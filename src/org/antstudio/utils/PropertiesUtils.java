@@ -28,4 +28,14 @@ public class PropertiesUtils {
 		return p;
 	}
 	
+	public static Properties loadPropertiesFileIfExist(String filePath){
+		try {
+			return loadPropertiesFile(filePath);
+		} catch (FileNotFoundException e) {
+			System.out.println("文件"+filePath+"不存在,不进行加载.");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return new Properties();
+	}
 }

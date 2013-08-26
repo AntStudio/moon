@@ -30,9 +30,7 @@ public class Require extends TagSupport{
 	{
 		try {
 			p = PropertiesUtils.loadPropertiesFile("~system~requireTag.properties");
-			for(Object s:p.keySet()){
-				System.out.println(s);
-			}
+			p.putAll(PropertiesUtils.loadPropertiesFileIfExist("requireTag.properties"));
 		} catch (FileNotFoundException e) {
 			log.error("require初始化失败,未找到配置文件");
 			e.printStackTrace();
