@@ -96,3 +96,15 @@
 .datagrid .modal-backdrop span i{
 	margin-right:10px;
 }
+
+.datagrid .table-hover tr:hover>td{
+	background: #e9f3fd;
+}
+
+.datagrid .table-hover tr.selected>td{
+	background: #dfeefc;
+}
+
+.datagrid .table tr>th.select-box{
+	width:15px;
+}

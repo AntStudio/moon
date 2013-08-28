@@ -15,7 +15,9 @@
 	    pageIndex:1,
 		pageSize:10,
 		params:{},
-		dataFormat:''
+		dataFormat:'',
+		showSelectBox:true,
+		multiSelect:true
 	};
 
 	var table  = {
@@ -27,8 +29,11 @@
 				var dataHtml="<tbody>";
 				$.each(data,function(index,columnData){
 					dataHtml+="<tr>";
+					if(opts.showSelectBox){
+						dataHtml+="<td><input name=\"selectBox\" type=\""+(opts.multiSelect?"checkbox":"radio")+"\"/></td>";
+					}
 					$.each(opts.columns,function(index,columnDefinition){
-					dataHtml+="<td>"+columnData[columnDefinition.name]+"</td>";
+						dataHtml+="<td>"+columnData[columnDefinition.name]+"</td>";
 					});
 					dataHtml+="</tr>";
 				});
@@ -40,6 +45,9 @@
 		},
 		renderHeader:function(opts){
 			var header = "<thead><tr>";
+			if(opts.showSelectBox){
+				header+="<th class=\"select-box\">"+(opts.multiSelect?"<input type=\"checkbox\"/>":"")+"</th>";
+			}
 			$.each(opts.columns,function(index,column){
 				header+="<th>"+column.name+"</th>";
 			});
@@ -159,6 +167,20 @@
 		},
 		bindEvents:function(opts){
 			var $container = $(this);
+			/*$("tbody",$container).mousedown(function(){
+				$("tbody tr",$container).bind("hover",function(){
+					$(this).addClass("selected");
+				});
+			})*/;
+			
+			$("tbody tr",$container).click(function(){
+				if(opts.multiSelect){
+					$(this).toggleClass("selected").find(":checkbox").prop("checked",$(this).hasClass("selected"));
+				}else{
+					$(this).toggleClass("selected").siblings().removeClass("selected");//find(":checkbox").prop("checked",$(this).hasClass("selected"));
+					$(this).find(":radio").prop("checked",$(this).hasClass("selected"));
+				}
+			});
 			$(".pagination-btn",$container).click(function(event){
 				switch($(this).attr("action")){
 					case "refresh": table.refresh.call($container,opts);break;
