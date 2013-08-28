@@ -30,3 +30,7 @@ h1 { font-size: 145% }
 body{
 	padding: 0 10px;
 }
+
+code{
+	white-space: normal;
+}
