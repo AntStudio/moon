@@ -56,7 +56,7 @@
 		</div> 
 	</div> --%>
 	<div class="main-container">
-		<iframe src="user" id="main"></iframe>
+		<iframe src="user" id="main" name="main"></iframe>
 	</div>
 </body>
 </html>
