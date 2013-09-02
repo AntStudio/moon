@@ -5,6 +5,29 @@
 	margin-bottom:0;
 }
 
+.datagrid>table>thead th.number{
+	width:25px;
+}
+
+.datagrid>table>thead th [class^="icon-"]{
+	float: right;
+	font-size: 20px;
+	color: #8D8989;
+}
+
+.datagrid>table>thead th .transparent{
+	opacity:0;
+}
+
+ 
+.datagrid>table>thead th.sort-column{
+	cursor:pointer;
+}
+
+.datagrid>table>tbody td.number{
+	text-align:center;
+}
+
 .datagrid>.grid-pagination{
 	padding: 5px;
 }
