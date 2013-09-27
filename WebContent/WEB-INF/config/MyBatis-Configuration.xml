@@ -9,5 +9,6 @@
         <mapper resource="org/antstudio/rbac/mapper/PermissionMapper.xml" />
         <mapper resource="org/antstudio/log/mapper/LogMapper.xml" />
         <mapper resource="org/antstudio/base/init/repository/mapper/TableCreatorMapper.xml" />
+        <mapper resource="org/antstudio/pw/repository/mapper/TimeStatisticsMapper.xml" />
     </mappers>
 </configuration>

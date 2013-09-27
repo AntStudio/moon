@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="org.antstudio.pw.repository.TimeStatisticsRepository">
+	<insert  id="save" parameterType="org.antstudio.pw.domain.TimeStatistics">
+		insert into time_statistics(user_id,time,type) 
+		values
+		(#{timeStatistics.user_id},CURRENT_TIMESTAMP,#{timeStatistics.type})
+	</insert>
+	
+	<update  id="update" parameterType="org.antstudio.pw.domain.TimeStatistics">
+		update time_statistics set time=#{timeStatistics.user_id} where id = ${timeStatistics.id}
+	</update>
+	
+</mapper>
