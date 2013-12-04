@@ -32,7 +32,6 @@ $.fn.reset = function(){
 			type:'post',
 			dataType:'json',
 			success:function(result){
-				console.log(result);
 				if(result.permission=='noPermission')
 				{
 					alert("您没有权限执行此操作.");
