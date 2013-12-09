@@ -16,6 +16,9 @@ import com.reeham.component.ddd.annotation.Model;
 @Model
 public class Permission extends BaseDomain{
 
+	private static final long serialVersionUID = -3163741468593949374L;
+
+
 	public Permission(){
 		
 	}

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.antstudio.rbac.domain.Menu;
-import org.antstudio.rbac.domain.Role;
 
 import com.reeham.component.ddd.model.ModelLoader;
 

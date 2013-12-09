@@ -3,7 +3,6 @@ package org.antstudio.rbac.repository;
 import java.util.List;
 
 import org.antstudio.rbac.domain.Menu;
-import org.antstudio.rbac.domain.User;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.antstudio.rbac.domain.Role;
-import org.antstudio.rbac.repository.MenuRepository;
 import org.antstudio.rbac.repository.RoleRepository;
 import org.antstudio.rbac.service.RoleService;
 import org.antstudio.utils.ClassPropertiesUtil;
@@ -25,9 +24,6 @@ public class RoleServiceImpl implements RoleService {
 	@Resource
 	private RoleRepository roleRepository;
 
-	@Resource
-	private MenuRepository menuRepository;
-	
 	@Override
 	public Role getModel(Long id) {
 		if(id==null||id<0)
@@ -45,6 +41,7 @@ public class RoleServiceImpl implements RoleService {
 		return get((Long)identifier);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<Role> getSubRoles(Long rid,boolean deleteFlag) {
 		return modelContainer.identifiersToModels((List)roleRepository.getSubRoles(rid, deleteFlag), Role.class, this);
@@ -116,6 +113,7 @@ public class RoleServiceImpl implements RoleService {
 		return  m;
 		
 	}
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List<Role> getRoleByPermission(Long pid) {
 		return modelContainer.identifiersToModels((List)roleRepository.getRolesByPermission(pid), Role.class, this);

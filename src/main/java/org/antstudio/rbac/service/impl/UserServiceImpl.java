@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.antstudio.pagination.Pager;
 import org.antstudio.rbac.domain.User;
-import org.antstudio.rbac.domain.repository.MenuEvent;
-import org.antstudio.rbac.repository.MenuRepository;
 import org.antstudio.rbac.repository.UserRepository;
 import org.antstudio.rbac.service.UserService;
 import org.antstudio.utils.ClassPropertiesUtil;
@@ -21,7 +19,6 @@ import com.reeham.component.ddd.annotation.Introduce;
 import com.reeham.component.ddd.annotation.Send;
 import com.reeham.component.ddd.message.DomainMessage;
 import com.reeham.component.ddd.model.ModelContainer;
-import com.reeham.component.ddd.model.ModelKey;
 import com.reeham.component.ddd.model.ModelUtils;
 
 /**
@@ -38,8 +35,6 @@ public class UserServiceImpl implements UserService{
 	private UserRepository userRepository;
 	@Resource
 	public ModelContainer modelContainer;
-	@Resource
-	private MenuRepository menuRepository;
 	
 	@Override
 	public User getModel(Long id) {
@@ -122,6 +117,7 @@ public class UserServiceImpl implements UserService{
 	   modelContainer.addModel(ModelUtils.asModelKey(User.class, Constants.SYSTEM_USERID), sysUser);
 	   return sysUser;
    }
+@SuppressWarnings({ "unchecked", "rawtypes" })
 @Override
 public List<User> getUsersByCreator(Map<String,Object> paramsMap) {
 	return modelContainer.identifiersToModels((List)userRepository.getUsersByCreator(paramsMap), User.class, this);

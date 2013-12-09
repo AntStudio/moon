@@ -7,7 +7,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.antstudio.rbac.domain.Role;
-import org.antstudio.rbac.domain.User;
 import org.antstudio.rbac.domain.annotation.MenuMapping;
 import org.antstudio.rbac.service.RoleService;
 import org.antstudio.rbac.service.UserService;
@@ -17,8 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.reeham.component.ddd.model.ModelContainer;
 
 /**
  * the action controller of role

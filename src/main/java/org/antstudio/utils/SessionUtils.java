@@ -3,8 +3,6 @@ package org.antstudio.utils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.antstudio.rbac.domain.User;
-
 
 /**
  * the Util related HttpSession

@@ -2,7 +2,6 @@ package org.antstudio.rbac.domain;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -24,6 +23,9 @@ import com.reeham.component.ddd.annotation.Model;
  */
 @Model
 public class User extends BaseDomain{
+
+	private static final long serialVersionUID = -7660365552913856672L;
+
 
 	public User(){
 		
@@ -80,11 +82,6 @@ public class User extends BaseDomain{
 	 */
 	private String contact;
 	
-	/**
-	 * the menus for user across the it's role .there only contains top menus for user.
-	 */
-	private List<Menu> menus;
-
 	@Resource
 	private RoleEvent roleEvent;
 	

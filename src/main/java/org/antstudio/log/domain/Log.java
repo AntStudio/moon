@@ -23,6 +23,11 @@ import com.reeham.component.ddd.annotation.Model;
 @Model
 public class Log extends BaseDomain{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public Log(){}
 	
 	public Log(String action){

@@ -25,6 +25,7 @@ import com.reeham.component.ddd.annotation.Model;
 @Model
 public class Role extends BaseDomain{
 
+	private static final long serialVersionUID = 2223770816508175289L;
 	public Role(Long id){
 		this.id = id;
 	}
@@ -124,6 +125,7 @@ public class Role extends BaseDomain{
 		user.setRole(this);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<Role> getSubRoles(){
 		return (List<Role>) roleEvent.getSubRoles(this);
 	}

@@ -3,7 +3,6 @@ package org.antstudio.rbac.service.impl;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.management.relation.RoleResult;
 
 import org.antstudio.rbac.domain.Role;
 import org.antstudio.rbac.domain.User;

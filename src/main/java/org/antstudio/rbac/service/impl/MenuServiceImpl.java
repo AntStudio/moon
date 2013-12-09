@@ -10,9 +10,7 @@ import javax.annotation.Resource;
 import org.antstudio.rbac.domain.Menu;
 import org.antstudio.rbac.repository.MenuRepository;
 import org.antstudio.rbac.service.MenuService;
-import org.antstudio.utils.ClassPropertiesUtil;
 import org.antstudio.utils.Constants;
-import org.antstudio.utils.ParamUtils;
 import org.springframework.stereotype.Service;
 
 import com.reeham.component.ddd.model.ModelContainer;
@@ -27,6 +25,7 @@ public class MenuServiceImpl implements MenuService {
 	
 	 
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<Menu> getSubMenusByRole(Long parentId, Long rid) {
 		if(rid==null||rid<=0)
@@ -86,7 +85,7 @@ public class MenuServiceImpl implements MenuService {
 		return list;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<Menu> getSubMenus(Long parentId) {
 		return modelContainer.identifiersToModels((List)menuRepository.getSubMenu(parentId), Menu.class, this);
@@ -146,6 +145,7 @@ public class MenuServiceImpl implements MenuService {
 		menuRepository.removeMenusFromRole(menus,rid);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List<Menu> getAllMenus(Boolean system) {
 		 

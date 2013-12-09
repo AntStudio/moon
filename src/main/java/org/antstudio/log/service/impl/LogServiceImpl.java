@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.antstudio.log.domain.Log;
 import org.antstudio.log.repository.LogRepository;
@@ -14,7 +12,6 @@ import org.antstudio.log.service.LogService;
 import org.antstudio.pagination.Pager;
 import org.antstudio.rbac.domain.User;
 import org.antstudio.rbac.repository.UserRepository;
-import org.antstudio.rbac.service.UserService;
 import org.antstudio.support.session.SessionContext;
 import org.antstudio.utils.Constants;
 import org.springframework.stereotype.Service;
@@ -46,6 +43,8 @@ public class LogServiceImpl implements LogService,ModelLoader{
 		}
 		return list;
 	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List<Log> getLogs(Map<String, Object> params) {
 		return modelContainer.identifiersToModels((List)logRepository.getLogs(params), Log.class, this);

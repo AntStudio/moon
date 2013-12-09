@@ -1,10 +1,5 @@
 package org.antstudio.log.interceptor;
 
-import javax.annotation.Resource;
-
-import org.antstudio.rbac.domain.User;
-import org.antstudio.rbac.service.UserService;
-import org.antstudio.support.session.SessionContext;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.stereotype.Component;
@@ -20,12 +15,12 @@ import org.springframework.stereotype.Component;
 @Deprecated
 public class LogInterceptor implements MethodInterceptor{
 
-	@Resource
-	private UserService userService;
+	//@Resource
+	//private UserService userService;
 
 	@Override
 	public Object invoke(MethodInvocation methodInvocation) throws Throwable {
-		Long currentUserId = (Long)SessionContext.getSession().getAttribute(User.CURRENT_USER_ID);
+		//Long currentUserId = (Long)SessionContext.getSession().getAttribute(User.CURRENT_USER_ID);
 		return null;
 	}
 

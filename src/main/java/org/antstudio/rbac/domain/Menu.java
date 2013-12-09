@@ -1,14 +1,12 @@
 package org.antstudio.rbac.domain;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.antstudio.base.domain.BaseDomain;
 import org.antstudio.rbac.domain.repository.MenuEvent;
-import org.antstudio.utils.Constants;
 
 import com.reeham.component.ddd.annotation.Model;
 
@@ -64,10 +62,6 @@ public class Menu extends BaseDomain{
 	 * if <code>true</code> ,menu is leaf menu.else it has sub menus.default 'false'
 	 */
 	private boolean leaf = false;
-	
-	@Resource
-	private MenuEvent menuLoader;
-	
  
 	/**
 	 * @return the menuName

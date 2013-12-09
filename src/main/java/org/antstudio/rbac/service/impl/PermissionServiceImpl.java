@@ -61,6 +61,7 @@ public class PermissionServiceImpl implements PermissionService,ModelLoader{
 		return (Permission) modelContainer.getModel(ModelUtils.asModelKey(Permission.class, id), this);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<Permission> getPermissions(Map<String,Object> paramsMap) {
 		return modelContainer.identifiersToModels((List)permissionRepository.getPermissions(paramsMap), Permission.class, this);
@@ -103,6 +104,7 @@ public class PermissionServiceImpl implements PermissionService,ModelLoader{
 		return new Pager(permissionRepository.getPermissionsByRole_count(paramsMap),getPermissionsByRoleForMap(paramsMap),paramsMap);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<Map<String,Object>> getPermissionsByRoleForMap(Map<String, Object> paramsMap) {
 		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();

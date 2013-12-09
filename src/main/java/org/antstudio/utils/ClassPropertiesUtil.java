@@ -2,8 +2,6 @@ package org.antstudio.utils;
 
 import java.lang.reflect.Field;
 
-import org.antstudio.rbac.domain.User;
-
 
 
 /**
