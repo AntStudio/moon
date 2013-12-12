@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
 
-import org.antstudio.moon.test.PropertiesFileTest;
-
 /**
  * 配置文件读取
  * @author Gavin
@@ -20,7 +18,7 @@ public class PropertiesUtils {
 		if(!filePath.startsWith("/")){
 			filePath="/"+filePath;
 		}
-		URL url = PropertiesFileTest.class.getResource(filePath);
+		URL url = PropertiesUtils.class.getResource(filePath);
 		if(url == null){
 			throw new FileNotFoundException(url+" can not found.");
 		}

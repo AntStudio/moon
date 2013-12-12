@@ -12,41 +12,14 @@
 	<!-- 启动注解驱动的Spring MVC功能，注册请求url和注解POJO类方法的映射 -->
 	<!-- <mvc:annotation-driven /> 使用jackson返回json不能使用此语句-->
 	<mvc:annotation-driven >
-  <mvc:argument-resolvers>
-        <bean class="org.antstudio.support.spring.FormMethodArgumentResolver"/>
-    </mvc:argument-resolvers>
+	  	<mvc:argument-resolvers>
+	        <bean class="org.antstudio.support.spring.FormMethodArgumentResolver"/>
+	    </mvc:argument-resolvers>
 	</mvc:annotation-driven>
 	<bean class="org.antstudio.base.init.TableCreator"/>
 	<bean class="org.antstudio.rbac.domain.init.Initializer"/>
 	<bean class="org.antstudio.rbac.domain.init.DomainAnnotationScanner"/>
 	
-<bean  
-        class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-          
-       </bean>   
-    <!-- 处理方法级别上的@RequestMapping注解-->  
-    <bean  
-        class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" >  
-        <property name="messageConverters">    
-            <list>    
-                <ref bean="mappingJacksonHttpMessageConverter"/>    
-                <ref bean="stringHttpMessageConverter"/>
-            </list>  
-            <!-- 配置的第二种方法
-            <list>
-                <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />  
-            <bean class="org.springframework.http.converter.StringHttpMessageConverter">  
-                <property name="supportedMediaTypes">  
-                    <list>  
-                        <value>text/plain;charset=UTF-8</value>  
-                    </list>  
-                </property>  
-            </bean>  
-                
-            </list> -->
-        </property>   
-        
-    </bean>  
         
   <!--       <mvc:interceptors>  
         多个拦截器,顺序执行  

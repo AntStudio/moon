@@ -22,7 +22,7 @@ public class AutoProxyCreator extends AbstractAutoProxyCreator {
 	@Override
 	protected Object[] getAdvicesAndAdvisorsForBean(Class<?> beanClass, String beanName, TargetSource targetSource)
 			throws BeansException {
-		if(underPackages(beanClass.getPackage().getName()))
+		if(beanClass.getPackage()!=null&&underPackages(beanClass.getPackage().getName()))
 			return getInterceptorsByNames();
 		return DO_NOT_PROXY;
 	}
