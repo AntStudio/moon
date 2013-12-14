@@ -32,9 +32,6 @@ public class JsonTest {
 	
 	@Test
 	public void test() throws Exception{
-		  this.mockMvc.perform(get("/accounts/1").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
-          .andExpect(status().isOk())
-          .andExpect(content().contentType("application/json"))
-          .andExpect(jsonPath("$.name").value("Lee"));
+		System.out.println(mockMvc.perform(get("/permission/getPermissionData?pageIndex=1&pageSize=10")));
 	}
 }
