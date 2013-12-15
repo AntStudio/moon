@@ -23,8 +23,11 @@
 	      3.2及之后               相当于注册了RequestMappingHandlerMapping 和 RequestMappingHandlerAdapter两个bean
 	-->
 	
+	<!-- 开启rest 注解 -->
+	<bean class="org.antstudio.moon.rest.handler.RestAnnotationHandler"/>	
+	
 	<bean class="org.antstudio.base.init.TableCreator"/>
-	<bean class="org.antstudio.rbac.domain.init.Initializer"/>
+	<!-- <bean class="org.antstudio.rbac.domain.init.Initializer"/> -->
 	<bean class="org.antstudio.rbac.domain.init.DomainAnnotationScanner"/>
 	
 	 <bean id="viewResolver"
@@ -58,10 +61,8 @@
 	  </list>
 	  </property>
 	</bean> 
-	
 <context:component-scan base-package="com.reeham" />
 <context:component-scan base-package="org.antstudio" use-default-filters="true" >
 <context:include-filter type="custom" expression="org.antstudio.support.spring.DomainTypeFilter"/>
 </context:component-scan>
-
 </beans>

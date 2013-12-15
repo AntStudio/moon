@@ -1,6 +1,9 @@
-package org.antstudio.moon.test.json;
+package org.antstudio.moon.test.rest;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,16 +15,11 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-/**
- * @author Gavin
- * @date 2013-12-15 下午1:58:49
- */
-
 
 @RunWith(SpringJUnit4ClassRunner.class)  
 @WebAppConfiguration  
 @ContextConfiguration(locations = { "file:src/main/webapp/WEB-INF/spring-servlet.xml","file:src/main/webapp/WEB-INF/applicationContext.xml" })  
-public class JsonTest {
+public class RestTest {
 
 	@Autowired  
 	private WebApplicationContext wac;
@@ -34,7 +32,24 @@ public class JsonTest {
 	
 	
 	@Test
-	public void test() throws Exception{
-		System.out.println(mockMvc.perform(get("/test")).andReturn().getResponse().getContentAsString());
+	public void getTest() throws Exception{
+		System.out.println(mockMvc.perform(get("/getTest")).andReturn().getResponse().getContentAsString());
+	}
+	
+	@Test
+	public void postTest() throws Exception{
+		System.out.println(mockMvc.perform(post("/postTest")).andReturn().getResponse().getContentAsString());
+	}
+	
+	
+	@Test
+	public void putTest() throws Exception{
+		System.out.println(mockMvc.perform(put("/putTest")).andReturn().getResponse().getContentAsString());
+	}
+	
+	@Test
+	public void deleteTest() throws Exception{
+		System.out.println(mockMvc.perform(delete("/deleteTest")).andReturn().getResponse().getContentAsString());
 	}
 }
+	
