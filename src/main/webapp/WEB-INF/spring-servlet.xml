@@ -27,7 +27,7 @@
 	<bean class="org.antstudio.moon.rest.handler.RestAnnotationHandler"/>	
 	
 	<bean class="org.antstudio.base.init.TableCreator"/>
-	<!-- <bean class="org.antstudio.rbac.domain.init.Initializer"/> -->
+	<bean class="org.antstudio.rbac.domain.init.Initializer"/> 
 	<bean class="org.antstudio.rbac.domain.init.DomainAnnotationScanner"/>
 	
 	 <bean id="viewResolver"
