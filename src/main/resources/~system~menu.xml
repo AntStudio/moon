@@ -4,4 +4,5 @@
 	<menu code="210000" name="文档">
 		<menu  code="210001" name="API文档" url="/doc/index.html"/>
 	</menu>
+	<menu code="pmanage" name="个人管理"></menu>
 </menus>

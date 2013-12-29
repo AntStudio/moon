@@ -120,11 +120,15 @@ http://www.springframework.org/schema/cache http://www.springframework.org/schem
         <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
     </bean>
     
-        <bean id="tableCreatorRepository" class="org.mybatis.spring.mapper.MapperFactoryBean">
+    <bean id="tableCreatorRepository" class="org.mybatis.spring.mapper.MapperFactoryBean">
         <property name="mapperInterface" value="org.antstudio.base.init.repository.TableCreatorRepository"></property>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
     </bean>
     
+     <bean id="registrationRepository" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="org.antstudio.blog.repository.RegistrationRepository"></property>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
     
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="proxoolDataSource"/>
