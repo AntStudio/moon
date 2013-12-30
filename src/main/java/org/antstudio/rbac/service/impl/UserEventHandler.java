@@ -2,6 +2,7 @@ package org.antstudio.rbac.service.impl;
 
 import javax.annotation.Resource;
 
+import org.antstudio.base.domain.eventhandler.BaseEventHandler;
 import org.antstudio.rbac.domain.User;
 import org.antstudio.rbac.repository.UserRepository;
 import org.antstudio.rbac.service.UserService;
@@ -16,7 +17,7 @@ import com.reeham.component.ddd.annotation.OnEvent;
  * @date 2012-11-29
  */
 @Component
-public class UserEventHandler {
+public class UserEventHandler extends BaseEventHandler<User>{
 
 	@Resource
 	private UserRepository userRepository;
@@ -34,16 +35,6 @@ public class UserEventHandler {
 		return userService.getModel(uid);
 	}
 	
-	@OnEvent("addUser")
-	public void addUser(User user){
-		userRepository.addUser(user);
-	}
-	
-	@OnEvent("updateUser")
-	public void updateUser(User user){
-		userRepository.updateUser(user);
-	}
-	
 	@OnEvent("deleteUser")
 	public void deleteUser(Long[] ids){
 		userRepository.deleteUser(ids);
@@ -53,4 +44,21 @@ public class UserEventHandler {
 	public void sendLogicDeleteMessage(Long[] ids){
 		userRepository.logicDeleteUser(ids);
 	}
+
+    @Override
+    public void save(User user) {
+        userRepository.addUser(user);
+    }
+
+    @Override
+    public void delete(User user) {
+        
+    }
+
+    @Override
+    public void update(User user) {
+        userRepository.updateUser(user);
+    }
+
+   
 }

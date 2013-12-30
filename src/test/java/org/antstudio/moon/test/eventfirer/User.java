@@ -1,10 +1,7 @@
 package org.antstudio.moon.test.eventfirer;
 
-import javax.annotation.Resource;
-
 import com.reeham.component.ddd.annotation.Model;
 import com.reeham.component.ddd.message.DomainMessage;
-import com.reeham.component.ddd.message.EventMessageFirer;
 
 /**
  * @author Gavin
@@ -12,12 +9,9 @@ import com.reeham.component.ddd.message.EventMessageFirer;
  */
 @Model
 public class User extends BaseDomain{
-
-    @Resource
-    public EventMessageFirer eventMessageFirer;
-    
+  
     public void test(){
         eventMessageFirer.fireDisruptorEvent("usersave", new DomainMessage("测试而已"));
     }
-    
+
 }

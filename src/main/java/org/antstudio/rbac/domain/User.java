@@ -98,12 +98,6 @@ public class User extends BaseDomain{
 	}
 	
 	
- public void addUser(){
-	 userEvent.addUser(this);
- }
-	
-	
-	
 	/**
 	 * @return the userName
 	 */
@@ -255,12 +249,7 @@ public class User extends BaseDomain{
 	public void setCreateBy(Long createBy) {
 		this.createBy = createBy;
 	}
-
-
-
-
-
-
+	
 	public Map<String,Object> toMap(){
 		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", getId());
@@ -288,8 +277,9 @@ public class User extends BaseDomain{
 	
 	
 	public void updateUser(){
-		if(!isSystemUser())
-		userEvent.update(this);
+		if(!isSystemUser()){
+		    update();
+		}
 	}
 	
 	public boolean isSystemUser(){

@@ -15,6 +15,7 @@ import org.antstudio.rbac.service.RoleService;
 import org.antstudio.utils.Constants;
 
 import com.reeham.component.ddd.annotation.Model;
+import com.reeham.component.ddd.message.DomainMessage;
 
 /**
  * the domain for role
@@ -152,12 +153,12 @@ public class Role extends BaseDomain{
 		this.parentId = parentId;
 	}
 	
-	public void save(){
-		roleEvent.save(this);
+	public DomainMessage save(){
+		return roleEvent.save(this);
 	}
 	
-	public void update(){
-		roleEvent.update(this);
+	public DomainMessage update(){
+		return roleEvent.update(this);
 	}
 	
 	/**

@@ -13,7 +13,7 @@ import com.reeham.component.ddd.message.DomainMessage;
  * @date 2012-11-29
  */
 @Introduce("message")
-public class UserEvent {
+public class UserEvent{
 
 	@Send("getUser")
 	public DomainMessage getUser(Long id){
@@ -25,13 +25,4 @@ public class UserEvent {
 		return new DomainMessage(user.getId());
 	}
 	
-	@Send("addUser")
-	public DomainMessage addUser(User user){
-		return new DomainMessage(user);
-	}
-	
-	@Send("updateUser")
-	public DomainMessage update(User user){
-		return new DomainMessage(user);
-	}
 }

@@ -2,11 +2,20 @@ package org.antstudio.base.domain;
 
 import java.io.Serializable;
 
+import javax.annotation.Resource;
+
+import org.antstudio.utils.Strings;
+
+import com.reeham.component.ddd.message.DomainMessage;
+import com.reeham.component.ddd.message.EventMessageFirer;
+
 /**
  * 域模型的基本对象,包含了一些公共基本属性,如:
  * <pre>id</pre>
  * <pre>deleteFlag(删除标志,用于逻辑删除)</pre>
  * <pre>domainNo(域编号,可用于处理多个域的数据)</pre>
+ * 也包含了领域的公共方法，如：
+ * <pre>save,update,delete</pre>
  * 一般的域模型都会继承于 {@link BaseDomain}
  * @author Gavin
  * @version 1.0
@@ -14,6 +23,8 @@ import java.io.Serializable;
  */
 public class BaseDomain implements Serializable{
 
+    @Resource
+    private EventMessageFirer eventMessageFirer;
 	/**
 	 * 版本序列标示
 	 */
@@ -82,4 +93,50 @@ public class BaseDomain implements Serializable{
 		this.domainNo = domainNo;
 	}
 	
+	/******************** 领域方法  ********************/
+	
+	/**
+	 * 持久化领域,如果需要等待结果可使用 {@link DomainMessage#getResultEvent()}
+	 * @return
+	 */
+	public DomainMessage save(){
+	    DomainMessage dm = new DomainMessage(this);
+	    eventMessageFirer.fireDisruptorEvent(Strings.lowerFirst(this.getClass().getSimpleName())+"/save",dm);
+	    return dm;
+	}
+	
+	/**
+     * 更新领域持久化数据,如果需要等待结果可使用 {@link DomainMessage#getResultEvent()}
+     * @return
+     */
+	public DomainMessage update(){
+	    DomainMessage dm = new DomainMessage(this);
+        eventMessageFirer.fireDisruptorEvent(Strings.lowerFirst(this.getClass().getSimpleName())+"/update",dm);
+        return dm;
+	}
+   
+	/**
+     * 删除领域对应的持久化数据(物理删除)
+     * @return
+     */
+    public DomainMessage delete(){
+        DomainMessage dm = new DomainMessage(this);
+        eventMessageFirer.fireDisruptorEvent(Strings.lowerFirst(this.getClass().getSimpleName())+"/delete",dm);
+        return dm;
+    }
+	
+    /**
+     * 删除领域对应的持久化数据,根据传入的参数进行逻辑删除或者物理删除
+     * @return
+     */
+    public DomainMessage delete(boolean logicDelete){
+        if(logicDelete){
+            this.setDeleteFlag(true);
+            return update();
+        }else{
+            return delete();
+        }
+    }
+    
+	/******************** /领域方法  ********************/
 }
