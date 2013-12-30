@@ -30,7 +30,7 @@ public interface UserRepository extends BaseRepository<User>{
 	
 	public Long getUsersByCreator_count(Map<String,Object> paramsMap);
 	
-	public void addUser(@Param("user") User user);
+	public Long addUser(@Param("user") User user);
 	
 	public void updateUser(@Param("user") User user);
 	

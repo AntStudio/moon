@@ -38,7 +38,7 @@
     </select>
     
     
-    <insert id="addUser" parameterType="org.antstudio.rbac.domain.User">
+    <insert id="addUser" parameterType="org.antstudio.rbac.domain.User" useGeneratedKeys="true" keyProperty="user.id"  keyColumn="id">
     
     insert tab_user(user_name,password,real_name,create_by,delete_flag,create_time) values(
     #{user.userName},#{user.password},#{user.realName},#{user.createBy},false,now()  )

@@ -28,7 +28,8 @@ public abstract class BaseEventHandler<T> implements BeanNameAware{
     private String beanName;
     protected Logger logger  = Logger.getLogger(getClass());
     
-    private Class<T> getTClass(){
+    @SuppressWarnings("unchecked")
+	private Class<T> getTClass(){
       return (Class<T>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
     
@@ -72,7 +73,7 @@ public abstract class BaseEventHandler<T> implements BeanNameAware{
     
     /******************** 子类必须复写的方法 ********************/
     
-    public abstract void save(T domain);
+    public abstract T save(T domain);
     public abstract void delete(T domain);
     public abstract void update(T domain);
     

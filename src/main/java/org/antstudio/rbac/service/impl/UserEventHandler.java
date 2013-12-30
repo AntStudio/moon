@@ -46,8 +46,9 @@ public class UserEventHandler extends BaseEventHandler<User>{
 	}
 
     @Override
-    public void save(User user) {
-        userRepository.addUser(user);
+    public User save(User user) {
+    	userRepository.addUser(user);
+        return user;
     }
 
     @Override
