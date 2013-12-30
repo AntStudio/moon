@@ -1,2 +1,0 @@
-测试时需要将org.antstudio.rbac.domain.init.Initializer 注册取消
-或者等待event处理结果，如果使用异步事件模型，逻辑会马上执行完毕并且关闭容器，从而事件无法执行
