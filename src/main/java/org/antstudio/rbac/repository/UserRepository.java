@@ -7,9 +7,7 @@ import org.antstudio.rbac.domain.User;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-
 /**
- * the repository for user domain
  * @author Gavin
  * @version 1.0
  * @date 2012-11-29
@@ -18,17 +16,22 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends BaseRepository<User>{
 
 	/**
-	 * assign role to user
+	 * 给用户分配角色
 	 * @param rid
 	 * @param uid
 	 */
 	public void assign(@Param("rid")Long rid,@Param("uid")Long uid);
 	
+	/**
+	 * 登录验证
+	 * @param user
+	 * @return
+	 */
 	public Long login(@Param("user")User user);
 	
 	public List<Long> getUsersByCreator(Map<String,Object> paramsMap);
 	
-	public Long getUsersByCreator_count(Map<String,Object> paramsMap);
+	public Long getUsersByCreatorCount(Map<String,Object> paramsMap);
 	
 	public Long addUser(@Param("user") User user);
 	

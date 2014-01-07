@@ -29,7 +29,7 @@ public class PermissionAction {
 	@Resource
 	private PermissionService permissionService;
 	@RequestMapping("")
-	@MenuMapping(name="权限管理",url="/permission",code="100001",parentCode="100000")
+	@MenuMapping(name="权限管理",url="/permission",code="platform_3",parentCode="platform")
 	public ModelAndView showPermissionManagePage(){
 		return new ModelAndView("pages/rbac/permission");
 	}

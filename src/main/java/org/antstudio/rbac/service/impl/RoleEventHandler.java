@@ -37,10 +37,6 @@ public class RoleEventHandler {
 		Long uid = ((User)params[1]).getId();
 		userRepository.assign(rid, uid);
 	}
-	@OnEvent("getRole")
-	public Role getRole(Long rid){
-		return roleService.getModel(rid);
-	}
 	
 	@OnEvent("getSubRoles")
 	public List<Role> getSubRoles(Long rid){

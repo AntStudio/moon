@@ -34,5 +34,4 @@ public interface RoleService extends BaseService<Role>,ModelLoader{
 	 */
 	public List<Role> getRoleByPermission(Long pid);
 	
-	
 }

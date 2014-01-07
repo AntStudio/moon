@@ -193,12 +193,12 @@ public class Role extends BaseDomain{
 		StringBuilder path = new StringBuilder();
 		//StringBuilder path = new StringBuilder();
 		List<Long> pathList = new ArrayList<Long>();
-		Role temp = roleService.getModel(getParentId());
+		Role temp = roleService.get(getParentId());
 		pathList.add(getId());
 		while(temp!=null){
 			//path.append(","+temp.getId());
 			pathList.add(temp.getId());
-			temp = roleService.getModel(temp.getParentId());
+			temp = roleService.get(temp.getParentId());
 		}
 		for(int i = pathList.size()-1;i>=0;i--){
 			path.append(","+pathList.get(i));

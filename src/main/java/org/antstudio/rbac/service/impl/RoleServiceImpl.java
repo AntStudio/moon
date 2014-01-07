@@ -12,6 +12,7 @@ import org.antstudio.rbac.service.RoleService;
 import org.antstudio.utils.ClassPropertiesUtil;
 import org.springframework.stereotype.Service;
 
+import com.reeham.component.ddd.annotation.OnEvent;
 import com.reeham.component.ddd.model.ModelContainer;
 import com.reeham.component.ddd.model.ModelUtils;
 
@@ -25,20 +26,21 @@ public class RoleServiceImpl implements RoleService {
 	private RoleRepository roleRepository;
 
 	@Override
-	public Role getModel(Long id) {
+	@OnEvent("role/get")
+	public Role get(Long id) {
 		if(id==null||id<0)
 			return null;
 		return (Role) modelContainer.getModel(ModelUtils.asModelKey(Role.class, id),this);
 	}
 
 	@Override
-	public Role get(Long id) {
+	public Role load(Long id) {
 		return roleRepository.get(id);
 	}
 
 	@Override
 	public Object loadModel(Object identifier) {
-		return get((Long)identifier);
+		return load((Long)identifier);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -86,7 +88,7 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public boolean update(Role role) {
-		Role oldRole = getModel(role.getId());
+		Role oldRole = get(role.getId());
 		oldRole = (Role) ClassPropertiesUtil.copyProperties(role,oldRole,true,"roleName");
 		oldRole.update();
 		//test(oldUser);

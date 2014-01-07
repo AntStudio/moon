@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.antstudio.base.action.BaseAction;
 import org.antstudio.log.domain.Log;
 import org.antstudio.log.service.LogService;
 import org.antstudio.rbac.domain.Role;
@@ -23,16 +24,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-
 /**
- * 
  * @author Gavin
  * @version 1.0
  * @date 2012-12-2
  */
 @Controller
 @RequestMapping("/user")
-public class UserAction {
+public class UserAction extends BaseAction{
 
 	@Resource 
 	private UserService userService;
@@ -40,7 +39,7 @@ public class UserAction {
 	@Resource
 	private LogService logService;
 	/**
-	 * show the login page
+	 * 显示登录页面
 	 * @return
 	 */
 	@RequestMapping(value = "/login")
@@ -49,41 +48,39 @@ public class UserAction {
 	}
 	 
 	/**
-	 * to do validate the user by password and userName
+	 * 登录验证
 	 * @param user
 	 * @param role
 	 * @return
 	 */
 	 @RequestMapping(value="/login/validate")
 	 @ResponseBody
-	 //@LogRecord(action="${method_return.result}登录系统")
 	 public Map<String,Object> userValidate(@FormParam(value="user")User user,HttpServletRequest request){
-		 if(user==null)
+		 if(user==null){
 			 return MessageUtils.getMapMessage(false);
+		 }
 		 String loginName = user.getUserName();
 		 String password = user.getPassword();
 		 user.setId(null);//设置id为null，此后用id是否为空判断是否成功登录
 		 user = userService.login(user);
 		 if(user==null||user.getId()==null){
-			 logService.log(new Log(loginName,-1L,"登录失败","{userName:"+loginName+",password:"+password+"}"));
+			logService.log(new Log(loginName,-1L,"登录失败","{userName:"+loginName+",password:"+password+"}"));
 			return MessageUtils.getMapMessage(false);
-		 }
-		 else{
+		 }else{
 			 request.getSession().setAttribute(User.CURRENT_USER_ID, user.getId());
 			 logService.log(new Log(user.getUserName(),user.getId(),"成功登录系统"));
-			return MessageUtils.getMapMessage(true);
+			 return MessageUtils.getMapMessage(true);
 		 }
 	 }
 	 
-	 @MenuMapping(url="/user",name="用户列表",code="100002",parentCode="100000")
+	 @MenuMapping(url="/user",name="用户列表",code="platform_1",parentCode="platform")
 	 @RequestMapping("")
 	 @PermissionMapping(code="000008",name="用户列表")
 	 public ModelAndView userList(HttpServletRequest request){
 		 return new ModelAndView("pages/rbac/userList");
 	 }
 	 
-	 
-	 @PermissionMapping(code="00000d",name="用户列表")
+	 @PermissionMapping(code="000001",name="用户列表")
 	 @RequestMapping("/getUsersData")
 	 @ResponseBody
 	 public Map<String,Object> getUsersData(HttpServletRequest request){
@@ -93,31 +90,30 @@ public class UserAction {
 		 return  userService.getUsersByCreatorForPager(paramsMap).toMap();
 	 }
 	 
-	 @RequestMapping("/addUser")
+	 @RequestMapping("/add")
 	 @ResponseBody
 	 public Map<String,Object> addUser(@FormParam(value="user")User user,HttpServletRequest request){
 		 user.setCreateBy(userService.getCurrentUserId(request));
-		 userService.addUser(user);
+		 enhance(user).save();
 		 return MessageUtils.getMapMessage(true);
 	 }
 	 
-	 @RequestMapping("/getUser")
+	 @RequestMapping("/get")
 	 @ResponseBody
 	 public Map<String,Object> getUser(@RequestParam("id")Long id){
 		 Map<String,Object> m = new HashMap<String,Object>();
-		 m.put("user", userService.getModel(id).toAllMap());
+		 m.put("user", userService.get(id).toAllMap());
 		 return m;
 	 }
 	 
-	 @RequestMapping("/updateUser")
+	 @RequestMapping("/update")
 	 @ResponseBody
 	 public Map<String,Object> updateUser(@FormParam("user") User user){
 		 userService.update(user);
 		 return MessageUtils.getMapMessage(true);
-		 
 	 }
 	 
-	 @RequestMapping("/logicDeleteUser")
+	 @RequestMapping("/logicDelete")
 	 @ResponseBody
 	 public Map<String,Object> logicDeleteUser(@RequestParam("ids")Long[] ids){
 		 userService.delete(ids, true);
@@ -134,9 +130,10 @@ public class UserAction {
 	 public Map<String,Object> getRolePath(@RequestParam("uid")Long uid){
 		Map<String,Object> path = MessageUtils.getMapMessage(true);
 		String rolePath = "";
-		Role role = userService.getModel(uid).getRole();
-		if(role!=null)
+		Role role = userService.get(uid).getRole();
+		if(role!=null){
 			rolePath = role.getRolePath();
+		}
 		path.put("path", rolePath);
 		 return path;
 	 }
@@ -153,11 +150,12 @@ public class UserAction {
 	 
 	 @LoginRequired
 	 @RequestMapping("/changePassword")
-	 @MenuMapping(code="100006",name="修改密码",url="/user/changePassword",parentCode="100000")
+	 @MenuMapping(code="platform_5",name="修改密码",url="/user/changePassword",parentCode="platform")
 	 public ModelAndView showChangePasswordPage(HttpServletRequest request){
 		 String info = null ;
-		 if(userService.isSysUser(userService.getCurrentUser(request)))
+		 if(userService.isSysUser(userService.getCurrentUser(request))){
 			 info = "对不起，系统管理员不能修改密码.";
+		 }
 		 return new ModelAndView("pages/rbac/changePassword","info",info);
 	 }
 	 
@@ -186,8 +184,9 @@ public class UserAction {
 	 @ResponseBody
 	 public Map<String,Object> changePassword(@RequestParam("password")String newPassword,HttpServletRequest request){
 		 User user = userService.getCurrentUser(request);
-		 if(user.isSystemUser())
+		 if(user.isSystemUser()){
 			 return MessageUtils.getMapMessage(false);
+		 }
 		 user.setPassword(newPassword);
 		 user.updateUser();
 		 return MessageUtils.getMapMessage(true);

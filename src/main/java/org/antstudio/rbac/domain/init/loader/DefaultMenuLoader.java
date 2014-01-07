@@ -27,7 +27,7 @@ public class DefaultMenuLoader implements MenuLoader{
 	@Override
 	public List<Menu> getMenus() {
 		List<Menu> menus = new ArrayList<Menu>();
-		menus.add(new Menu("平台管理","","100000",""));
+		menus.add(new Menu("平台管理","","platform",""));
 		log.info("[spring-rbac] get menu:[平台管理]");
 		try {
 			menus.addAll(new DomParseService().getMenus(DefaultMenuLoader.class.getResourceAsStream("/~system~menu.xml")));

@@ -39,7 +39,7 @@ public interface PermissionService extends BaseService<Permission>{
 	 * @param id
 	 * @return
 	 */
-	public Permission getModel(Long id);
+	public Permission get(Long id);
 	
 	/**
 	 * 获取所有的权限信息

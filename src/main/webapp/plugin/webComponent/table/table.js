@@ -18,20 +18,21 @@
 		formatData:'',
 		showSelectBox:false,//是否显示单选框或者复选框
 		multiSelect:true,//是否允许多选
-		showNumber:true//是否显示序号(从1开始计数)
+		showNumber:true,//是否显示序号(从1开始计数)
+		buttons:[]
 	};
 
-	var table  = {
+	var methods  = {
 		renderData:function(opts){
 			var $container = this;
-			var getData = table.getData.call(this,opts);
+			var getData = methods.getData.call(this,opts);
 			var dfd = $.Deferred();
 			getData.done(function(data){
 				opts.currentDataSize = data.length;
 				var dataHtml="<tbody>";
 				tableDataCache[$container.selector]=data;
 				$.each(data,function(index,columnData){
-					dataHtml+="<tr data-number=\""+(index)+"\">";//data-number表示当前行的序号,用户获取选择行使用,从0开始计数
+					dataHtml+="<tr data-number=\""+(index)+"\" data-id=\"tr_"+columnData[(opts.rowId||{})]+"\">";//data-number表示当前行的序号,用户获取选择行使用,从0开始计数
 					if(opts.showNumber){//处理序号列
 						dataHtml+="<td class=\"number\">"+(index+1)+"</td>";
 					}
@@ -78,25 +79,33 @@
 		},
 		renderTable:function(opts){
 			var $container = this;
-			var tableHtml = "<div class=\"datagrid\"><table class=\"table table-bordered table-hover\">";
-			tableHtml+=table.renderHeader(opts);
+			table.opts = opts;
+			table.selector = $container.selector;
+			
+			var $tableDiv = $(document.createElement("div"));
+			opts.table = $tableDiv;
+			$tableDiv.addClass("datagrid").append(methods.renderTitle(opts));;
+			var tableHtml = "";
+			tableHtml+="<table class=\"table table-bordered table-hover\">";
+			tableHtml+=methods.renderHeader(opts);
 			var renderTableDfd = $.Deferred();
-			table.renderData.call($container,opts).done(function(tbody){
+			methods.renderData.call($container,opts).done(function(tbody){
 				tableHtml+=tbody;
 				renderTableDfd.resolve();
 			});
-
+			
 			$.when(renderTableDfd).done(function(){
 				tableHtml+="</table>";
-				tableHtml+=table.renderPagination(opts);
-				tableHtml+=table.renderModal();
-				tableHtml+=table.renderSelection();
+				tableHtml+=methods.renderPagination(opts);
+				tableHtml+=methods.renderModal();
+				tableHtml+=methods.renderSelection();
 				tableHtml+="</div>";
-				$container.html(tableHtml);
-				tableCache[$container.selector] = $(tableHtml);
-				table.bindEvents.call($container,opts);
-				tableCache[$container.selector]=tableHtml;
+				$container.append($tableDiv.append($(tableHtml)));
+				tableCache[$container.selector] = table;
+				methods.bindEvents.call($container,opts);
 			});
+			table.methods = methods;
+			return table;
 		},
 		renderPagination:function(opts){
 			var startIndex = (opts.pageIndex-1)*opts.pageSize+1;
@@ -155,7 +164,7 @@
 			$refreshBtn.toggleClass("icon-spin").closest(".datagrid").find(".modal-backdrop").toggleClass("hide").toggleClass("in");
 
 			
-			table.getData.call(this,opts).done(function(data){
+			methods.getData.call(this,opts).done(function(data){
 				tableDataCache[$container.selector]=data;
 				var dataHtml="";
 				$.each(data,function(index,columnData){
@@ -176,15 +185,15 @@
 					dataHtml+="</tr>";
 				});
 				$("table tbody",$container).html(dataHtml);
-				table.bindEvents.call($container,opts);
+				methods.bindEventsForTr.call($container,opts);
 				$refreshBtn.toggleClass("icon-spin").closest(".datagrid").find(".modal-backdrop").toggleClass("hide").toggleClass("in");
 				dfd.resolve(dataHtml);
-				table.refreshPagination.call($container,opts);
+				methods.refreshPagination.call($container,opts);
 			});
 			return dfd.promise();
 		},
 		getSelect:function(opts){
-			var $container = $(this);
+			var $container = $(table.selector);
 			var selectedData = [],tableData = tableDataCache[$container.selector];
 			 $("tbody tr",$container).each(function(index,tr){
 				 var $tr=$(tr); 
@@ -197,14 +206,19 @@
 		getData:function(opts){
 			var dfd = $.Deferred();
 			if(opts.data){
-				opts.total = opts.data.total;
-				dfd.resolve(opts.formatData.call(this,opts.data));
+				opts.total = opts.data.total||opts.data.length;
+				if(typeof(opts.formatData)=="function"){
+					dfd.resolve(opts.formatData.call(this,opts.data));
+				}else{
+					dfd.resolve(opts.data);
+				}
+				
 			}else{
 				$.ajax({
 					url:opts.url,
 					type:'Get',
 					dataType:'json',
-					data:$.extend({},{pageIndex:opts.pageIndex,pageSize:opts.pageSize},opts.params)
+					data:$.extend({_random:Math.random()},{pageIndex:opts.pageIndex,pageSize:opts.pageSize},opts.params)
 				}).done(function(data){
 					opts.total = data.total;
 					if($.isFunction(opts.formatData)){
@@ -220,62 +234,27 @@
 		bindEvents:function(opts){
 			var $container = $(this);
 			/**
-			**tr行选中事件
-			**/
-			$("tbody tr",$container).bind("select",function(){
-			     if(opts.multiSelect){
-					$(this).addClass("selected").find(":checkbox").prop("checked",true);
-				}else{
-					$(this).addClass("selected").siblings().removeClass("selected");
-					$(this).find(":radio").prop("checked",true);
-				}
-			});
-
-			/**
-			**tr行取消选中事件
-			**/
-			$("tbody tr",$container).bind("unselect",function(){
-			     if(opts.multiSelect){
-					$(this).removeClass("selected").find(":checkbox").prop("checked",false);
-				}else{
-					$(this).removeClass("selected").siblings().removeClass("selected");
-					$(this).find(":radio").prop("checked",false);
-				}
-			});
-
-			/**
-			**tr点击事件，用于选择行或取消选择行
-			**/
-			$("tbody tr",$container).click(function(){
-				if($(this).hasClass("selected")){
-					$(this).trigger("unselect");
-				}else{
-					$(this).trigger("select");
-				}
-			});
- 
-			/**
 			**分页按钮点击事件
 			**/
 			$(".pagination-btn",$container).click(function(event){
 				switch($(this).attr("action")){
-					case "refresh": table.refresh.call($container,opts);break;
+					case "refresh": methods.refresh.call($container,opts);break;
 					case "first"  : opts.pageIndex = 1;
-								    table.refresh.call($container,opts);break;
+								    methods.refresh.call($container,opts);break;
 					case "prev"   : if(opts.pageIndex-1>0){
 										opts.pageIndex=opts.pageIndex-1;
 									}else{
 										opts.pageIndex = 1;
 									}
-					 				table.refresh.call($container,opts);break;
+					 				methods.refresh.call($container,opts);break;
 					case "next": 	if(opts.pageIndex+1>opts.pageCount){
 										opts.pageIndex=opts.pageCount;
 									}else{
 										opts.pageIndex = opts.pageIndex+1;
 									}
-									table.refresh.call($container,opts);break;
+									methods.refresh.call($container,opts);break;
 					case "last":    opts.pageIndex=opts.pageCount;
-						            table.refresh.call($container,opts);break;
+						            methods.refresh.call($container,opts);break;
 				}
 			});
 			
@@ -297,20 +276,21 @@
 
 				opts.params.sortName = $th.attr("data-name");
 				opts.params.sortType = $upIcon.hasClass("hide")?"desc":"asc";
-				table.refresh.call($container,opts);
+				methods.refresh.call($container,opts);
 			});
 			/**********************拖动事件处理***********************************/
 			var topY,bottomY;//拖动区域的上下边界
 			var mouseDown = false;
+			var _TitleWidth = 37;
 			if(opts.multiSelect){//允许多选时才绑定拖动事件
 				$($container).mousedown(function(event){
 					mouseDown = true;
 					var x = event.pageX,y=event.pageY;
 					 $(this).mousemove(function(e){
 						 if(mouseDown){
-							 $("#area").removeClass("hide");
+							$("#area").removeClass("hide");
 							var ex = e.pageX,ey=e.pageY;
-							topY = (ey>y?y:ey)- $container.find("table").offset().top;
+							topY = (ey>y?y:ey)- $container.find("table").offset().top+_TitleWidth;
 							bottomY = topY+Math.abs(ey-y);
 
 							$("#area").css({
@@ -357,7 +337,7 @@
 			}
 			function select(){
 			   $("tbody tr",$container).each(function(index,e){
-				if($(e).offset().top-$container.find("table").offset().top+$(e).height()>=topY&&$(e).offset().top-$container.find("table").offset().top<=bottomY){
+				if($(e).offset().top-$container.find("table").offset().top+$(e).height()+_TitleWidth>=topY&&$(e).offset().top-$container.find("table").offset().top+_TitleWidth<=bottomY){
 						$(e).trigger("select");
 					}else{
 						$(e).trigger("unselect");
@@ -365,19 +345,92 @@
 			   });
 		    }
 			/**********************  /拖动事件处理 ***********************************/
+			
+			methods.bindEventsForTr.call($container,opts);
+		},
+		bindEventsForTr:function(opts){//给tbody Tr绑定事件,这样在刷新的时候就可以只给刷新的数据修改事件
+			var $container = $(this);
+			/**
+			**tr行选中事件
+			**/
+			$("tbody tr",$container).bind("select",function(){
+			     if(opts.multiSelect){
+					$(this).addClass("selected").find(":checkbox").prop("checked",true);
+				}else{
+					$(this).addClass("selected").siblings().removeClass("selected");
+					$(this).find(":radio").prop("checked",true);
+				}
+			});
+
+			/**
+			**tr行取消选中事件
+			**/
+			$("tbody tr",$container).bind("unselect",function(){
+			     if(opts.multiSelect){
+					$(this).removeClass("selected").find(":checkbox").prop("checked",false);
+				}else{
+					$(this).removeClass("selected").siblings().removeClass("selected");
+					$(this).find(":radio").prop("checked",false);
+				}
+			});
+
+			/**
+			**tr点击事件，用于选择行或取消选择行
+			**/
+			$("tbody tr",$container).click(function(){
+				if($(this).hasClass("selected")){
+					$(this).trigger("unselect");
+				}else{
+					$(this).trigger("select");
+				}
+			});
+ 
+		},
+		renderTitle:function(opts){
+			var $div = $(document.createElement("div"));
+			var $span = $(document.createElement("span"));
+			$span.html(opts.title||'');
+			$div.addClass("table-title").append($span).append(methods.renderButtonGroup(opts));
+			return $div;
+		},
+		renderButtonGroup:function(opts){
+			var $btnDiv = $(document.createElement("div"));
+			$btnDiv.addClass("button-group");
+			$.each(opts.buttons,function(index,button){
+				var $btn = $(document.createElement("button"));
+				$btn.addClass("btn btn-small btn-link").html(button.text);
+				$btn.bind("click",function(){
+					button.click.call(table,button);
+				});
+				$btnDiv.append($btn);
+			});
+			return $btnDiv;
 		}
 	};
 
+	/**
+	 * 返回给外部调用
+	 */
+	var table = {
+			refresh:function(){
+				methods.refresh.call($(table.selector),table.opts);
+			},
+			getSelect:function(){
+				return methods.getSelect.call(table.selector);
+			}
+	};
 	var tableCache = {};//用于存储表对象
 	var tableDataCache = {};//用于存储表对象数据
 	$.fn.table=function(opts){
 		if(typeof(opts)=="string"){
 			if(opts=="getSelect"){
-				return table.getSelect.call($(this));
+				return methods.getSelect.call($(this));
+			}else if(opts=="refresh"){
+				methods.refresh.call($(this),tableCache[$(this).selector].opts);
 			}
 		}else{
 			opts=$.extend({},defaults,opts);
-			table.renderTable.call($(this),opts);
+			return methods.renderTable.call($(this),opts);
 		}
 	};
 })();

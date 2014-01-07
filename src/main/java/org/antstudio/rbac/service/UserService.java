@@ -19,18 +19,17 @@ import com.reeham.component.ddd.model.ModelLoader;
 public interface UserService extends BaseService<User>,ModelLoader{
 
 	/**
-	 * 登录验证，登录成功返回该user,
-	 * 登录失败返回传入的user参数，应只包含userName和password，其中id应为null
+	 * login validate
 	 * @param user
-	 * @return
+	 * @return when validate failed,return the full user info; 
+	 * 		   when validate successfully,return the user info what pass in,
+	 *         sure the user id is <code>null</code>
 	 */
 	public User login(User user);
 	
 	public User getCurrentUser(HttpServletRequest request);
 	
 	public Long getCurrentUserId(HttpServletRequest request);
-	
-	//public List<User> getUsers
 	
 	/**
 	 * check if the user is system admin user
@@ -44,9 +43,6 @@ public interface UserService extends BaseService<User>,ModelLoader{
 	public List<Map<String,Object>> getUsersByCreatorForMap(Map<String,Object> paramsMap);
 	
 	public Pager getUsersByCreatorForPager(Map<String,Object> paramsMap);
-	
-	public void addUser(User user);
-	
 	
 	public boolean update(User user);
 	

@@ -12,7 +12,7 @@ public interface RoleRepository extends BaseRepository<Role>{
 
 	public List<Long> getSubRoles(@Param("rid") Long rid,@Param("deleteFlag")boolean deleteFlag);
 	
-	public void save(@Param("role")Role role);
+	public Long save(@Param("role")Role role);
 	
 	public void delete(@Param("ids") Long[] ids);
 	

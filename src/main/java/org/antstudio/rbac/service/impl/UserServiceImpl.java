@@ -16,8 +16,7 @@ import org.antstudio.utils.Constants;
 import org.springframework.stereotype.Service;
 
 import com.reeham.component.ddd.annotation.Introduce;
-import com.reeham.component.ddd.annotation.Send;
-import com.reeham.component.ddd.message.DomainMessage;
+import com.reeham.component.ddd.annotation.OnEvent;
 import com.reeham.component.ddd.model.ModelContainer;
 import com.reeham.component.ddd.model.ModelUtils;
 
@@ -38,7 +37,8 @@ public class UserServiceImpl implements UserService {
     public ModelContainer  modelContainer;
 
     @Override
-    public User getModel(Long id) {
+    @OnEvent("user/get")
+    public User get(Long id) {
         if (Constants.SYSTEM_USERID.equals(id)) {
             return (User) modelContainer.getModel(ModelUtils.asModelKey(User.class, id), this);
         }
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User get(Long id) {
+    public User load(Long id) {
         if (Constants.SYSTEM_USERID.equals(id)) {
             return getSysUser();
         }
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Object loadModel(Object identifier) {
-        return get((Long) identifier);
+        return load((Long) identifier);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
         if (isSysUser(user)) {// to validate the system user
             return validateSysUser(user);
         }
-        Object loginUser = getModel(userRepository.login(user));
+        Object loginUser = get(userRepository.login(user));
         if (loginUser != null)
             return (User) loginUser;
         else
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getCurrentUser(HttpServletRequest request) {
-        return getModel(getCurrentUserId(request));
+        return get(getCurrentUserId(request));
     }
 
     @Override
@@ -98,12 +98,10 @@ public class UserServiceImpl implements UserService {
 
     private User validateSysUser(User user) {
         if (Constants.SYSTEM_PASSWORD.equals(user.getPassword())) {
-
             return getSysUser();
         } else {
             return null;
         }
-
     }
 
     private User getSysUser() {
@@ -134,22 +132,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public Pager getUsersByCreatorForPager(Map<String, Object> paramsMap) {
 
-        return new Pager(userRepository.getUsersByCreator_count(paramsMap), getUsersByCreatorForMap(paramsMap), paramsMap);
-    }
-
-    @Override
-    public void addUser(User user) {
-        modelContainer.enhanceModel(user).save();
+        return new Pager(userRepository.getUsersByCreatorCount(paramsMap), getUsersByCreatorForMap(paramsMap), paramsMap);
     }
 
     @Override
     public boolean update(User user) {
         if (user == null || user.getId() == null)
             return false;
-        User oldUser = getModel(user.getId());
+        User oldUser = get(user.getId());
         oldUser = (User) ClassPropertiesUtil.copyProperties(user, oldUser, true, "userName", "password", "realName");
         oldUser.updateUser();
-        // test(oldUser);
         return true;
 
     }
@@ -162,26 +154,15 @@ public class UserServiceImpl implements UserService {
             for (Long id : ids) {
                 user = (User) modelContainer.getModel(ModelUtils.asModelKey(User.class, id));
                 if (user != null) {
-                    user.setDeleteFlag(true);// 更新缓存
+                    user.setDeleteFlag(true);// update the cache
                 }
             }
-            userRepository.logicDeleteUser(ids);// sendLogicDeleteMessage(ids);
+            userRepository.logicDeleteUser(ids);
         } else {
             for (Long id : ids) {
-                modelContainer.removeModel(ModelUtils.asModelKey(User.class, id));// 将物理删除的对象移除缓存
+                modelContainer.removeModel(ModelUtils.asModelKey(User.class, id));// remove the domain from cache
             }
-            userRepository.deleteUser(ids);// sendDeleteMessage(ids);
+            userRepository.deleteUser(ids);
         }
     }
-
-    @Send("deleteUser")
-    public DomainMessage sendDeleteMessage(Long[] ids) {
-        return new DomainMessage(ids);
-    }
-
-    @Send("logicDeleteUser")
-    public DomainMessage sendLogicDeleteMessage(Long[] ids) {
-        return new DomainMessage(ids);
-    }
-
 }

@@ -1,68 +1,26 @@
 package org.antstudio.rbac.service;
 
-
 /**
- * the interface for basic service
+ * 服务类通用接口
  * @author Gavin
  * @version 1.0
- * @date 2012-11-27  
+ * @Date 2012-11-27  
  */
 public interface BaseService<T> {
 
-  
 	/**
-	 * persistence a object into database
-	 * @param o
-	 *//*
-	public void save(T o);
-	
-	*//**
-	 * update the object
-	 * @param o
-	 * @return
-	 *//*
-	public Integer update(T o);
-	
-	*//**
-	 * delete logically all the object across the id array 
-	 * @see {@code com.greejoy.rbac.service.BaseService.delete(Long ids[],boolean logicDel)} 
-	 * @param ids
-	 *//*
-	public void delete(Long[] ids);
-	
-	*//**
-	 * delete logically the object across the id
-	 * @param id
-	 * @see {@code com.greejoy.rbac.service.BaseService.delete(Long id,boolean logicDel)} 
-	 *//*
-	public void delete(Long id);
-	
-	*//**
-	 * if logicDel is <code>true</code>,just update the deleteFlag value to true,
-	 * else delete all the records by the id array
-	 * @param ids
-	 * @param logicDel
-	 * @see {@code com.greejoy.rbac.service.BaseService.delete(Long[] ids)} 
-	 *//*
-	public void delete(Long ids[],boolean logicDel);
-	
-	*//**
-	 * if logicDel is <code>true</code>,just update the deleteFlag value to true,
-	 * else delete the record by the id 
-	 * @param id
-	 * @param logicDel
-     * @see {@code com.greejoy.rbac.service.BaseService.delete(Long id)} 
-	 *//*
-	public void delete(Long id,boolean logicDel);
-	*/
-	
-	
-	/**
-	 * get the domain from model container cache,if not exist,get from database.
+	 * 根据id获取对应的领域对象，如果该领域对象不存在于缓存中，那么应该调用{@link #load(Long)}进行领域的加载
 	 * @param id
 	 * @return
 	 */
-	public T getModel(Long id);
-	
 	public T get(Long id);
+	
+	/**
+	 * 从数据库或者其它地方加载领域
+	 * @param id
+	 * @return
+	 */
+	public T load(Long id);
+	
+	
 }

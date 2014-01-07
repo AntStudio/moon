@@ -29,7 +29,7 @@ public class MenuEventHandler {
 	@OnEvent("getParentMenu")
 	public Menu getParent(Menu menu){
 		if(menu.getParentId()!=null)
-		return menuService.get(menu.getParentId());
+		return menuService.load(menu.getParentId());
 		else
 			if(menu.getParentCode()!=""){
 				return menuService.getMenuByCode(menu.getParentCode());

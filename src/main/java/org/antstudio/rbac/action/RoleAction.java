@@ -32,7 +32,7 @@ public class RoleAction {
 	@Resource
 	private UserService userService;
 
-	@MenuMapping(url="/role",name="角色管理",code="100004",parentCode="100000")
+	@MenuMapping(url="/role",name="角色管理",code="platform_4",parentCode="platform")
 	@RequestMapping("")
 	public String showRole(){
 		
@@ -75,7 +75,7 @@ public class RoleAction {
 	 @RequestMapping("/assignRoleToUser")
 	 @ResponseBody
 	 public Map<String,Object> assignRoleToUser(@RequestParam("rid")Long rid,@RequestParam("uid")Long uid){
-		 roleService.getModel(rid).assign(userService.getModel(uid));
+		 roleService.get(rid).assign(userService.get(uid));
 		 return MessageUtils.getMapMessage(true);
 	 }
 	 

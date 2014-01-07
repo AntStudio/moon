@@ -54,7 +54,7 @@ public class RbacInterceptor implements MethodInterceptor {
 		}
 		
 		if(currentUserId!=null){
-			currentUser = userService.getModel(currentUserId);
+			currentUser = userService.get(currentUserId);
 			currentRole = currentUser.getRole();
 		}
 			// 权限拦截

@@ -98,7 +98,7 @@ public class MenuAction {
 	 * 跳转菜单管理界面
 	 * @return
 	 */
-	@MenuMapping(url="/menu",name="菜单管理",code="100003",parentCode="100000")
+	@MenuMapping(url="/menu",name="菜单管理",code="platform_2",parentCode="platform")
 	@RequestMapping("")
 	public ModelAndView showMenuPage(){
 		return new ModelAndView("/pages/rbac/menu");
@@ -120,7 +120,7 @@ public class MenuAction {
 	@ResponseBody
 	public Map<String,Object> updateMenu(@FormParam("menu") Menu menu){
 		if(menu.getId()!=null){
-			Menu oldMenu = menuService.getModel(menu.getId());
+			Menu oldMenu = menuService.get(menu.getId());
 			menu = (Menu) ClassPropertiesUtil.copyProperties(menu, oldMenu, true, "menuName","url");
 			menuService.update(menu);
 		}

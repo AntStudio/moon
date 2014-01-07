@@ -44,7 +44,7 @@ public class PermissionServiceImpl implements PermissionService,ModelLoader{
 
 	@Override
 	public Object loadModel(Object identifier) {
-		return get((Long) identifier);
+		return load((Long) identifier);
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class PermissionServiceImpl implements PermissionService,ModelLoader{
 	}
 
 	@Override
-	public Permission getModel(Long id) {
+	public Permission get(Long id) {
 		return (Permission) modelContainer.getModel(ModelUtils.asModelKey(Permission.class, id), this);
 	}
 
@@ -129,7 +129,7 @@ public class PermissionServiceImpl implements PermissionService,ModelLoader{
 	}
 
 	@Override
-	public Permission get(Long id) {
+	public Permission load(Long id) {
 		return permissionRepository.get(id);
 	}
 	

@@ -15,7 +15,7 @@ import com.reeham.component.ddd.message.DomainMessage;
 @Introduce("message")
 public class UserEvent{
 
-	@Send("getUser")
+	@Send("user/get")
 	public DomainMessage getUser(Long id){
 		return new DomainMessage(id);
 	}
@@ -25,4 +25,8 @@ public class UserEvent{
 		return new DomainMessage(user.getId());
 	}
 	
+	@Send("role/get")
+	public DomainMessage getRole(User user){
+		return new DomainMessage(user.getRoleId());
+	}
 }

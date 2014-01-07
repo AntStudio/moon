@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.antstudio.base.domain.BaseDomain;
-import org.antstudio.rbac.domain.repository.RoleEvent;
 import org.antstudio.rbac.domain.repository.UserEvent;
 import org.antstudio.utils.Constants;
 
@@ -25,11 +24,6 @@ import com.reeham.component.ddd.annotation.Model;
 public class User extends BaseDomain{
 
 	private static final long serialVersionUID = -7660365552913856672L;
-
-
-	public User(){
-		
-	}
 	
 	/**
 	 * the Identifier for  user in current session 
@@ -83,20 +77,56 @@ public class User extends BaseDomain{
 	private String contact;
 	
 	@Resource
-	private RoleEvent roleEvent;
-	
-	@Resource
 	private UserEvent userEvent;
 	
-	
 	public Role getRole() {
-		if(Constants.SYSTEM_ROLEID.equals(roleId))
+		if(Constants.SYSTEM_ROLEID.equals(roleId)){
 			return new Role(roleId);
-		if(roleId==null||roleId<=0)
+		}
+		if(roleId==null||roleId<=0){
 			return null;
-		return (Role) roleEvent.getRole(this).getEventResult();
+		}
+		return (Role) userEvent.getRole(this).getEventResult();
 	}
 	
+	public Map<String,Object> toMap(){
+		Map<String,Object> m = new HashMap<String,Object>();
+		m.put("id", getId());
+		m.put("user_name", getUserName());
+		if(roleId==null||getRole()==null){
+			m.put("role_name", "还未分配角色");
+		}else{
+			m.put("role_name", getRole().getRoleName());
+		}
+		return m;
+		
+	}
+	
+	public Map<String,Object> toAllMap(){
+		Map<String,Object> m = new HashMap<String,Object>();
+		m.put("id", getId());
+		m.put("userName", getUserName());
+		if(roleId==null||getRole()==null){
+			m.put("roleName", "还未分配角色");
+		}else{
+			m.put("roleName", getRole().getRoleName());
+		}
+		m.put("password", password);
+		m.put("realName", realName);
+		return m;
+	}
+	
+	public void updateUser(){
+		if(!isSystemUser()){
+		    update();
+		}
+	}
+	
+	public boolean isSystemUser(){
+		return getId().equals(Constants.SYSTEM_USERID);
+	}
+	
+	/********************  setter/getter  ********************/
 	
 	/**
 	 * @return the userName
@@ -238,51 +268,11 @@ public class User extends BaseDomain{
 		return createBy;
 	}
 
-
-
-
-
-
 	/**
 	 * @param createBy the createBy to set
 	 */
 	public void setCreateBy(Long createBy) {
 		this.createBy = createBy;
 	}
-	
-	public Map<String,Object> toMap(){
-		Map<String,Object> m = new HashMap<String,Object>();
-		m.put("id", getId());
-		m.put("user_name", getUserName());
-		if(roleId==null||getRole()==null)
-			m.put("role_name", "还未分配角色");
-		else
-		m.put("role_name", getRole().getRoleName());
-		return m;
-		
-	}
-	
-	public Map<String,Object> toAllMap(){
-		Map<String,Object> m = new HashMap<String,Object>();
-		m.put("id", getId());
-		m.put("userName", getUserName());
-		if(roleId==null||getRole()==null)
-			m.put("roleName", "还未分配角色");
-		else
-		m.put("roleName", getRole().getRoleName());
-		m.put("password", password);
-		m.put("realName", realName);
-		return m;
-	}
-	
-	
-	public void updateUser(){
-		if(!isSystemUser()){
-		    update();
-		}
-	}
-	
-	public boolean isSystemUser(){
-		return getId().equals(Constants.SYSTEM_USERID);
-	}
+	/******************** /setter/getter  ********************/
 }

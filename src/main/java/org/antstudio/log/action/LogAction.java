@@ -33,7 +33,7 @@ public class LogAction {
 	 * @return
 	 */
 	@RequestMapping("")
-	@MenuMapping(code="100007",name="日志列表",parentCode="100000",url="/log")
+	@MenuMapping(code="platform_6",name="日志列表",parentCode="platform",url="/log")
 	public ModelAndView showLogPage(){
 		
 		return new ModelAndView("pages/log/log");

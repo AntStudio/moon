@@ -1,7 +1,7 @@
 package org.antstudio.rbac.repository;
 
 /**
- * the base repository for domain
+ * 通用仓储类
  * @author Gavin
  * @version 1.0
  * @date 2012-11-29
@@ -9,11 +9,16 @@ package org.antstudio.rbac.repository;
 public interface BaseRepository<T> {
 
 	/**
-	 * to get the domain from repository based on the id parameter
+	 * 根据id加载领域
 	 * @param id
 	 * @return
 	 */
 	public T get(Long id);
 	
+	public Long save(T domain);
+	
+	public Long update(T domain,String...columns);
+	
+	public Long delete(Long id);
 	
 }

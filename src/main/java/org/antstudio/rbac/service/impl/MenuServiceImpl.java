@@ -34,20 +34,20 @@ public class MenuServiceImpl implements MenuService {
 	}
 
 	@Override
-	public Menu get(Long id) {
+	public Menu load(Long id) {
 		
 		return menuRepository.get(id);
 	}
 
 	@Override
-	public Menu getModel(Long id) {
+	public Menu get(Long id) {
 		return (Menu) modelContainer.getModel(ModelUtils.asModelKey(Menu.class, id),this);
 	}
 
 	@Override
 	public Object loadModel(Object identifier) {
 		 
-		return get((Long)identifier);
+		return load((Long)identifier);
 	}
 
 	@Override
@@ -119,14 +119,14 @@ public class MenuServiceImpl implements MenuService {
 			if(menuIds[i]==-1)//前台根节点不处理
 				continue;
 			if(true==checkStatus[i]){
-				Menu menu = getModel(menuIds[i]);
+				Menu menu = get(menuIds[i]);
 				if(menu.getParentId()==null&&menu.getParentCode()!=null){
 					menu.setParentId(menu.getParent().getId());
 				}
 				addMenus.add(menu);
 			}
 			else{
-				removeMenus.add(getModel(menuIds[i]));
+				removeMenus.add(get(menuIds[i]));
 			}
 		}
 		if(addMenus.size()>0)
@@ -169,7 +169,7 @@ public class MenuServiceImpl implements MenuService {
 		Map<String,Menu> menusMap = new HashMap<String,Menu>();
 		Menu menu;
 		for(Long id:menuRepository.getAllMenus(true, false)){
-			menu = getModel(id);
+			menu = get(id);
 			menusMap.put(menu.getCode(), menu);
 		}
 		return menusMap;
@@ -188,6 +188,6 @@ public class MenuServiceImpl implements MenuService {
 		if(code==null)
 		return null;
 		else
-		return	this.getModel(menuRepository.getByCode(code));
+		return	this.get(menuRepository.getByCode(code));
 	}
 }

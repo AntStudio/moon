@@ -22,11 +22,6 @@ public class RoleEvent {
 		return new DomainMessage(params);
 	}
 	
-	@Send("getRole")
-	public DomainMessage getRole(User user){
-		return new DomainMessage(user.getRoleId());
-	}
-	
 	@Send("getSubRoles")
 	public DomainMessage getSubRoles(Role role){
 		return new DomainMessage(role);
