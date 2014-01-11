@@ -13,8 +13,10 @@ import org.springframework.stereotype.Repository;
  * @date 2012-11-29
  */
 @Repository
-public interface UserRepository extends BaseRepository<User>{
+public interface UserRepository{
 
+    public User get(Long id);
+    
 	/**
 	 * 给用户分配角色
 	 * @param rid

@@ -12,7 +12,7 @@ var dialogCache = {};
 		width:560
 	};
 
-	var dialog  = {
+	var methods  = {
 		renderDialog:function(opts){
 			var $contentHtml = this;
 			var selector = this.selector;
@@ -40,14 +40,14 @@ var dialogCache = {};
 				var $btn = $(document.createElement("button"));
 				$btn.addClass(btn.css).html(btn.text);
 				$btn.bind("click",function(){
-					btn.click.call($dialogDiv);
+					btn.click.call(dialog);
 				});
 				$btnGroup.append($btn);
 			});
 
 			$dialogDiv.append($dialogHeader).append($dialogContent).append($btnGroup);
 
-			dialog.bindEvents.call($dialogDiv,opts);
+			methods.bindEvents.call($dialogDiv,opts);
 			$dialogDiv.css({"width":opts.width,
 							 "margin-left":-opts.width/2});
 			dialogCache[selector] = $dialogDiv;
@@ -65,13 +65,24 @@ var dialogCache = {};
 		}
 	};
 
+	var dialog = {
+			renderDialog:function(){
+				methods.renderDialog.call($(this),dialog.opts);
+			},
+			close:function(){
+				dialogCache[dialog.selector].modal("hide");
+			}
+	};
 	$.fn.dialog=function(opts){
 		if(typeof(opts)=="string"){
 			if(opts=="close"){
+				dialog.close();
 				dialogCache[$(this).selector].modal("hide");
 			}
 		}else{
 			opts=$.extend({},defaults,opts);
+			dialog.opts = opts;
+			dialog.selector=$(this).selector;
 			dialog.renderDialog.call($(this),opts);
 		}
 	};

@@ -47,9 +47,6 @@ public interface MenuService extends BaseService<Menu>,ModelLoader{
 	
 	public void deleteMenus(List<Menu> menus);
 	
-	public void update(Menu menu);
-	
-	
 	public Menu getMenuByCode(String code);
 	
 }

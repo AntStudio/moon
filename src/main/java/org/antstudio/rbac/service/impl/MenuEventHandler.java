@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.antstudio.base.domain.eventhandler.BaseEventHandler;
 import org.antstudio.rbac.domain.Menu;
 import org.antstudio.rbac.repository.MenuRepository;
 import org.antstudio.rbac.service.MenuService;
@@ -13,13 +14,12 @@ import org.springframework.stereotype.Component;
 import com.reeham.component.ddd.annotation.OnEvent;
 
 /**
- * 
  * @author Gavin
  * @version 1.0
  * @date 2012-11-27 
  */
 @Component
-public class MenuEventHandler {
+public class MenuEventHandler extends BaseEventHandler<Menu>{
 
 	@Resource
 	private MenuRepository menuRepository;
@@ -43,15 +43,24 @@ public class MenuEventHandler {
 		return menuService.getTopMenusByRole(rid);
 	}
 	
-	@OnEvent("saveOrUpdateMenu")
-	public void saveOrUpdateMenu(Menu menu){
-		if(menu.getId()==null){
-			List<Menu> menus = new ArrayList<Menu>();
-		    menus.add(menu);
-		    menuRepository.addMenus(menus);
-		}
-		else
-		menuRepository.update(menu);
-	}
+    @Override
+    public Menu save(Menu menu) {
+        List<Menu> menus = new ArrayList<Menu>();
+        menus.add(menu);
+        menuRepository.addMenus(menus);
+        return menu;
+    }
+
+    @Override
+    public void delete(Menu menu) {
+        List<Menu> m = new ArrayList<Menu>();
+        m.add(menu);
+        menuRepository.deleteMenus(m);
+    }
+
+    @Override
+    public void update(Menu menu) {
+        menuRepository.update(menu);
+    }
 	
 }

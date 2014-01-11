@@ -6,36 +6,51 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<m:require src="jquery,common,zt,js/ztree.extend.js,jqueryui,flexgrid,js/pages/rbac/menu.js"></m:require>
+<m:require src="jquery,common,zt,js/ztree.extend.js,bootstrap,dialog,font,js/pages/rbac/menu.js"></m:require>
 <title>菜单</title>
  
 <style type="text/css">
-.label{
-width:80px;
-text-align: right;
-float:left;
+.rmenu {
+	position: absolute;
+	display: none;
+}
+
+.rmenu i {
+	color: #44A1CC;
+	margin-right: 10px;
+}
+
+.label-text {
+	width: 70px;
+	display: inline-block;
+}
+
+#menuForm input {
+	width: 80%;
+}
+
+#menuForm {
+	margin: 0px;
 }
 </style>
 </head>
 <body>
-     <!-- 菜单树 -->
-     <div id="menuTree" class="ztree">  </div>
-    <%--右键菜单,有jquery menu处理ui --%>
-    <ul id="rmenu" style="width: 100px;position:absolute;display:none">
-    <li><a href="#" onclick="addMenu()"><span class="ui-icon ui-icon-disk"></span>添加菜单</a></li>
-    <li><a href="#" onclick="editMenu()"><span class="ui-icon ui-icon-zoomin"></span>编辑菜单</a></li>
-    <li><a href="#" onclick="deleteMenu()"><span class="ui-icon ui-icon-zoomout"></span>删除菜单</a></li>
-    <li><a href="#" onclick="assignRole()"><span class="ui-icon ui-icon-zoomin"></span>分配角色</a></li>
-</ul>
+    <!-- 菜单树 -->
+    <div id="menuTree" class="ztree">  </div>
+    <%--右键菜单--%>
+    <ul id="rmenu"  class="dropdown-menu rmenu">
+	    <li><a href="#" onclick="addMenu()">    <i class="fa fa-plus"></i>添加菜单</a></li>
+	    <li><a href="#" onclick="editMenu()">   <i class="fa fa-edit"></i>编辑菜单</a></li>
+	    <li><a href="#" onclick="deleteMenu()"> <i class="fa fa-minus-square-o"></i>删除菜单</a></li>
+    </ul>
 
-<%--菜单信息 --%>
+		<%--菜单信息 --%>
+		<form action="" id="menuForm" style="display: none;">
+		 <div><span class="label-text">菜单名:</span><input type="text" name="menu.menuName"/></div>
+		 <div><span class="label-text">菜单url:</span><input type="text" name="menu.url"/></div>
+		</form>
 
-<form action="" id="menuForm" style="display: none;">
- <p><span class="label">菜单名:</span><input type="text" name="menu.menuName"/>
-  <p><span class="label">菜单url:</span><input type="text" name="menu.url"/>
-</form>
-
- <!-- 菜单树 -->
-     <div id="roleTree" class="ztree">  </div>
+    <!-- 角色树 -->
+    <div id="roleTree" class="ztree"></div>
 </body>
 </html>

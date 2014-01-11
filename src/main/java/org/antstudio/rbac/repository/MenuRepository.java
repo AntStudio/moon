@@ -14,8 +14,10 @@ import org.springframework.stereotype.Repository;
  * @date 2012-11-27
  */
 @Repository
-public interface MenuRepository extends BaseRepository<Menu>{
+public interface MenuRepository{
 
+    public Menu get(Long id);
+    
 	public Long getByCode(@Param("code")String code);
 	
 	public List<Long> getSubMenu(@Param("pid")Long parentId);

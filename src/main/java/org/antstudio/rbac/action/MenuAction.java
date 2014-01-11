@@ -1,6 +1,5 @@
 package org.antstudio.rbac.action;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +7,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.antstudio.base.action.BaseAction;
 import org.antstudio.rbac.domain.Menu;
 import org.antstudio.rbac.domain.User;
 import org.antstudio.rbac.domain.annotation.MenuMapping;
@@ -23,26 +23,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.reeham.component.ddd.model.ModelContainer;
-
 /**
- * the action controller for the menu
+ * 菜单控制器
  * @author Gavin
  * @version 1.0
  * @date 2012-12-4
  */
 @Controller
 @RequestMapping("/menu")
-public class MenuAction {
+public class MenuAction extends BaseAction{
 
 	@Resource
 	private MenuService menuService;
 	
 	@Resource
 	private UserService useruService;
-	
-	@Resource
-	private ModelContainer modelContainer;
 	
 	/**
 	 * 获取子菜单(默认获取deleteFlag=false的菜单)
@@ -55,8 +50,9 @@ public class MenuAction {
 	@ResponseBody
 	public List<Map<String,Object>> getSubMenus(@RequestParam("pid") Long pid,HttpServletRequest request,HttpServletResponse response){
 		User currentUser = useruService.getCurrentUser(request);
-		if(pid==-1L)
+		if(pid==-1L){
 			pid = null;
+		}
 		return menuService.getSubMenusByRoleForMap(pid,currentUser.getRoleId());
 	}
 	
@@ -71,8 +67,9 @@ public class MenuAction {
 	@RequestMapping("/getAssignMenuData")
 	@ResponseBody
 	public List<Map<String,Object>> getAssignMenuData(@RequestParam("pid") Long pid,@RequestParam("rid")Long rid,HttpServletRequest request,HttpServletResponse response){
-		if(pid==-1L)
+		if(pid==-1L){
 			pid = null;
+		}
 		return menuService.getAssignMenuData(pid,rid);
 	}
 	
@@ -104,7 +101,7 @@ public class MenuAction {
 		return new ModelAndView("/pages/rbac/menu");
 	}
 	
-	@RequestMapping("/addMenu")
+	@RequestMapping("/add")
 	@ResponseBody
 	@PermissionMapping(code="000001",name="添加菜单信息")
 	public Map<String,Object> addMenu(@FormParam("menu") Menu menu){
@@ -112,31 +109,27 @@ public class MenuAction {
 		if(menuId.equals(menu.getParentId())){
 			menu.setParentId(null);
 		}
-		modelContainer.enhanceModel(menu).saveOrUpdate();
+		enhance(menu).save();
 		return MessageUtils.getMapMessage(true);
 	}
 	
-	@RequestMapping("/updateMenu")
+	@RequestMapping("/update")
 	@ResponseBody
 	public Map<String,Object> updateMenu(@FormParam("menu") Menu menu){
 		if(menu.getId()!=null){
 			Menu oldMenu = menuService.get(menu.getId());
 			menu = (Menu) ClassPropertiesUtil.copyProperties(menu, oldMenu, true, "menuName","url");
-			menuService.update(menu);
+			enhance(menu).update();
 		}
 		return MessageUtils.getMapMessage(true);
 	}
 	
-	@RequestMapping("/deleteMenu")
+	@RequestMapping("/delete")
 	@ResponseBody
-	public Map<String,Object> deleteMenu(@FormParam("menu") Menu menu){
-		
-		
-		if(menu.getId()!=null){
-			 List<Menu> menus = new ArrayList<Menu>();
-			 menus.add(menu);
-			menuService.deleteMenus(menus);
-		}
-		return MessageUtils.getMapMessage(true);
-	}
+    public Map<String, Object> deleteMenu(@FormParam("menu") Menu menu) {
+        if (menu.getId() != null) {
+            enhance(menu).delete();
+        }
+        return MessageUtils.getMapMessage(true);
+    }
 }

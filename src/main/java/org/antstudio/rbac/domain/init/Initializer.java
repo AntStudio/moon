@@ -57,7 +57,7 @@ public class Initializer implements ApplicationListener<ContextRefreshedEvent> {
 				if (deleteMenus.size() != 0)
 					menuService.deleteMenus(deleteMenus);
 				for (Menu m : updateMenus) {
-					m.saveOrUpdate();
+					m.update();
 				}
 			}
 

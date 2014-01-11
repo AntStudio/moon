@@ -11,7 +11,7 @@ import org.antstudio.rbac.domain.repository.MenuEvent;
 import com.reeham.component.ddd.annotation.Model;
 
 /**
- * the domain for menu 
+ * 菜单领域
  * @author Gavin
  * @version 1.0
  * @date 2012-11-27 
@@ -19,33 +19,27 @@ import com.reeham.component.ddd.annotation.Model;
 @Model
 public class Menu extends BaseDomain{
 
-	/**
-	 * Serial version UID
-	 */
 	private static final long serialVersionUID = 8687328492330629794L;
 
-	/**
-	 * the name for menu
-	 */
 	private String menuName;
 	
-	/**
-	 * the url which menu linked
-	 */
 	private String url;
 	
-	/**
-	 * the id for parent menu,if is the top menu,parentId is <code>null</code>
-	 */
 	private Long parentId;
 	
 	private String code;
 	
 	private String parentCode;
  
-	private Long createBy;
+    private Long   createBy;
+
+    /**
+     * 是否是叶子菜单，即是否有子菜单
+     */
+    private boolean leaf  = false;
 	
-	
+	@Resource
+    private MenuEvent menuEvent;
 	public Menu(){
 		
 	}
@@ -55,107 +49,6 @@ public class Menu extends BaseDomain{
 		this.url = url;
 		this.code = code;
 		this.parentCode = parentCode;
-	}
-	
-	
-	/**
-	 * if <code>true</code> ,menu is leaf menu.else it has sub menus.default 'false'
-	 */
-	private boolean leaf = false;
- 
-	/**
-	 * @return the menuName
-	 */
-	public String getMenuName() {
-		return menuName;
-	}
-
-	/**
-	 * @param menuName the menuName to set
-	 */
-	public void setMenuName(String menuName) {
-		this.menuName = menuName;
-	}
-
-	/**
-	 * @return the url
-	 */
-	public String getUrl() {
-		return url;
-	}
-
-	/**
-	 * @param url the url to set
-	 */
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	/**
-	 * @return the parentId
-	 */
-	public Long getParentId() {
-		return parentId;
-	}
-
-	/**
-	 * @param parentId the parentId to set
-	 */
-	public void setParentId(Long parentId) {
-		this.parentId = parentId;
-	}
-
-	@Resource
-	private MenuEvent menuEvent;
-	/**
-	 * @return the subMenu
-	 */
-
-
-	/**
-	 * @return the code
-	 */
-	public String getCode() {
-		return code;
-	}
-
-	/**
-	 * @param code the code to set
-	 */
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	/**
-	 * @return the leaf
-	 */
-	public boolean isLeaf() {
-		return leaf;
-	}
-
-	/**
-	 * @return the parentCode
-	 */
-	public String getParentCode() {
-		return parentCode;
-	}
-
-	/**
-	 * @param parentCode the parentCode to set
-	 */
-	public void setParentCode(String parentCode) {
-		this.parentCode = parentCode;
-	}
-
-	/**
-	 * @param leaf the leaf to set
-	 */
-	public void setLeaf(boolean leaf) {
-		this.leaf = leaf;
-	}
-	
-	public void saveOrUpdate(){
-		menuEvent.saveOrUpdate(this);
 	}
 	
 	public Map<String,Object> toMap(){
@@ -168,20 +61,6 @@ public class Menu extends BaseDomain{
 	}
 
 	/**
-	 * @return the createBy
-	 */
-	public Long getCreateBy() {
-		return createBy;
-	}
-
-	/**
-	 * @param createBy the createBy to set
-	 */
-	public void setCreateBy(Long createBy) {
-		this.createBy = createBy;
-	}
-	
-	/**
 	 * 是否是系统菜单
 	 * @return
 	 */
@@ -189,13 +68,72 @@ public class Menu extends BaseDomain{
 		return code!=null;
 	}
 	
-	public Menu getParent(){
-		if(parentId==null&&parentCode==null)//已经是顶级菜单
-	   return null;
-		else
-			return((Menu) menuEvent.getParent(this).getEventResult());
-			
-	}
+    public Menu getParent() {
+        if (parentId == null && parentCode == null) {// 已经是顶级菜单
+            return null;
+        } else {
+            return ((Menu) menuEvent.getParent(this).getEventResult());
+        }
+
+    }
 	
+	/********************  getter/setter *******************/
+    public Long getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(Long createBy) {
+        this.createBy = createBy;
+    }
+    
+    public String getMenuName() {
+        return menuName;
+    }
+
+    public void setMenuName(String menuName) {
+        this.menuName = menuName;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public boolean isLeaf() {
+        return leaf;
+    }
+
+    public String getParentCode() {
+        return parentCode;
+    }
+    
+    public void setParentCode(String parentCode) {
+        this.parentCode = parentCode;
+    }
+    
+    public void setLeaf(boolean leaf) {
+        this.leaf = leaf;
+    }
+    
+    /******************** /getter/setter *******************/
 	 
 }

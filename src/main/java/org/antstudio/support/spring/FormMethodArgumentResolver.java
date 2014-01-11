@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.antstudio.support.spring.annotation.FormParam;
 import org.antstudio.utils.FileUtils;
+import org.apache.log4j.Logger;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -34,6 +35,7 @@ import com.reeham.component.ddd.model.ModelUtils;
  */
 public class FormMethodArgumentResolver implements HandlerMethodArgumentResolver{
 
+    Logger logger = Logger.getLogger(FormMethodArgumentResolver.class);
 	@Resource
 	private ModelContainer modelContainer;
 	   public FormMethodArgumentResolver() {
@@ -141,8 +143,7 @@ public class FormMethodArgumentResolver implements HandlerMethodArgumentResolver
 	    				field.set(instance, paramsMap.get(fieldName));
 	    			}
 	    			}catch(Exception e){//当字段无法访问时，即可能是父类的private属性，通过setter方法进行处理，如果找不到setter方法直接抛出异常
-	    				System.out.println(fieldName+"..........");
-	    				e.printStackTrace();
+	    			    logger.warn("Not found the declared field:"+fieldName+" in "+parameterType+", Now try to find the setter method for "+parameterType);
 	    				value=paramsMap.get(fieldName).toString();
 	    				for(Method m:methods){
 	    					if(m.getName().equals("set"+fieldName.substring(0,1).toUpperCase()+fieldName.substring(1))&&m.getParameterTypes().length==1)

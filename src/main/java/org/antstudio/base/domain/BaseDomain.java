@@ -8,6 +8,8 @@ import org.antstudio.utils.Strings;
 
 import com.reeham.component.ddd.message.DomainMessage;
 import com.reeham.component.ddd.message.EventMessageFirer;
+import com.reeham.component.ddd.model.ModelContainer;
+import com.reeham.component.ddd.model.ModelUtils;
 
 /**
  * 域模型的基本对象,包含了一些公共基本属性,如:
@@ -25,6 +27,8 @@ public class BaseDomain implements Serializable{
 
     @Resource
     private EventMessageFirer eventMessageFirer;
+    @Resource
+    private ModelContainer modelContainer;
 	/**
 	 * 版本序列标示
 	 */
@@ -122,6 +126,7 @@ public class BaseDomain implements Serializable{
     public DomainMessage delete(){
         DomainMessage dm = new DomainMessage(this);
         eventMessageFirer.fireDisruptorEvent(Strings.lowerFirst(this.getClass().getSimpleName())+"/delete",dm);
+        modelContainer.removeModel(ModelUtils.asModelKey(this.getClass(), getId()));
         return dm;
     }
 	
