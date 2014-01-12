@@ -13,6 +13,7 @@ import org.antstudio.rbac.repository.PermissionRepository;
 import org.antstudio.rbac.service.PermissionService;
 import org.springframework.stereotype.Service;
 
+import com.reeham.component.ddd.annotation.OnEvent;
 import com.reeham.component.ddd.model.ModelContainer;
 import com.reeham.component.ddd.model.ModelLoader;
 import com.reeham.component.ddd.model.ModelUtils;
@@ -30,6 +31,7 @@ public class PermissionServiceImpl implements PermissionService,ModelLoader{
 	private PermissionRepository permissionRepository;
 	@Resource
 	private ModelContainer modelContainer;
+	
 	@Override
 	public void batchSave(List<Permission> permissions) {
 		if(permissions.size()!=0)
@@ -44,19 +46,21 @@ public class PermissionServiceImpl implements PermissionService,ModelLoader{
 
 	@Override
 	public Object loadModel(Object identifier) {
+		System.out.println(identifier);
 		return load((Long) identifier);
 	}
 
 	@Override
 	public Map<String, Permission> getPermissionsByCode(Map<String,Object> paramsMap) {
 		Map<String,Permission> m = new HashMap<String,Permission>();
-	for(Permission permission:getPermissions(paramsMap)){
-		m.put(permission.getCode(),permission);
-	}
+		for(Permission permission:getPermissions(paramsMap)){
+			m.put(permission.getCode(),permission);
+		}
 		return m;
 	}
 
 	@Override
+	@OnEvent("permission/get")
 	public Permission get(Long id) {
 		return (Permission) modelContainer.getModel(ModelUtils.asModelKey(Permission.class, id), this);
 	}
