@@ -44,7 +44,7 @@ public class ExceptionHandler implements HandlerExceptionResolver   {
 		 else
 			 log = new Log("NOT LOGINED",-1L,message,"当前用户未登录,The Session id is "+request.getSession().getId()+"\n"+bf.toString(),Constants.SYSTEM_LOG);
 		 
-		 modelContainer.enhanceModel(log).saveOrUpdate();
+		 modelContainer.enhanceModel(log).save();
 	
 		return null;
 	}

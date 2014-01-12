@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-
 /**
- * 日志action
  * @author Gavin
  * @version 1.0
  * @date 2013-1-7
@@ -35,7 +33,6 @@ public class LogAction {
 	@RequestMapping("")
 	@MenuMapping(code="platform_6",name="日志列表",parentCode="platform",url="/log")
 	public ModelAndView showLogPage(){
-		
 		return new ModelAndView("pages/log/log");
 	}
 	
@@ -53,6 +50,6 @@ public class LogAction {
 	@RequestMapping("/getLogDetail")
 	@ResponseBody
 	public Map<String,Object> getLogDetail(@RequestParam("id")Long id){
-		return MessageUtils.getMapMessage(true, "log", logService.getModel(id).toDetailMap());
+		return MessageUtils.getMapMessage(true, "log", logService.get(id).toDetailMap());
 	}
 }

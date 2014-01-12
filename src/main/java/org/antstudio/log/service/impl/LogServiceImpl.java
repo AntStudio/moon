@@ -16,14 +16,13 @@ import org.antstudio.support.session.SessionContext;
 import org.antstudio.utils.Constants;
 import org.springframework.stereotype.Service;
 
+import com.reeham.component.ddd.annotation.OnEvent;
 import com.reeham.component.ddd.model.ModelContainer;
 import com.reeham.component.ddd.model.ModelLoader;
 import com.reeham.component.ddd.model.ModelUtils;
 
 @Service
 public class LogServiceImpl implements LogService,ModelLoader{
-
-	
 	@Resource
 	private ModelContainer modelContainer;
 	@Resource
@@ -49,20 +48,21 @@ public class LogServiceImpl implements LogService,ModelLoader{
 	public List<Log> getLogs(Map<String, Object> params) {
 		return modelContainer.identifiersToModels((List)logRepository.getLogs(params), Log.class, this);
 	}
-
+	
 	@Override
-	public Log getModel(Long id) {
+	@OnEvent("log/get")
+	public Log get(Long id) {
 		return (Log) modelContainer.getModel(ModelUtils.asModelKey(Log.class, id));
 	}
 
 	@Override
-	public Log getLog(Long id) {
+	public Log load(Long id) {
 		return logRepository.getLog(id);
 	}
 
 	@Override
 	public Object loadModel(Object identifier) {
-		return getLog((Long)identifier);
+		return load((Long)identifier);
 	}
 
 	@Override
@@ -93,8 +93,7 @@ public class LogServiceImpl implements LogService,ModelLoader{
 				log.setUserName(user.getUserName());
 			}
 		}
-		
-		modelContainer.enhanceModel(log).saveOrUpdate();
+		modelContainer.enhanceModel(log).save();
 	}
 
 }

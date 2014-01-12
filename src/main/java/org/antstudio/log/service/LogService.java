@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.antstudio.log.domain.Log;
 import org.antstudio.pagination.Pager;
+import org.antstudio.rbac.service.BaseService;
 
 
 /**
@@ -13,7 +14,7 @@ import org.antstudio.pagination.Pager;
  * @version 1.0
  * @date 2013-1-7
  */
-public interface LogService {
+public interface LogService extends BaseService<Log>{
 
 	/**
 	 * 查询日志，返回页面形式的日志
@@ -23,20 +24,7 @@ public interface LogService {
 	public Pager getLogsForPage(Map<String,Object> params);
 	
 	public List<Log> getLogs(Map<String,Object> params);
-	/**
-	 * 缓存中加载
-	 * @param id
-	 * @return
-	 */
-	public Log getModel(Long id);
-	
-	/**
-	 * 数据库加载
-	 * @param id
-	 * @return
-	 */
-	public Log getLog(Long id);
-	
+
 	/**
 	 * 保存日志
 	 * @param log

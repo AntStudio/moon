@@ -2,30 +2,35 @@ package org.antstudio.log.service.impl;
 
 import javax.annotation.Resource;
 
+import org.antstudio.base.domain.eventhandler.BaseEventHandler;
 import org.antstudio.log.domain.Log;
 import org.antstudio.log.repository.LogRepository;
 import org.springframework.stereotype.Component;
 
-import com.reeham.component.ddd.annotation.OnEvent;
-
 /**
- * 日志事件处理器
  * @author Gavin
- * @version 1.0
- * @date 2013-1-7
+ * @date 2014-1-12
  */
 @Component
-public class LogEventHandler {
+public class LogEventHandler extends BaseEventHandler<Log>{
 
 	@Resource
 	private LogRepository logRepository;
-	
-	@OnEvent("saveOrUpdateLog")
-	public void saveOrUpdate(Log log){
-		if(log.getId()==null)
-			logRepository.save(log);
-		else
-			logRepository.update(log);
+	@Override
+	public Log save(Log log) {
+		logRepository.save(log);
+		return log;
 	}
+
+	@Override
+	public void delete(Log domain) {
+		
+	}
+
+	@Override
+	public void update(Log domain) {
+		
+	}
+
 	
 }

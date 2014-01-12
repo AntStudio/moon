@@ -5,10 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.antstudio.base.domain.BaseDomain;
-import org.antstudio.log.domain.respository.LogEvent;
 import org.antstudio.utils.Constants;
 
 import com.reeham.component.ddd.annotation.Model;
@@ -23,19 +20,33 @@ import com.reeham.component.ddd.annotation.Model;
 @Model
 public class Log extends BaseDomain{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
+	private String userName;
+	
+	private Long userId;
+	
+	private String action;
+	
+	private Date time;
+	
+	private String type;
+	
+	private byte[] detail;
+
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	
+	
 	public Log(){}
 	
 	public Log(String action){
 		this(action,action,Constants.OPERATE_LOG);
 	}
+	
 	public Log(String action,String detail){
 		this(action,detail,detail);
 	}
+	
 	public Log(String action,String detail,String type){
 		this.action = action;
 		this.detail = detail.getBytes();
@@ -59,30 +70,6 @@ public class Log extends BaseDomain{
 		this.detail = detail.getBytes();
 	}
 	
-	
-	private String userName;
-	
-	private Long userId;
-	
-	private String action;
-	
-	private Date time;
-	
-	private String type;
-	
-	private byte[] detail;
-
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-	@Resource
-	private LogEvent logEvent;
-	
-	/**
-	 * 保存或更新操作
-	 */
-	public void saveOrUpdate(){
-		logEvent.saveOrUpdate(this);	
-	}
-	
 	public Map<String,Object> toMap(){
 		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("user_name", userName);
@@ -99,59 +86,36 @@ public class Log extends BaseDomain{
 		m.put("detail", detail==null?"":new String(detail));
 		return m;
 	}
+	
+	
 	/***********************properties getter and setter********************************/
-	/**
-	 * @return the userName
-	 */
 	public String getUserName() {
 		return userName;
 	}
 
-	/**
-	 * @param userName the userName to set
-	 */
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-
-	/**
-	 * @return the userId
-	 */
 	public Long getUserId() {
 		return userId;
 	}
 
-	/**
-	 * @param userId the userId to set
-	 */
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 
-	/**
-	 * @return the action
-	 */
 	public String getAction() {
 		return action;
 	}
 
-	/**
-	 * @param action the action to set
-	 */
 	public void setAction(String action) {
 		this.action = action;
 	}
 
-	/**
-	 * @return the time
-	 */
 	public Date getTime() {
 		return time;
 	}
 
-	/**
-	 * @param time the time to set
-	 */
 	public void setTime(Date time) {
 		this.time = time;
 	}

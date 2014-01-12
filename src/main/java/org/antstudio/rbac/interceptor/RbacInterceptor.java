@@ -96,7 +96,7 @@ public class RbacInterceptor implements MethodInterceptor {
 				if(currentUserId!=null){//只对登录的用户进行日志处理,主要处理操作日志
 				LogRecord logRecord = method.getAnnotation(LogRecord.class);
 				Log log = new Log(currentUser.getUserName(),currentUserId,logRecord.action());
-				modelContainer.enhanceModel(log).saveOrUpdate();
+				modelContainer.enhanceModel(log).save();
 				}
 				
 			}
@@ -118,7 +118,7 @@ public class RbacInterceptor implements MethodInterceptor {
 				 else
 					 log = new Log(currentUser.getUserName(),currentUserId,message,bf.toString(),Constants.SYSTEM_LOG);
 				 
-				 modelContainer.enhanceModel(log).saveOrUpdate();
+				 modelContainer.enhanceModel(log).save();
 			}
 				return o;
 			
