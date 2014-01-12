@@ -5,20 +5,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<m:require src="jquery,common,zt,js/ztree.extend.js,jqueryui,flexgrid,js/pages/rbac/permission.js"></m:require>
+<m:require src="jquery,common,zt,js/ztree.extend.js,bootstrap,table,dialog,js/pages/rbac/permission.js"></m:require>
 <title>权限管理</title>
- 
-<style type="text/css">
-.label{
-width:80px;
-text-align: right;
-float:left;
-}
-</style>
 </head>
 <body style="margin:0">
-<!-- 权限列表 -->
-     <table id="permissionTable" ></table> 
+
+	<!-- 权限列表 -->
+     <div id="permissionTable" ></div> 
      
     <!-- 角色分配 -->
      <div id="roleTree" class="ztree">  </div>

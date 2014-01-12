@@ -1,84 +1,19 @@
-
-$.fn.reset = function(){
-	$(':input',this)  
-	 .not(':button, :submit, :reset, :hidden')  
-	 .val('')  
-	 .removeAttr('checked')  
-	 .removeAttr('selected'); 
-};
-$.serializeToUrl=function(o,prefix){
-	if(typeof(prefix)=='undefined'){
-		prefix = "";
-	}
-    for(var i in o){
-    	prefix+=i+"="+o[i]+"&";
-    }
-	
-    return prefix.substring(0,prefix.length-1);
-}
- /**
-  * ajax submit form,use like this:
-  *	<p>  $("#loginForm").ajaxSubmitForm("login/validate",
-  *			 function(result) {
-  *		        // todo the code when success
-  *	             }, 
-  *	         function(result) {
-  *		        // todo the code when failure
-  *	        });
-  *</p>
-  * @param url        : the form submit url
-  * @param successFun : when ajax submit form success,also the response message 
-  *                     is success(means:the success propertity of responesText is true),
-  *                     call the successFun with the responesText parameter
-  * @param failureFun : if not call the successFun,then call the failureFun with responesText parameter 
-  */
- $.fn.ajaxSubmitForm = function(url,data,successFun,failureFun,errorFun){
-	 
-		$.ajax({
-			url:url,
-			data:$(this).serialize()+$.serializeToUrl(data,"&"),
-			type:'post',
-			dataType:'json',
-			success:function(result){
-				if(result.success){
-					successFun(result);
-				
-				}
-				else
-					failureFun(result);
-			},
-			failure:function(XMLHttpRequest, textStatus, errorThrown){
-				errorFun(XMLHttpRequest, textStatus, errorThrown);
-			}
-		});
- };
- 
 $(function(){
-	$("#permissionTable").flexigrid({
+	$("#permissionTable").table({
 		url: contextPath+'/permission/getPermissionData',
-		dataType: 'json',
-		singleSelect:false,
-		
-		colModel : [
-			{display: 'ID', name : 'id', width : "20%", sortable : false, align: 'center'},
-			{display: '权限代码', name : 'code', width : "30%", sortable : false, align: 'center'},
-			{display: '权限名称', name : 'name', width :"40%", sortable : false, align: 'center'}
+		columns : [
+			{display: 'ID', name : 'id', align: 'center'},
+			{display: '权限代码', name : 'code',align: 'center'},
+			{display: '权限名称', name : 'name', align: 'center'}
 			
 			],
 		buttons : [
-			{name: '分配权限', bclass: 'branchIcon',id:'assignBtn',tooltip:'分配权限给角色',onpress : btnHandler}
+			{text: '分配权限',name:"assignBtn",click : btnHandler}
 			],
-		searchitems : [
-			{display: '权限代码', name : 'code'}
-			],
-		sortname: "id",
-		sortorder: "asc",
-		usepager: true,
 		title: '权限列表',
-		useRp: true,
-		rp: 15,
-		showTableToggleBtn: true,
-		height: $(window).height()-135
+		formatData:function(data){
+			return data.rows;
+			}
 	});   
 	
 });
@@ -87,36 +22,39 @@ $(function(){
 	
 var pid ;
 var ztree;
-function btnHandler(btnTest, grid){
-	if(btnTest=="assignBtn"){
-		var selectRows = $('.trSelected', grid);
+function btnHandler(btn){
+	var name = btn.name;
+	var table = this;
+	
+	if(name=="assignBtn"){
+		var selectRows = table.getSelect();
 		if(selectRows.length!=1){
 			alert("请选择一个权限进行操作.");
 			return false;
 		}
-		pid = $(selectRows.get(0)).attr("id").substring(3);
+		pid = selectRows[0].id;
 		showRoleTree(pid);
 		   $("#roleTree").dialog({
 			   title:'分配权限给角色',
-			   modal:true,
 			   buttons:[{
 				   text:'确定',
 				   click:function(){
-					   var ids="",checkStatus="" ;
+					   var ids="",checkStatus="" ;var dialog = this;
 						$.each(ztree.getChangeCheckedNodes(),function(index,e){
 							ids+="ids="+e.id+"&";
-							checkStatus+="checkStatus="+e.checked+"&";
+							checkStatus+="status="+e.checked+"&";
 						});
-						alert(ids+checkStatus+"rid="+ztree.getSelectedNodes()[0].id);
-						$.post(contextPath+"/role/assignMenu",ids+checkStatus+"pid="+pid,function(result){
+						console.log(dialog);
+						$.post(contextPath+"/permission/assignPermission",ids+checkStatus+"rid="+pid,function(result){
 							alert("成功");
+							dialog.close();
 						});
 				   }
 			   },{
 				   text:'取消',
 				   click:function(){
 					   ztree.selectNode(ztree.getNodeByParam("uid",2));
-					   //$(this).dialog("close");
+					   this.close();
 				   }
 			   }]
 		   });
@@ -163,10 +101,7 @@ function filter(treeId, parentNode, childNodes) {
 	return childNodes;
 }
  
-
-
- 
-	$.fn.zTree.init($("#roleTree"), setting,znodes);
-	 ztree = $.fn.zTree.getZTreeObj("roleTree");
+$.fn.zTree.init($("#roleTree"), setting,znodes);
+ztree = $.fn.zTree.getZTreeObj("roleTree");
  
 }

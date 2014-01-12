@@ -79,8 +79,8 @@ public class RoleAction {
 		 return MessageUtils.getMapMessage(true);
 	 }
 	 
-	 @RequestMapping("/getRoleDataByPermission")
-	 @ResponseBody
+	@RequestMapping("/getRoleDataByPermission")
+	@ResponseBody
 	public  List<Map<String,Object>> getRoleDataByPermission(@RequestParam("pid")Long pid,@RequestParam("rid")Long rid){
 		 if(rid==-1)
 			 rid = null;
