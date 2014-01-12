@@ -1,5 +1,6 @@
 .datagrid{
 	position:relative;
+	height: 100%;
 }
 .datagrid>.table-title{
   background: #F1F1F1;
@@ -9,8 +10,8 @@
   font-size: 20px;
   padding-left: 10px;
 }
-.datagrid>table{
-	margin-bottom:0;
+.datagrid .table-container>table{
+	margin-bottom: 0px;
 }
 
 .datagrid>table>thead th.number{
@@ -74,6 +75,7 @@
 	 border-bottom-left-radius: 0px;
 }
 .grid-pagination{
+  background: #ECECEC;
 	border: 1px solid #ddd;
 	border-top:none;
 	border-bottom-left-radius: 4px;
@@ -136,4 +138,22 @@
 
 .datagrid .button-group button{
   line-height: 29px;
+}
+
+/**
+ *   固定布局
+ */
+.datagrid.fixed-layout .grid-pagination{
+    position: absolute;
+    bottom: 0;
+    width:100%;
+    box-sizing: border-box;
+}
+
+.datagrid.fixed-layout .table-container{
+  position: absolute;
+  width: 100%;
+  bottom: 41px;
+  top: 37px;
+  overflow-y: auto;
 }

@@ -79,14 +79,18 @@
 		},
 		renderTable:function(opts){
 			var $container = this;
+			table.autoLayout = ($container.height()==0);//是否自适应布局
 			table.opts = opts;
 			table.selector = $container.selector;
 			
 			var $tableDiv = $(document.createElement("div"));
 			opts.table = $tableDiv;
-			$tableDiv.addClass("datagrid").append(methods.renderTitle(opts));;
+			$tableDiv.addClass("datagrid").append(methods.renderTitle(opts));
+			if(!table.autoLayout){
+				$tableDiv.addClass("fixed-layout");
+			}
 			var tableHtml = "";
-			tableHtml+="<table class=\"table table-bordered table-hover\">";
+			tableHtml+="<div class=\"table-container\"><table class=\"table table-bordered table-hover\">";
 			tableHtml+=methods.renderHeader(opts);
 			var renderTableDfd = $.Deferred();
 			methods.renderData.call($container,opts).done(function(tbody){
@@ -95,7 +99,7 @@
 			});
 			
 			$.when(renderTableDfd).done(function(){
-				tableHtml+="</table>";
+				tableHtml+="</table></div>";
 				tableHtml+=methods.renderPagination(opts);
 				tableHtml+=methods.renderModal();
 				tableHtml+=methods.renderSelection();
@@ -220,7 +224,7 @@
 					dataType:'json',
 					data:$.extend({_random:Math.random()},{pageIndex:opts.pageIndex,pageSize:opts.pageSize},opts.params)
 				}).done(function(data){
-					opts.total = data.total;
+					opts.total = data.total||data.length;
 					if($.isFunction(opts.formatData)){
 						data = opts.formatData.call(this,data);
 					}
