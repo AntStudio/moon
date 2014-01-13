@@ -11,11 +11,9 @@ import org.antstudio.base.domain.BaseDomain;
 import org.antstudio.rbac.domain.repository.MenuEvent;
 import org.antstudio.rbac.domain.repository.RoleEvent;
 import org.antstudio.rbac.domain.repository.UserEvent;
-import org.antstudio.rbac.service.RoleService;
 import org.antstudio.utils.Constants;
 
 import com.reeham.component.ddd.annotation.Model;
-import com.reeham.component.ddd.message.DomainMessage;
 
 /**
  * the domain for role
@@ -27,12 +25,15 @@ import com.reeham.component.ddd.message.DomainMessage;
 public class Role extends BaseDomain{
 
 	private static final long serialVersionUID = 2223770816508175289L;
+	
 	public Role(Long id){
 		this.id = id;
 	}
+	
 	public Role(){
 		
 	}
+	
 	/**
 	 * the name for every role
 	 */
@@ -59,67 +60,17 @@ public class Role extends BaseDomain{
 	@Resource
 	private RoleEvent roleEvent;
 	
-	@Resource
-	private RoleService roleService;
 	/**
-	 * @return the roleName
-	 */
-	public String getRoleName() {
-		return roleName;
-	}
-
-	/**
-	 * @param roleName the roleName to set
-	 */
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
-
-	/**
-	 * @return the active
-	 */
-	public boolean isActive() {
-		return active;
-	}
-
-	/**
-	 * @param active the active to set
-	 */
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-
-	/**
-	 * @return the createBy
-	 */
-	public Long getCreateBy() {
-		return createBy;
-	}
-
-	/**
-	 * @param createBy the createBy to set
-	 */
-	public void setCreateBy(Long createBy) {
-		this.createBy = createBy;
-	}
-
-	/**
-	 * @return the top menus for role
+	 * @return 获取当前角色的顶级菜单
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Menu> getTopMenus() {
 		return (List<Menu>) menuLoader.getTopMenusByRole(this).getEventResult();
 	}
 
- 
-	/**
-	 * get the creator of the role
-	 * @return
-	 */
 	public User getCreator(){
 		return (User) userLoader.getUser(getCreateBy()).getEventResult();
 	}
-	
 	
 	public void assign(User user){
 		roleEvent.assign(this, user);
@@ -140,37 +91,16 @@ public class Role extends BaseDomain{
 	}
 
 	/**
-	 * @return the parentId
-	 */
-	public Long getParentId() {
-		return parentId;
-	}
-
-	/**
-	 * @param parentId the parentId to set
-	 */
-	public void setParentId(Long parentId) {
-		this.parentId = parentId;
-	}
-	
-	public DomainMessage save(){
-		return roleEvent.save(this);
-	}
-	
-	public DomainMessage update(){
-		return roleEvent.update(this);
-	}
-	
-	/**
 	 * 根据权限code判断是否具有某种权限
 	 * @param code
 	 * @return
 	 */
-	public boolean hasPermission(String code){
-		if(Constants.SYSTEM_ROLEID.equals(this.getId()))
-			return true;
-		return (Boolean) roleEvent.hasPermission(this,code).getEventResult();
-	}
+    public boolean hasPermission(String code) {
+        if (Constants.SYSTEM_ROLEID.equals(this.getId())) {
+            return true;
+        }
+        return (Boolean) roleEvent.hasPermission(this, code).getEventResult();
+    }
 	
 	/**
 	 * 根据菜单code判断是否具有某种菜单访问权限(主要处理系统级菜单)
@@ -178,8 +108,9 @@ public class Role extends BaseDomain{
 	 * @return
 	 */
 	public boolean accessMenu(String code){
-		if(Constants.SYSTEM_ROLEID.equals(this.getId()))
-			return true;
+        if (Constants.SYSTEM_ROLEID.equals(this.getId())) {
+            return true;
+        }
 		return (Boolean) roleEvent.accessMenu(this,code).getEventResult();
 	}
 	
@@ -188,21 +119,56 @@ public class Role extends BaseDomain{
 	 * @return
 	 */
 	public String getRolePath(){
-		if(Constants.SYSTEM_ROLEID.equals(this.getId()))
-			return "";
+        if (Constants.SYSTEM_ROLEID.equals(this.getId())) {
+            return "";
+        }
 		StringBuilder path = new StringBuilder();
-		//StringBuilder path = new StringBuilder();
 		List<Long> pathList = new ArrayList<Long>();
-		Role temp = roleService.get(getParentId());
+		Role temp = (Role) roleEvent.get(getParentId()).getEventResult();
 		pathList.add(getId());
 		while(temp!=null){
-			//path.append(","+temp.getId());
 			pathList.add(temp.getId());
-			temp = roleService.get(temp.getParentId());
+			temp = (Role) roleEvent.get(temp.getParentId()).getEventResult(); 
 		}
 		for(int i = pathList.size()-1;i>=0;i--){
 			path.append(","+pathList.get(i));
 		}
 		return path.substring(1);
 	}
+	
+	
+	/*******************  setter/getter *******************/
+	
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+    
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Long getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(Long createBy) {
+        this.createBy = createBy;
+    }
+    /******************* /setter/getter *******************/
 }

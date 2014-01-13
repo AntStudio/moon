@@ -9,7 +9,6 @@ import javax.annotation.Resource;
 import org.antstudio.rbac.domain.Role;
 import org.antstudio.rbac.repository.RoleRepository;
 import org.antstudio.rbac.service.RoleService;
-import org.antstudio.utils.ClassPropertiesUtil;
 import org.springframework.stereotype.Service;
 
 import com.reeham.component.ddd.annotation.OnEvent;
@@ -28,8 +27,9 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	@OnEvent("role/get")
 	public Role get(Long id) {
-		if(id==null||id<0)
-			return null;
+        if (id == null || id < 0) {
+            return null;
+        }
 		return (Role) modelContainer.getModel(ModelUtils.asModelKey(Role.class, id),this);
 	}
 
@@ -45,6 +45,7 @@ public class RoleServiceImpl implements RoleService {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
+	@OnEvent("role/getSubRoles")
 	public List<Role> getSubRoles(Long rid,boolean deleteFlag) {
 		return modelContainer.identifiersToModels((List)roleRepository.getSubRoles(rid, deleteFlag), Role.class, this);
 	}
@@ -57,11 +58,6 @@ public class RoleServiceImpl implements RoleService {
 			list.add(role.toMap());
 		}
 		return list;
-	}
-
-	@Override
-	public void addRole(Role role) {
-		modelContainer.enhanceModel(role).save();
 	}
 
 	@Override
@@ -81,18 +77,9 @@ public class RoleServiceImpl implements RoleService {
 			for(Long id:ids){
 				modelContainer.removeModel(ModelUtils.asModelKey(Role.class,id));//将物理删除的对象移除缓存
 			}
-			roleRepository.delete(ids);//sendDeleteMessage(ids);
+			roleRepository.delete(ids);
 		}
 		
-	}
-
-	@Override
-	public boolean update(Role role) {
-		Role oldRole = get(role.getId());
-		oldRole = (Role) ClassPropertiesUtil.copyProperties(role,oldRole,true,"roleName");
-		oldRole.update();
-		//test(oldUser);
-		return true;
 	}
 
 	@Override

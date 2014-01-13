@@ -87,7 +87,6 @@ function editMenu(){
 		alert("对不起,系统菜单不能编辑");
 		return false;
 	}
-	alert(selectNode.id);
 	$(":input[name='menu.menuName']").val(selectNode.menuName);
 	$(":input[name='menu.url']").val(selectNode.url);
 	$("#menuForm").dialog({

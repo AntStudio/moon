@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.antstudio.base.action.BaseAction;
 import org.antstudio.rbac.domain.Role;
 import org.antstudio.rbac.domain.annotation.MenuMapping;
 import org.antstudio.rbac.service.RoleService;
@@ -18,14 +19,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * the action controller of role
  * @author Gavin
  * @version 1.0
  * @date 2012-12-4
  */
 @Controller
 @RequestMapping("/role")
-public class RoleAction {
+public class RoleAction extends BaseAction {
 
 	@Resource
 	private RoleService roleService;
@@ -35,41 +35,43 @@ public class RoleAction {
 	@MenuMapping(url="/role",name="角色管理",code="platform_4",parentCode="platform")
 	@RequestMapping("")
 	public String showRole(){
-		
 		return "pages/rbac/role";
 	}
 	
 	@RequestMapping("/getRoleData")
 	@ResponseBody
 	public List<Map<String,Object>> getRoleDate(@RequestParam("id")Long rid){
-		if(rid==-1L)
+		if(rid==-1L){
 			rid = null;
+		}
 		return roleService.getSubRolesForMap(rid, false);
 	}
 	
-	@RequestMapping("/addRole")
+	@RequestMapping("/add")
 	@ResponseBody
 	public Map<String,Object> addRole(@FormParam("role") Role role,HttpServletRequest request){
 		role.setCreateBy(userService.getCurrentUserId(request));
-		if(role.getParentId()==null||role.getParentId()==-1L)
+		if(role.getParentId()==null||role.getParentId()==-1L){
 			role.setParentId(null);
-		roleService.addRole(role);
+		}
+		enhance(role).save();
 		return MessageUtils.getMapMessage(true);
 	}
 	
-	@RequestMapping("/logicDeleteRole")
+	@RequestMapping("/logicDelete")
     @ResponseBody
 	public Map<String,Object> deleteRole(@RequestParam("ids")Long[] ids){
 		roleService.delete(ids, true);
 		return MessageUtils.getMapMessage(true);
 	}
 	
-	 @RequestMapping("/updateRole")
+	 @RequestMapping("/update")
 	 @ResponseBody
 	 public Map<String,Object> updateRole(@FormParam("role") Role role){
-		 roleService.update(role);
+	     Role roleCache = roleService.get(role.getId());
+	     roleCache.setRoleName(role.getRoleName());
+	     roleCache.update();
 		 return MessageUtils.getMapMessage(true);
-		 
 	 }
 	 
 	 @RequestMapping("/assignRoleToUser")
@@ -82,8 +84,9 @@ public class RoleAction {
 	@RequestMapping("/getRoleDataByPermission")
 	@ResponseBody
 	public  List<Map<String,Object>> getRoleDataByPermission(@RequestParam("pid")Long pid,@RequestParam("rid")Long rid){
-		 if(rid==-1)
+		 if(rid==-1){
 			 rid = null;
+		 }
 		 return roleService.getAllRoleDataByPermission(pid, rid);
 	}
 }

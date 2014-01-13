@@ -66,17 +66,15 @@ function addRole(){
 		buttons:[{
 			text:'添加',
 			click:function(){
-				$("#roleForm").ajaxSubmitForm(contextPath+"/role/addRole",{"role.parentId":$.fn.zTree.getZTreeObj("roleTree").getSelectedNodes()[0].id},
+				$("#roleForm").ajaxSubmitForm(contextPath+"/role/add",{"role.parentId":$.fn.zTree.getZTreeObj("roleTree").getSelectedNodes()[0].id},
 						function(){
-					$("#roleForm").dialog("close");
-					$("#roleForm").reset();
-					
-					var nodes = ztree.getSelectedNodes();
-					ztree.reAsyncChildNodes(nodes[0],"",true);
-					ztree.expandNode(nodes[0],true);
-				},
+							$("#roleForm").dialog("close");
+							$("#roleForm").reset();
+							var nodes = ztree.getSelectedNodes();
+							ztree.reAsyncChildNodes(nodes[0],"",true);
+							ztree.expandNode(nodes[0],true);
+						},
 						function(){alert("服务器出错，请稍后再试...");});
-				
 			}
 		},{
 			text:'取消',
@@ -93,18 +91,16 @@ function addRole(){
 function deleteRole(){
 	if(ztree.getSelectedNodes().length>=1){
 		if(confirm("确认要删除该角色吗?")){
-			 $.post(contextPath+"/role/logicDeleteRole",{ids:ztree.getSelectedNodes()[0].id},function(result){
+			 $.post(contextPath+"/role/logicDelete",{ids:ztree.getSelectedNodes()[0].id},function(result){
 				 ztree.reAsyncChildNodes(ztree.getSelectedNodes()[0].getParentNode(),"refresh",true);
-					ztree.expandNode(ztree.getSelectedNodes()[0].getParentNode(),true); 
-
-				  });
+			     ztree.expandNode(ztree.getSelectedNodes()[0].getParentNode(),true); 
+			 });
 		}
 	}
 }
 
 function editRole(){
-	 
-	  $(":input[name='role.roleName']","#roleForm").val($.fn.zTree.getZTreeObj("roleTree").getSelectedNodes()[0].name);
+	$(":input[name='role.roleName']","#roleForm").val($.fn.zTree.getZTreeObj("roleTree").getSelectedNodes()[0].name);
 	$("#roleForm").dialog({
 		modal:true,
 		title:'编辑角色',
@@ -114,18 +110,15 @@ function editRole(){
 		buttons:[{
 			text:'保存',
 			click:function(){
-				$("#roleForm").ajaxSubmitForm(contextPath+"/role/updateRole",{"role.id":$.fn.zTree.getZTreeObj("roleTree").getSelectedNodes()[0].id},
+				$("#roleForm").ajaxSubmitForm(contextPath+"/role/update",{"role.id":$.fn.zTree.getZTreeObj("roleTree").getSelectedNodes()[0].id},
 						function(){
-					$("#roleForm").dialog("close");
-					var nodes = ztree.getSelectedNodes();
-					nodes[0].name = $(":input[name='role.roleName']","#roleForm").val();
-					ztree.updateNode(nodes[0]);
-					$("#roleForm").reset();
-					//ztree.reAsyncChildNodes(nodes[0].getParentNode(),"",true);
-					//ztree.expandNode(nodes[0].getParentNode(),true);
-				},
+							$("#roleForm").dialog("close");
+							var nodes = ztree.getSelectedNodes();
+							nodes[0].name = $(":input[name='role.roleName']","#roleForm").val();
+							ztree.updateNode(nodes[0]);
+							$("#roleForm").reset();
+						},
 						function(){alert("服务器出错，请稍后再试...");});
-				
 			}
 		},{
 			text:'取消',
@@ -182,59 +175,48 @@ function assignMenu(){
 		buttonAlign:'center',
 		show:'flod',
 		hide: "explode",
-		buttons:[{
-			text:'保存',
-			click:function(){
-				var ids="",checkStatus="" ;
-				$.each($.fn.zTree.getZTreeObj("menuTree").getChangeCheckedNodes(),function(index,e){
-					ids+="ids="+e.id+"&";
-					checkStatus+="checkStatus="+e.checked+"&";
-				});
-				alert(ids+checkStatus+"rid="+ztree.getSelectedNodes()[0].id);
-				$.post(contextPath+"/menu/assignMenu",ids+checkStatus+"rid="+ztree.getSelectedNodes()[0].id,function(result){
-					alert("成功");
-				});
-				/* $("#menuTree").ajaxSubmitForm(contextPath+"/role/updateRole",{"role.id":$.fn.zTree.getZTreeObj("roleTree").getSelectedNodes()[0].id},
-						function(){
-					$("#roleForm").dialog("close");
-					var nodes = ztree.getSelectedNodes();
-					nodes[0].name = $(":input[name='role.roleName']","#roleForm").val();
-					ztree.updateNode(nodes[0]);
-					$("#roleForm").reset();
-					//ztree.reAsyncChildNodes(nodes[0].getParentNode(),"",true);
-					//ztree.expandNode(nodes[0].getParentNode(),true);
-				},
-						function(){alert("服务器出错，请稍后再试...");}); */
-				
-			}
-		},{
-			text:'取消',
-			click:function(){
-				$("#menuTree").dialog("close");
-			}
-			}
-		 
-		         ]
+		buttons:[
+		         {
+					text:'保存',
+					click:function(){
+						var ids="",checkStatus="" ;
+						$.each($.fn.zTree.getZTreeObj("menuTree").getChangeCheckedNodes(),function(index,e){
+							ids+="ids="+e.id+"&";
+							checkStatus+="checkStatus="+e.checked+"&";
+						});
+						$.post(contextPath+"/menu/assignMenu",ids+checkStatus+"rid="+ztree.getSelectedNodes()[0].id,function(result){
+							alert("菜单分配成功");
+							$("#menuTree").dialog("close");
+						});
+					}
+		         },
+		         {
+					text:'取消',
+					click:function(){
+						$("#menuTree").dialog("close");
+					}
+		         }
+                ]
 	});
 }
 
 function assignPermission(){
 	var rid = ztree.getSelectedNodes()[0].id;
-	if(!rid)
+	if(!rid){
 		return false;
+	}
 	var grid = $("#permissionTable").flexigrid({
 		url: contextPath+'/permission/getPermissionDataByRole?rid='+rid,
 		dataType: 'json',
 		singleSelect:false,
 		colModel : [
-			{display: 'ID', name : 'id', width : 20, sortable : false, align: 'center'},
-			{display: '权限代码', name : 'code', width : 150, sortable : false, align: 'center'},
-			{display: '权限名称', name : 'name', width :250, sortable : false, align: 'center'}
-			
-			],
+					{display: 'ID', name : 'id', width : 20, sortable : false, align: 'center'},
+					{display: '权限代码', name : 'code', width : 150, sortable : false, align: 'center'},
+					{display: '权限名称', name : 'name', width :250, sortable : false, align: 'center'}
+				   ],
 		searchitems : [
-			{display: '权限代码', name : 'code'}
-			],
+		               {display: '权限代码', name : 'code'}
+		               ],
 		sortname: "id",
 		sortorder: "asc",
 		usepager: true,
@@ -253,28 +235,29 @@ function assignPermission(){
 		buttonAlign:'center',
 		show:'flod',
 		hide: "explode",
-		buttons:[{
-			text:'确定',
-			click:function(){
-				var selectRows = $('.trSelected', grid);
-				var ids = "",status="";
-		/* 		$.each(selectRows,function(index,e){
-					ids+="ids="+$(e).attr("id").substring(3)+"&";
-				}); */
-				$($(grid).flexChangedRows()).each(function(){
-					ids +="ids="+$(this).val()+"&";
-					status += "status="+($(this).attr("checked")=="checked")+"&";
-				});
-				if(ids!="")
-				  $.post(contextPath+"/permission/assignPermission",ids+status+"rid="+ztree.getSelectedNodes()[0].id,function(result){
-					alert("成功");
-				});  
-			}
-		},{
-			text:'取消',
-			click:function(){
-				$(this).dialog("close");
-			}
-		}]
+		buttons:[
+		         {
+					text:'确定',
+					click:function(){
+						var ids = "",status="";
+						$($(grid).flexChangedRows()).each(function(){
+							ids +="ids="+$(this).val()+"&";
+							status += "status="+($(this).attr("checked")=="checked")+"&";
+						});
+						if(ids!=""){
+						  $.post(contextPath+"/permission/assignPermission",ids+status+"rid="+ztree.getSelectedNodes()[0].id,function(result){
+								alert("权限分配成功");
+								$(".flexigrid").dialog("close");
+						  });  
+						}
+					}
+		         },
+		         {
+					text:'取消',
+					click:function(){
+						$(this).dialog("close");
+					}
+		         }
+		        ]
 	});
 }

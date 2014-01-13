@@ -16,35 +16,31 @@ import com.reeham.component.ddd.message.DomainMessage;
 @Introduce("message")
 public class RoleEvent {
 
-	@Send("assignRole2User")
+	@Send("role/assignRole2User")
 	public DomainMessage assign(Role role,User user){
 		Object[] params = {role,user};
 		return new DomainMessage(params);
 	}
 	
-	@Send("getSubRoles")
+	@Send("role/getSubRoles")
 	public DomainMessage getSubRoles(Role role){
 		return new DomainMessage(role);
 	}
 	
-	@Send("saveRole")
-	public DomainMessage save(Role role){
-		return new DomainMessage(role);
-	}
-	
-	@Send("updateRole")
-	public DomainMessage update(Role role){
-		return new DomainMessage(role);
-	}
-	
-	@Send("hasPermission")
+	@Send("role/hasPermission")
 	public DomainMessage hasPermission(Role role,String code){
 		Object[] params = {role.getId(),code};
 		return new DomainMessage(params);
 	}
-	@Send("accessMenu")
+	
+	@Send("role/accessMenu")
 	public DomainMessage accessMenu(Role role,String code){
 		Object[] params = {role.getId(),code};
 		return new DomainMessage(params);
 	}
+	
+	@Send("role/get")
+    public DomainMessage get(Long id){
+        return new DomainMessage(id);
+    }
 }

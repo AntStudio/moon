@@ -13,11 +13,7 @@ public interface RoleService extends BaseService<Role>,ModelLoader{
 	
 	public List<Map<String,Object>> getSubRolesForMap(Long rid,boolean deleteFlag); 
 	
-	public void addRole(Role role);
-	
 	public void delete(Long[] ids, boolean logicDel);
-	
-	public boolean update(Role role);
 	
 	/**
 	 * 根据权限获取所有的角色信息,如果该权限分配给了角色，那么checked属性为true，否者为false

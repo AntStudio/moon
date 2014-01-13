@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface RoleRepository {
 
     public Role get(Long id);
+    
 	public List<Long> getSubRoles(@Param("rid") Long rid,@Param("deleteFlag")boolean deleteFlag);
 	
 	public Long save(@Param("role")Role role);

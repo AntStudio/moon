@@ -626,11 +626,9 @@ Array.prototype.contains = function(item){
 							var changeRows = [];
 							 $(":checkbox[name='grid_checkbox']",t).each(function(){
 								if(!p.initRowsStatus.contains(this)&&$(this).attr("checked")){
-									alert(this);
 									changeRows.push(this);
 								}else
 									if(p.initRowsStatus.contains(this)&&!$(this).attr("checked")){
-										alert(this+".........");
 										changeRows.push(this);
 									}
 							 });
