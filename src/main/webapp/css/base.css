@@ -5,12 +5,16 @@
 
 .main-container{
 	position: absolute;
-	top: 50px;
-	right: 10px;
-	bottom: 5px;
+	top: 42px;
+	right: 0px;
+	bottom: 0px;
 	left: 0px;
 	border: none;
 	overflow: hidden;
+}
+
+.navbar{
+  background: #000;
 }
 
 
