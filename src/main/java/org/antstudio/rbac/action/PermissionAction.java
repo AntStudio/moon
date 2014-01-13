@@ -66,9 +66,10 @@ public class PermissionAction {
 	 */
 	@RequestMapping("/assignPermission")
 	@ResponseBody
-   public Map<String,Object> assignPermission(@RequestParam("ids")Long[] pids,@RequestParam("status")Boolean[] status,@RequestParam("rid")Long rid){ 
-	   permissionService.assignPermission(pids,status,rid);
-	   return MessageUtils.getMapMessage(true);
-   }
+    public Map<String, Object> assignPermission(@RequestParam("pids") Long[] pids,
+                            @RequestParam("status") Boolean[] status, @RequestParam("rids") Long[] rids) {
+        permissionService.assignPermission(pids, status, rids);
+        return MessageUtils.getMapMessage(true);
+    }
 	
 }

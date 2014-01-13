@@ -87,20 +87,45 @@ public class PermissionServiceImpl implements PermissionService,ModelLoader{
 	}
 
 	@Override
-	public void assignPermission(Long[] pids,Boolean[] status, Long rid) {
-	List<Long> addPids = new ArrayList<Long>();
-	List<Long> deletePids = new ArrayList<Long>();
-	for(int i=0,j=status.length;i<j;i++){
-		if(status[i])
-			addPids.add(pids[i]);
-		else
-			deletePids.add(pids[i]);
-	}
-	if(addPids.size()>0)
-    permissionRepository.assignAddPermission(addPids, rid);	
-	if(deletePids.size()>0)
-		 permissionRepository.assignDeletePermission(deletePids, rid);
-	}
+    public void assignPermission(Long[] pids, Boolean[] status, Long[] rids) {
+	    boolean singlePermission = (pids.length==1);
+        List<Long> adds = new ArrayList<Long>();
+        List<Long> deletes = new ArrayList<Long>();
+        if(!singlePermission){//给角色分配权限 1角色--》多权限
+            for (int i = 0, j = status.length; i < j; i++) {
+                if(pids[i]>0){
+                    if (status[i]) {
+                        adds.add(pids[i]);
+                    } else {
+                        deletes.add(pids[i]);
+                    }
+                }
+            }
+            if (adds.size() > 0) {
+                permissionRepository.assignAddPermission(adds.toArray(new Long[0]), rids);
+            }
+            if (deletes.size() > 0) {
+                permissionRepository.assignDeletePermission(deletes.toArray(new Long[0]), rids);
+            }
+        }else{//给角色分配权限 1权限--》多角色
+            for (int i = 0, j = status.length; i < j; i++) {
+                if(rids[i]>0){
+                    if (status[i]) {
+                        adds.add(rids[i]);
+                    } else {
+                        deletes.add(rids[i]);
+                    }
+                }
+            }
+            if (adds.size() > 0) {
+                permissionRepository.assignAddPermission(pids, adds.toArray(new Long[0]));
+            }
+            if (deletes.size() > 0) {
+                permissionRepository.assignDeletePermission(pids, deletes.toArray(new Long[0]));
+            }
+        }
+       
+    }
 
 	@Override
 	public Pager getPermissionsByRoleForPage(Map<String,Object> paramsMap) {

@@ -103,8 +103,8 @@ public class RbacInterceptor implements MethodInterceptor {
             try {
                 o = methodInvocation.proceed();
             } catch (Exception e) {// 捕获系统级日志,记录详细信息
-                log.error(e.getMessage()+" for details,please look for the tab_log in db");
                 String message = e.getClass().getName() + ":" + e.getLocalizedMessage();
+                log.error(message+" for details,please look for the tab_log in db");
                 StringBuffer bf = new StringBuffer(message + "\n");
                 for (StackTraceElement se : e.getStackTrace()) {
                     bf.append("at " + se.getClassName()

@@ -64,7 +64,7 @@ public interface PermissionService extends BaseService<Permission>{
 	 * @param pids
 	 * @param rid
 	 */
-	public void assignPermission(Long[] pids,Boolean[] status,Long rid);
+	public void assignPermission(Long[] pids,Boolean[] status,Long[] rids);
 	
 	/**
 	 * 根据角色获取权限信息

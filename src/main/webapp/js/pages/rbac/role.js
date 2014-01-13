@@ -241,11 +241,11 @@ function assignPermission(){
 					click:function(){
 						var ids = "",status="";
 						$($(grid).flexChangedRows()).each(function(){
-							ids +="ids="+$(this).val()+"&";
+							ids +="pids="+$(this).val()+"&";
 							status += "status="+($(this).attr("checked")=="checked")+"&";
 						});
 						if(ids!=""){
-						  $.post(contextPath+"/permission/assignPermission",ids+status+"rid="+ztree.getSelectedNodes()[0].id,function(result){
+						  $.post(contextPath+"/permission/assignPermission",ids+status+"rids="+ztree.getSelectedNodes()[0].id,function(result){
 								alert("权限分配成功");
 								$(".flexigrid").dialog("close");
 						  });  

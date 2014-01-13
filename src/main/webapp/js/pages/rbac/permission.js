@@ -41,11 +41,10 @@ function btnHandler(btn){
 				   click:function(){
 					   var ids="",checkStatus="" ;var dialog = this;
 						$.each(ztree.getChangeCheckedNodes(),function(index,e){
-							ids+="ids="+e.id+"&";
+							ids+="rids="+e.id+"&";
 							checkStatus+="status="+e.checked+"&";
 						});
-						console.log(dialog);
-						$.post(contextPath+"/permission/assignPermission",ids+checkStatus+"rid="+pid,function(result){
+						$.post(contextPath+"/permission/assignPermission",ids+checkStatus+"pids="+pid,function(result){
 							alert("成功");
 							dialog.close();
 						});
@@ -82,26 +81,26 @@ var setting = {
 			dataFilter: filter
 		}
 }; 
+		
+var znodes = [ {
+		name : '角色管理',
+		id : -1,
+		isParent : true
+	} ];
 
-
-	
-	
-var znodes = [{name:'角色管理',id:-1,isParent:true}];
-
-function filter(treeId, parentNode, childNodes) {
-	if (!childNodes) 
-		{
-		return null;
+	function filter(treeId, parentNode, childNodes) {
+		if (!childNodes) {
+			return null;
 		}
-	for (var i=0, l=childNodes.length; i<l; i++) {
-		childNodes[i].name = childNodes[i].roleName.replace(/\.n/g, '.');
-		childNodes[i].isParent = true;
-		childNodes[i].uid = childNodes[i].id;
+		for ( var i = 0, l = childNodes.length; i < l; i++) {
+			childNodes[i].name = childNodes[i].roleName.replace(/\.n/g, '.');
+			childNodes[i].isParent = true;
+			childNodes[i].uid = childNodes[i].id;
+		}
+		return childNodes;
 	}
-	return childNodes;
-}
- 
-$.fn.zTree.init($("#roleTree"), setting,znodes);
-ztree = $.fn.zTree.getZTreeObj("roleTree");
- 
+
+	$.fn.zTree.init($("#roleTree"), setting, znodes);
+	ztree = $.fn.zTree.getZTreeObj("roleTree");
+
 }

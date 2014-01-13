@@ -31,9 +31,9 @@ public interface PermissionRepository {
 	
 	public Long getPermission_count(Map<String,Object> paramMap);
 	
-	public void assignAddPermission(@Param("pids")List<Long> pids,@Param("rid")Long rid);
+	public void assignAddPermission(@Param("pids")Long[] pids,@Param("rids")Long[] rids);
 	
-	public void assignDeletePermission(@Param("pids")List<Long>  pids,@Param("rid")Long rid);
+	public void assignDeletePermission(@Param("pids")Long[]  pids,@Param("rids")Long[] rids);
 	
 	public List<Long> getPermissionsByRole(Map<String,Object> paramsMa);
 	
