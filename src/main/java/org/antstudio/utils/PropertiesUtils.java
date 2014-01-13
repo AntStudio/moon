@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 /**
  * 配置文件读取
  * @author Gavin
@@ -13,6 +15,8 @@ import java.util.Properties;
  */
 public class PropertiesUtils {
 
+    private static Logger log = Logger.getLogger(PropertiesUtils.class);
+    
 	public static Properties loadPropertiesFile(String filePath) throws FileNotFoundException, IOException{
 		Properties p = new Properties();
 		if(!filePath.startsWith("/")){
@@ -30,7 +34,7 @@ public class PropertiesUtils {
 		try {
 			return loadPropertiesFile(filePath);
 		} catch (FileNotFoundException e) {
-			System.out.println("文件"+filePath+"不存在,不进行加载.");
+		    log.warn("文件"+filePath+"不存在,不进行加载.");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

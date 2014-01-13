@@ -17,6 +17,7 @@ import org.antstudio.support.session.SessionContext;
 import org.antstudio.utils.Constants;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -34,9 +35,10 @@ public class RbacInterceptor implements MethodInterceptor {
 
 	@Resource
 	private UserService userService;
-
 	@Resource
 	private ModelContainer modelContainer;
+	
+	private Logger log = Logger.getLogger(RbacInterceptor.class);
 	@Override
 	public Object invoke(MethodInvocation methodInvocation) throws Throwable {
 		boolean hasPermission = true, accessMenu = true;
@@ -62,75 +64,76 @@ public class RbacInterceptor implements MethodInterceptor {
 				if(currentRole==null)
 					hasPermission = false;
 				else{
-				if (currentRole.hasPermission(methodInvocation.getMethod().getAnnotation(PermissionMapping.class)
-						.code())) {
-					System.out.println("具有"
-							+ methodInvocation.getMethod().getAnnotation(PermissionMapping.class).code() + "权限");
-					hasPermission = true;
-				} else {
-					System.out.println("meiyou具有"
-							+ methodInvocation.getMethod().getAnnotation(PermissionMapping.class).code() + "权限");
-					hasPermission = false;
-				}
+    				if (currentRole.hasPermission(methodInvocation.getMethod().getAnnotation(PermissionMapping.class)
+    						.code())) {
+    				    log.debug("当前角色具有"+ methodInvocation.getMethod().getAnnotation(PermissionMapping.class).code() + "权限");
+    					hasPermission = true;
+    				} else {
+    				    log.warn("当前角色没有"+ methodInvocation.getMethod().getAnnotation(PermissionMapping.class).code() + "权限");
+    					hasPermission = false;
+    				}
 				}
 			}
 			// 菜单拦截
-			if (method.isAnnotationPresent(MenuMapping.class)) {
-				if(currentRole==null)
-					return new ModelAndView("pages/login","from",from);
-				else
-				{
-				if (currentRole.accessMenu((method.getAnnotation(MenuMapping.class).code()))) {
-					System.out.println("具有" + method.getAnnotation(MenuMapping.class).code()
-							+ "菜单");
-					accessMenu = true;
-				} else {
-					System.out.println("meiyou具有"
-							+ methodInvocation.getMethod().getAnnotation(MenuMapping.class).code() + "菜单");
-					accessMenu = false;
-				}
-				}
-			}
+        if (method.isAnnotationPresent(MenuMapping.class)) {
+            if (currentRole == null) {
+                return new ModelAndView("pages/login", "from", from);
+            } else {
+                if (currentRole.accessMenu((method.getAnnotation(MenuMapping.class).code()))) {
+                    log.debug("当前角色可以访问 " + method.getAnnotation(MenuMapping.class).code() + "菜单");
+                    accessMenu = true;
+                } else {
+                    log.warn("当前角色不能访问 " + method.getAnnotation(MenuMapping.class).code() + "菜单");
+                    accessMenu = false;
+                }
+            }
+        }
 		//日志记录
-			if(method.isAnnotationPresent(LogRecord.class)){
-				if(currentUserId!=null){//只对登录的用户进行日志处理,主要处理操作日志
-				LogRecord logRecord = method.getAnnotation(LogRecord.class);
-				Log log = new Log(currentUser.getUserName(),currentUserId,logRecord.action());
-				modelContainer.enhanceModel(log).save();
-				}
-				
-			}
+        if (method.isAnnotationPresent(LogRecord.class)) {
+            if (currentUserId != null) {// 只对登录的用户进行日志处理,主要处理操作日志
+                LogRecord logRecord = method.getAnnotation(LogRecord.class);
+                Log log = new Log(currentUser.getUserName(), currentUserId, logRecord.action());
+                modelContainer.enhanceModel(log).save();
+            }
+
+        }
 			//具有相应的权限和菜单
-		if(hasPermission&&accessMenu){
-			Object o = null;
-			try{
-			  o = methodInvocation.proceed();
-			  
-			 }catch (Exception e) {//捕获系统级日志,记录详细信息
-				 String message = e.getClass().getName()+":"+e.getLocalizedMessage();
-				 StringBuffer bf = new StringBuffer(message+"\n");
-				 for(StackTraceElement se:e.getStackTrace()){
-					 bf.append("at "+se.getClassName()+"."+se.getMethodName()+"("+se.getFileName()+":"+se.getLineNumber()+")\n");
-				 }
-				 Log log ;
-				 if(currentUser==null)
-					 log = new Log("Not Login",-1L,message,bf.toString(),Constants.SYSTEM_LOG);
-				 else
-					 log = new Log(currentUser.getUserName(),currentUserId,message,bf.toString(),Constants.SYSTEM_LOG);
-				 
-				 modelContainer.enhanceModel(log).save();
-			}
-				return o;
-			
-			
-		}
+        if (hasPermission && accessMenu) {
+            Object o = null;
+            try {
+                o = methodInvocation.proceed();
+            } catch (Exception e) {// 捕获系统级日志,记录详细信息
+                log.error(e.getMessage()+" for details,please look for the tab_log in db");
+                String message = e.getClass().getName() + ":" + e.getLocalizedMessage();
+                StringBuffer bf = new StringBuffer(message + "\n");
+                for (StackTraceElement se : e.getStackTrace()) {
+                    bf.append("at " + se.getClassName()
+                                            + "."
+                                            + se.getMethodName()
+                                            + "("
+                                            + se.getFileName()
+                                            + ":"
+                                            + se.getLineNumber()
+                                            + ")\n");
+                }
+                Log log;
+                if (currentUser == null) {
+                    log = new Log("Not Login", -1L, message, bf.toString(), Constants.SYSTEM_LOG);
+                } else {
+                    log = new Log(currentUser.getUserName(), currentUserId, message, bf.toString(), Constants.SYSTEM_LOG);
+                }
+                modelContainer.enhanceModel(log).save();
+            }
+            return o;
+
+        }
 		
 		//不具有权限或菜单,返回json数据{"permission":"noPermission"}
-		if(method.isAnnotationPresent(ResponseBody.class)){
-			 SessionContext.getResponse().setContentType("text/plain; charset=UTF-8");
-			 SessionContext.getResponse().getWriter().write("{\"permission\":\"noPermission\"}");
-			 return null;
-		}
+        if (method.isAnnotationPresent(ResponseBody.class)) {
+            SessionContext.getResponse().setContentType("text/plain; charset=UTF-8");
+            SessionContext.getResponse().getWriter().write("{\"permission\":\"noPermission\"}");
+            return null;
+        }
 		return new ModelAndView("pages/accessError","hasPermission",hasPermission).addObject("accessMenu", accessMenu);
 	}
 
