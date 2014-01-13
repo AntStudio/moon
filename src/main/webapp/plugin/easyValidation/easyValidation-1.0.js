@@ -615,6 +615,7 @@
 	    }
 	};
 
+var resultMap = {};
 	/**
 	 * 验证插件方法入口
 	 */
@@ -624,6 +625,13 @@
 			return;
 		}
 		var $form = $(this);
+		var formId = $form.attr("id")+"-"+$form.attr("name");
+		if(options=="validate"){
+			doValidate();
+			return;
+		}
+		
+		 
 		$.fn.defaults.align =options.align|| $.fn.defaults.align;
 		$.fn.defaults.theme =options.theme|| $.fn.defaults.theme;
 		var fields = new Array();
@@ -671,21 +679,33 @@
 		});
 
 		$form.bind("submit", function(e) {// 表单提交事件绑定
+			doValidate().done(function(result){
+				if(result){
+					$form.submit();
+				}
+			});
+		 	return result;
+		});
+
+		function doValidate(){
 			getFields();
+			var dfd  = $.Deferred();
 			var $resultDfds = new Array();
 			if(!result){//如果之前验证通过就不用再次验证了
 				$.each(fields,function(index,data){
 					$resultDfds.push(method.validate(data.field, data.types, data.options1));
 				});
-				 method.when($resultDfds).done(function(data){
+				method.when($resultDfds).done(function(data){
 					 result = data;
-					 if(result){
-						$form.submit();
-					 }
+					 resultMap[formId]=data;
+					 dfd.resolve(result);
 				 });
+			}else{
+				dfd.resolve(result);
 			}
-		 	return result;
-		});
+
+			return dfd.promise();
+		}
 		//点击msg，msg消失并使相应表单获取焦点
 		$(".easyValidation").live("click",function() {
 			method.hide(this);
@@ -696,6 +716,12 @@
 				$("form :input[name='" + index + "']").focus();
 			}
 		});
+
+		if(options == "getResult"){
+			console.log(resultMap);
+			return resultMap[formId]||false;
+		}
+
 	};
 	/**
 	 * 四舍五入

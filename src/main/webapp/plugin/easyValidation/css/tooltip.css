@@ -1,6 +1,6 @@
 @import url("common.css");
 .easyValidation div.tooltip {
-  z-index: 2000;
+  z-index: 1030;
   display: block;
   font-size: 11px;
   display: inline-block;
@@ -49,7 +49,7 @@
   -ms-transform-origin: 50% 50% 0;
   transform-origin: 50% 50% 0;
   /*filter: progid:dximagetransform.microsoft.matrix(M11=0.7071, M12=-0.7071, M21=0.7071, M22=0.7071, SizingMethod='auto expand');*/
-  z-index: 1999;
+  z-index: 1;
 }
 .easyValidation .tooltip.top .tooltip-arrow {
   left: 47%;
