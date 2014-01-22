@@ -18,6 +18,11 @@ var setting = {
 				$("*:not('.ztree')").one("click",function(e){
 					 $("#rmenu").css("display","none");
 				});
+				if(treeNode.urlPath){
+					$(".preview").removeClass("hide");
+				}else{
+					$(".preview").addClass("hide");
+				}
 				$("#rmenu").css("left",event.pageX).css("top",event.pageY).css("display","inline");
 				}
 			}
@@ -35,6 +40,13 @@ function filter(treeId, parentNode, childNodes) {
 	for (var i=0, l=childNodes.length; i<l; i++) {
 		childNodes[i].name = (childNodes[i].menuName||'').replace(/\.n/g, '.');
 		childNodes[i].isParent = true;
+		
+		//取消左键单击进行对应路径的打开，修改为右键预览
+		if(childNodes[i].url){
+			childNodes[i].urlPath = contextPath+childNodes[i].url;
+		}
+		childNodes[i].url = "";
+			
 	}
 	return childNodes;
 }
@@ -88,7 +100,7 @@ function editMenu(){
 		return false;
 	}
 	$(":input[name='menu.menuName']").val(selectNode.menuName);
-	$(":input[name='menu.url']").val(selectNode.url);
+	$(":input[name='menu.url']").val(selectNode.urlPath);
 	$("#menuForm").dialog({
 		title:'编辑菜单',
 		buttons:[{
@@ -118,6 +130,10 @@ function editMenu(){
 }
 
 
+function preview(){
+	var selectNode = ztree.getSelectedNodes()[0];
+	window.open(selectNode.urlPath,"_blank");
+}
 function deleteMenu(){
 	if (!ztree.getSelectedNodes()[0].edit) {
 		alert("对不起,系统菜单不能删除");

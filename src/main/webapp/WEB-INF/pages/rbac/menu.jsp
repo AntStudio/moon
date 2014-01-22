@@ -42,6 +42,7 @@
 	    <li><a href="#" onclick="addMenu()">    <i class="fa fa-plus"></i>添加菜单</a></li>
 	    <li><a href="#" onclick="editMenu()">   <i class="fa fa-edit"></i>编辑菜单</a></li>
 	    <li><a href="#" onclick="deleteMenu()"> <i class="fa fa-minus-square-o"></i>删除菜单</a></li>
+	    <li class="preview hide"><a href="#" onclick="preview()"> <i class="fa fa-indent"></i>预览</a></li>
     </ul>
 
 		<%--菜单信息 --%>
