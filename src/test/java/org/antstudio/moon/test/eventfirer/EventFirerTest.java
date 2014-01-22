@@ -4,11 +4,9 @@ import javax.annotation.Resource;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.web.context.WebApplicationContext;
 
 import com.reeham.component.ddd.model.ModelContainer;
 
@@ -22,8 +20,6 @@ import com.reeham.component.ddd.model.ModelContainer;
 @WebAppConfiguration  
 @ContextConfiguration(locations = { "file:src/main/webapp/WEB-INF/spring-servlet.xml","file:src/main/webapp/WEB-INF/applicationContext.xml" })  
 public class EventFirerTest {
-    @Autowired  
-    private WebApplicationContext wac;
     @Resource
     private ModelContainer modelContainer;
     
