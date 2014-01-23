@@ -42,6 +42,10 @@ public @interface MenuMapping {
 	 */
 	public String parentCode() default "";
 	
-	
+	/**
+	 * the menu order , used to show menu orderly
+	 * @return
+	 */
+	public int menuOrder() default 0;
 	
 }

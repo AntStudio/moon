@@ -183,9 +183,25 @@ public class MenuServiceImpl implements MenuService {
 	
 	@Override
 	public Menu getMenuByCode(String code) {
-		if(code==null)
-		return null;
-		else
-		return	this.get(menuRepository.getByCode(code));
+		if (code == null) {
+			return null;
+		} else {
+			return this.get(menuRepository.getByCode(code));
+		}
+	}
+
+	@Override
+	public void sortMenus(Long parentId, Long[] childrenIds) {
+		int order = 0;
+		for(Long id:childrenIds){
+			Menu menu = get(id);
+			menu.setMenuOrder(order++);
+		}
+		if(parentId==-1L){
+			menuRepository.sortMenu(null, childrenIds,null);
+		}else{
+			menuRepository.sortMenu(parentId, childrenIds,get(parentId).getCode());
+		}
+		
 	}
 }

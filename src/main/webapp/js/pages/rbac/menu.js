@@ -11,6 +11,16 @@ var setting = {
 			dataType:'json',
 			dataFilter: filter
 		},
+		edit:{
+			drag:{
+				isMove:true,
+				next:true,
+				prev:true
+			},
+			enable:true,
+			showRemoveBtn:false,
+			showRenameBtn:false
+		},
 		callback: {
 			onRightClick: function(event, treeId, treeNode){
 				$.fn.zTree.getZTreeObj("menuTree").selectNode(treeNode);
@@ -25,11 +35,33 @@ var setting = {
 				}
 				$("#rmenu").css("left",event.pageX).css("top",event.pageY).css("display","inline");
 				}
+			},
+			onDrop:function(event, treeId, treeNodes, targetNode, moveType, isCopy){
+				if(moveType=="inner"){//如果是将菜单拖到目标节点的内部
+					var array = new Array();
+					$.each(targetNode.children,function(index,node){
+						array.push(node.id);
+					});
+					sortMenu.call(this,targetNode.id,array);
+				}
 			}
 		}
 
 }; 
 
+/**
+ * @param parentMenuId 父菜单id
+ * @param childrenMenuIds 子菜单id数组
+ */
+function sortMenu(parentMenuId,childrenMenuIds){
+	$.getJsonData(contextPath+"/menu/sort",
+				  {
+					parentMenuId:parentMenuId,
+					childrenMenuIds:childrenMenuIds
+				  }).done(function(data){
+					  alert("成功");
+				  });
+}
 var znodes = [{name:'菜单管理',id:-1,isParent:true}];
 
 function filter(treeId, parentNode, childNodes) {

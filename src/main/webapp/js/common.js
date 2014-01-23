@@ -149,3 +149,25 @@ $.fn.reset = function(){
 	$.returnValue=function(val){
 		return val;
 	};
+	
+	/**
+	 * 封装ajax数据交互
+	 */
+	var _defaults = {type:"Get",dataType:"json"};
+	$.getJsonData = function(url,params,opts){
+		var dfd = $.Deferred();
+		opts = $.extend({},_defaults,opts);
+		
+		$.ajax({
+			   url : url,
+			  type : opts.type,
+		  dataType : opts.dataType,
+		      data : params
+		}).done(function(data,textStatus, jqXHR ){
+			dfd.resolve(data,textStatus, jqXHR );
+		}).fail(function( jqXHR, textStatus, errorThrown ){
+			dfd.reject( jqXHR, textStatus, errorThrown );
+		});
+		
+		return dfd.promise();
+	};

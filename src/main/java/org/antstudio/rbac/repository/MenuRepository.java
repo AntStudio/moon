@@ -35,4 +35,7 @@ public interface MenuRepository{
 	public void deleteMenus(@Param("menus")List<Menu> menus);
 	
 	public void update(@Param("menu")Menu menu);
+	
+	public void sortMenu(@Param("parentId")Long parentId,
+						 @Param("childrenIds")Long[] childrenIds,@Param("parentCode")String parentCode);
 }

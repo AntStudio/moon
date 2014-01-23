@@ -132,4 +132,11 @@ public class MenuAction extends BaseAction{
         }
         return MessageUtils.getMapMessage(true);
     }
+	
+	@RequestMapping("/sort")
+	@ResponseBody
+    public Map<String, Object> sortMen(@RequestParam("parentMenuId")Long parentId,@RequestParam("childrenMenuIds[]")Long[] childrenIds) {
+		menuService.sortMenus(parentId, childrenIds);
+        return MessageUtils.getMapMessage(true);
+    }
 }

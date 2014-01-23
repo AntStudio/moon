@@ -32,6 +32,8 @@ public class Menu extends BaseDomain{
 	private String parentCode;
  
     private Long   createBy;
+    
+    private int   menuOrder;
 
     /**
      * 是否是叶子菜单，即是否有子菜单
@@ -133,6 +135,14 @@ public class Menu extends BaseDomain{
     public void setLeaf(boolean leaf) {
         this.leaf = leaf;
     }
+
+	public int getMenuOrder() {
+		return menuOrder;
+	}
+
+	public void setMenuOrder(int menuOrder) {
+		this.menuOrder = menuOrder;
+	}
     
     /******************** /getter/setter *******************/
 	 

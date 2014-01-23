@@ -49,4 +49,11 @@ public interface MenuService extends BaseService<Menu>,ModelLoader{
 	
 	public Menu getMenuByCode(String code);
 	
+	/**
+	 * 对菜单进行排序
+	 * @param parentId 需要排序的菜单的父菜单id
+	 * @param childrenIds 需要排序菜单id数组
+	 */
+	public void sortMenus(Long parentId,Long[] childrenIds);
+	
 }
