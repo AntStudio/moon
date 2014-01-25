@@ -28,13 +28,14 @@
 		<if test="pid==null">parent_id is null and parent_code is null</if>
 		<if test="pid!=null">parent_id=#{pid} or parent_code =(select code from
 			tab_menu where id=#{pid})</if>
-		order by code
+		order by menu_order,code
 	</select>
 	<select id="getAllMenus" resultType="Long">
 		select id from tab_menu
 		<if test="system==null"></if>
 		<if test="system==true">where code is not null</if>
 		<if test="system==false">where code is null and delete_flag = #{deleteFlag}</if>
+		order by menu_order asc;
 	</select>
 	<insert id="addMenus">
 		insert into

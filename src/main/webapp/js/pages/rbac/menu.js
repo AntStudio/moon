@@ -43,6 +43,13 @@ var setting = {
 						array.push(node.id);
 					});
 					sortMenu.call(this,targetNode.id,array);
+				}else{
+					var array = new Array();
+					var parentNode = targetNode.getParentNode();
+					$.each(parentNode.children,function(index,node){
+						array.push(node.id);
+					});
+					sortMenu.call(this,parentNode.id,array);
 				}
 			}
 		}
