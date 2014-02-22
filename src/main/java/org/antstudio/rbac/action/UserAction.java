@@ -94,6 +94,7 @@ public class UserAction extends BaseAction{
 	 @ResponseBody
 	 public Map<String,Object> addUser(@FormParam(value="user")User user,HttpServletRequest request){
 		 user.setCreateBy(userService.getCurrentUserId(request));
+		 user.encryptPassword();
 		 enhance(user).save();
 		 return MessageUtils.getMapMessage(true);
 	 }

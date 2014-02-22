@@ -13,6 +13,7 @@ import org.antstudio.rbac.repository.UserRepository;
 import org.antstudio.rbac.service.UserService;
 import org.antstudio.utils.ClassPropertiesUtil;
 import org.antstudio.utils.Constants;
+import org.antstudio.utils.MD5;
 import org.springframework.stereotype.Service;
 
 import com.reeham.component.ddd.annotation.Introduce;
@@ -65,6 +66,7 @@ public class UserServiceImpl implements UserService {
         if (isSysUser(user)) {// to validate the system user
             return validateSysUser(user);
         }
+        user.encryptPassword();
         Object loginUser = get(userRepository.login(user));
         if (loginUser != null)
             return (User) loginUser;

@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import org.antstudio.base.domain.BaseDomain;
 import org.antstudio.rbac.domain.repository.UserEvent;
 import org.antstudio.utils.Constants;
+import org.antstudio.utils.MD5;
 
 import com.reeham.component.ddd.annotation.Model;
 
@@ -76,6 +77,10 @@ public class User extends BaseDomain{
 	 */
 	private String contact;
 	
+	/**
+	 * 密码是否加密
+	 */
+	private boolean isEncrypt = false;
 	@Resource
 	private UserEvent userEvent;
 	
@@ -126,6 +131,12 @@ public class User extends BaseDomain{
 		return getId().equals(Constants.SYSTEM_USERID);
 	}
 	
+	public void encryptPassword(){
+	    if(this.password!=null&&!isEncrypt){//密码不为空,并且未加密
+	        isEncrypt = true;
+	        this.password = MD5.getMD5(password+"Moon");
+	    }
+	}
 	/********************  setter/getter  ********************/
 	
 	/**
