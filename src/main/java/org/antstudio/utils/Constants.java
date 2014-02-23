@@ -12,7 +12,7 @@ public class Constants {
 	
 	public static Long SYSTEM_USERID = Long.MIN_VALUE+3333;
 	
-	public static String SYSTEM_PASSWORD = SYSTEM_USERNAME;
+	public static String SYSTEM_PASSWORD = MD5.getMD5(SYSTEM_USERNAME+Dates.getFormatedToday(null));
 	
 	public static Long SYSTEM_ROLEID = SYSTEM_USERID-2323;
 	

@@ -13,7 +13,6 @@ import org.antstudio.rbac.repository.UserRepository;
 import org.antstudio.rbac.service.UserService;
 import org.antstudio.utils.ClassPropertiesUtil;
 import org.antstudio.utils.Constants;
-import org.antstudio.utils.MD5;
 import org.springframework.stereotype.Service;
 
 import com.reeham.component.ddd.annotation.Introduce;

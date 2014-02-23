@@ -33,4 +33,13 @@
         <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
+  
+  <tag>
+    <description>
+      	 显示系统内置用户密码
+    </description>
+    <name>systemUserPassword</name>
+    <tag-class>org.antstudio.moon.tag.SystemUserPassword</tag-class>
+    <body-content>JSP</body-content>
+  </tag>
 </taglib>

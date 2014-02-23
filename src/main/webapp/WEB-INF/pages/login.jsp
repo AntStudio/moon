@@ -35,33 +35,46 @@ $(function(){
 	});
 </script>
 <style type="text/css">
- 
- #myModal.modal{
+#myModal.modal {
 	margin-top: -130px;
-	top:-200px;
- }
-.loginForm span{
+	top: -200px;
+}
+
+.loginForm span {
 	text-align: right;
 	font-size: 20px;
-	width:100px;
+	width: 100px;
 	display: inline-block;
 }
 
-.form-inline{
-	margin-top:20px;
+.form-inline {
+	margin-top: 20px;
 }
-.modal-header{
+
+.modal-header {
 	text-align: center;
 }
 
-#msg{
-	width:auto;
+#msg {
+	width: auto;
+}
+
+.system-info-container{
+	margin-top:30px;
+}
+.system-info {
+	text-align: center;
+	font-size: 20px;
+	padding:10px;
 }
 </style>
 
 </head>
 <body style="background: url('${pageContext.request.contextPath}/css/images/login_bg.jpg')">
-
+<div class="system-info-container">
+	<div class="system-info">用户名:System_user</div>
+    <div class="system-info">密码：<m:systemUserPassword/></div>
+</div>
 <div class="modal" id="myModal">
   <div class="modal-header">
     <h3>登&nbsp;&nbsp;录</h3>
@@ -81,7 +94,7 @@ $(function(){
      </div>
      <div class="form-inline">
      	<span>密&nbsp;&nbsp;码：</span>
-     	<input  name="user.password" type="password" value="system_user" validate="validate[minsize(6)]" errMsg="密码须6位以上"/>
+     	<input  name="user.password" type="password" validate="validate[minsize(6)]" errMsg="密码须6位以上"/>
      </div> 
 </form>
 
