@@ -6,33 +6,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<m:require src="jquery,common,zt,js/ztree.extend.js,bootstrap,dialog,font,js/pages/rbac/menu.js"></m:require>
+<m:require src="jquery,common,zt,js/ztree.extend.js,bootstrap,dialog,font,{rbac/menu}"></m:require>
 <title>菜单</title>
  
-<style type="text/css">
-.rmenu {
-	position: absolute;
-	display: none;
-}
-
-.rmenu i {
-	color: #44A1CC;
-	margin-right: 10px;
-}
-
-.label-text {
-	width: 70px;
-	display: inline-block;
-}
-
-#menuForm input {
-	width: 80%;
-}
-
-#menuForm {
-	margin: 0px;
-}
-</style>
 </head>
 <body>
     <!-- 菜单树 -->

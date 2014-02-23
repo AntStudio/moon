@@ -1,0 +1,22 @@
+.rmenu {
+	position: absolute;
+	display: none;
+}
+
+.rmenu i {
+	color: #44A1CC;
+	margin-right: 10px;
+}
+
+.label-text {
+	width: 70px;
+	display: inline-block;
+}
+
+#menuForm input {
+	width: 80%;
+}
+
+#menuForm {
+	margin: 0px;
+}

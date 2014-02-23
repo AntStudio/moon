@@ -1,0 +1,12 @@
+.label-text {
+	width: 70px;
+	display: inline-block;
+}
+
+#userForm input {
+	width: 80%;
+}
+
+#userForm {
+	margin: 0px;
+}

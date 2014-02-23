@@ -5,23 +5,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<m:require src="jquery,common,zt,js/ztree.extend.js,bootstrap,table,dialog,js/pages/rbac/userList.js"></m:require>
+<m:require src="jquery,common,zt,js/ztree.extend.js,bootstrap,table,dialog,{rbac/userList}"></m:require>
 <title>用户管理</title>
-
-<style type="text/css">
-  .label-text{
-    width: 70px;
-    display: inline-block;
-  }
-  
-  #userForm input{
-    width:80%;
-  }
-  
-  #userForm {
-    margin:0px;
-  }
-</style>
 </head>
 <body style="margin:0;">
 <!-- 用户列表 -->
