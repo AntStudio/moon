@@ -3,6 +3,7 @@ package org.antstudio.moon.tag;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -27,10 +28,14 @@ public class Require extends TagSupport{
 	private String type;
 	private String src;
 	private Properties p;
+	private Pattern pattern = Pattern.compile("^\\s*\\{.*\\}\\s*$");
+	private String cssDefaultFolder,jsDefaultFolder;
 	{
 		try {
 			p = PropertiesUtils.loadPropertiesFile("~system~requireTag.properties");
 			p.putAll(PropertiesUtils.loadPropertiesFileIfExist("requireTag.properties"));
+			cssDefaultFolder = p.getProperty("default.css.folder", "css/pages/");
+			jsDefaultFolder = p.getProperty("default.js.folder", "js/pages/");
 		} catch (FileNotFoundException e) {
 			log.error("require初始化失败,未找到配置文件");
 			e.printStackTrace();
@@ -49,23 +54,25 @@ public class Require extends TagSupport{
 		String contextPath = RequestUtils.getContextPath(pageContext);
 		if(type==null||"js".equals(type)){//for js
 			for(String s:src.split(",")){
-				if(p.containsKey("js."+s)){
-					sb.append("<script type=\"text/javascript\" src=\""+contextPath+p.getProperty("js."+s)+"\"></script>\n");
+				if(pattern.matcher(s).matches()){//当时{Name}时,从默认路径获取
+					s = s.replaceAll("[\\s\\{\\}]", "");
+					sb.append(importCss(contextPath+cssDefaultFolder+s+".css"));
+					sb.append(importJs(contextPath+jsDefaultFolder+s+".js"));
+				}else if(p.containsKey("js."+s)){
+					sb.append(importJs(contextPath+p.getProperty("js."+s)));
 				}else{
-					if(s.endsWith(".js")){
-						sb.append("<script type=\"text/javascript\" src=\""+contextPath+s+"\"></script>\n");
-					}
+					sb.append(importJs(contextPath+s));
 				}
-				if(p.containsKey("css."+s)){
-					sb.append(" <link rel=\"stylesheet\" href=\""+contextPath+p.getProperty("css."+s)+"\" type=\"text/css\" />\n");
+				if(type==null&&p.containsKey("css."+s)){
+					sb.append(importCss(contextPath+p.getProperty("css."+s)));
 				}
 			}
 		}else{//for css
 			for(String s:src.split(",")){
 				if(p.containsKey("css."+s)){
-					sb.append(" <link rel=\"stylesheet\" href=\""+contextPath+p.getProperty("css."+s)+"\" type=\"text/css\" />\n");
+					sb.append(importCss(contextPath+p.getProperty("css."+s)));
 				}else{
-					sb.append(" <link rel=\"stylesheet\" href=\""+contextPath+s+"\" type=\"text/css\" />\n");
+					sb.append(importCss(contextPath+s));
 				}
 			}
 		}
@@ -77,6 +84,13 @@ public class Require extends TagSupport{
 		return EVAL_PAGE;
 	}
 	
+	private String importJs(String path){
+		return "<script type=\"text/javascript\" src=\""+path+"\"></script>\n";
+	}
+	
+	private String importCss(String path){
+		return " <link rel=\"stylesheet\" href=\""+path+"\" type=\"text/css\" />\n";
+	}
 	
 	public void setType(String type) {
 		this.type = type;
