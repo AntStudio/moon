@@ -121,9 +121,9 @@
 			return table;
 		},
 		renderPagination:function(opts){
-			var startIndex = (opts.pageIndex-1)*opts.pageSize+1;
-			var endIndex = startIndex+opts.currentDataSize-1;
-			var pageCount = Math.ceil(opts.total/opts.pageSize);
+			var startIndex = (opts.currentDataSize==0)?0:((opts.pageIndex-1)*opts.pageSize+1);
+			var endIndex = (opts.currentDataSize==0)?0:(startIndex+opts.currentDataSize-1);
+			var pageCount = Math.ceil((opts.total||1)/opts.pageSize);
 			opts.pageCount = pageCount||1;
 
 			var paginationHtml = "<div class=\"grid-pagination\">"
@@ -146,23 +146,23 @@
 		   +endIndex
 		   +"</span>"
 		   +"<span>条,共</span>"
-		   +"<span clss=\"total\">" 
-		   +opts.total
-		   +"条记录</span>"
+		   +"<span class=\"total\">" 
+		   +(opts.total||0)
+		   +"</span>条记录"
 		   +"</div>"
 		   +"</div>";
 		   return paginationHtml;
 		},
 		refreshPagination:function(opts){
 			var $pagination = $(".grid-pagination",this);
-			var startIndex = (opts.pageIndex-1)*opts.pageSize+1;
-			var endIndex = startIndex+opts.currentDataSize-1;
-			var pageCount = Math.ceil(opts.total/opts.pageSize);
+			var startIndex = (opts.currentDataSize==0)?0:((opts.pageIndex-1)*opts.pageSize+1);
+			var endIndex = (opts.currentDataSize==0)?0:(startIndex+opts.currentDataSize-1);
+			var pageCount = Math.ceil((opts.total||1)/opts.pageSize);
 			opts.pageCount = pageCount||1;
 			$pagination.find(":text[name='currentPage']").val(opts.pageIndex||1);
 			$pagination.find(".pagecount").html(pageCount);
 			$pagination.find(".current-data-info").html(startIndex+"~"+endIndex);
-			$pagination.find(".total").html(opts.total);
+			$pagination.find(".total").html(opts.total||0);
 		},
 		renderModal:function(){
 			return "<div class=\"modal-backdrop fade hide\"><span> <i class=\"icon-spinner icon-spin\"></i>Loading...</span></div>";
@@ -179,6 +179,7 @@
 			
 			methods.getData.call(this,opts).done(function(data){
 				tableDataCache[$container.selector]=data;
+				opts.currentDataSize = data.length;
 				var dataHtml="";
 				$.each(data,function(index,columnData){
 					dataHtml+="<tr data-number=\""+(index)+"\" data-id=\"tr_"+columnData[(opts.rowId||{})]+"\"";//data-number表示当前行的序号,用户获取选择行使用,从0开始计数
