@@ -50,34 +50,33 @@ public class RbacInterceptor implements MethodInterceptor {
 				+(currentServletRequest.getQueryString()==null?"":("?"+currentServletRequest.getQueryString()));
 		Method method = methodInvocation.getMethod();
 		if((method.isAnnotationPresent(LoginRequired.class)||method.getDeclaringClass().isAnnotationPresent(LoginRequired.class))
-				&&currentUserId==null)//需要登录的操作，如果没有登录返回登录页面
-		{
-			return new ModelAndView("pages/login","from",from).addObject("info","请先登录...");
+				&&currentUserId==null){//需要登录的操作，如果没有登录返回登录页面
+		    SessionContext.getResponse().sendRedirect("user/login?from="+from);
 		}
 		
 		if(currentUserId!=null){
 			currentUser = userService.get(currentUserId);
 			currentRole = currentUser.getRole();
 		}
-			// 权限拦截
-			if (method.isAnnotationPresent(PermissionMapping.class)) {
-				if(currentRole==null)
+		// 权限拦截
+		if (method.isAnnotationPresent(PermissionMapping.class)) {
+			if(currentRole==null){
+				hasPermission = false;
+			} else {
+				if (currentRole.hasPermission(methodInvocation.getMethod().getAnnotation(PermissionMapping.class)
+						.code())) {
+				    log.debug("当前角色具有"+ methodInvocation.getMethod().getAnnotation(PermissionMapping.class).code() + "权限");
+					hasPermission = true;
+				} else {
+				    log.warn("当前角色没有"+ methodInvocation.getMethod().getAnnotation(PermissionMapping.class).code() + "权限");
 					hasPermission = false;
-				else{
-    				if (currentRole.hasPermission(methodInvocation.getMethod().getAnnotation(PermissionMapping.class)
-    						.code())) {
-    				    log.debug("当前角色具有"+ methodInvocation.getMethod().getAnnotation(PermissionMapping.class).code() + "权限");
-    					hasPermission = true;
-    				} else {
-    				    log.warn("当前角色没有"+ methodInvocation.getMethod().getAnnotation(PermissionMapping.class).code() + "权限");
-    					hasPermission = false;
-    				}
 				}
 			}
-			// 菜单拦截
+		}
+		// 菜单拦截
         if (method.isAnnotationPresent(MenuMapping.class)) {
             if (currentRole == null) {
-                return new ModelAndView("pages/login", "from", from);
+                SessionContext.getResponse().sendRedirect("user/login?from="+from);
             } else {
                 if (currentRole.accessMenu((method.getAnnotation(MenuMapping.class).code()))) {
                     log.debug("当前角色可以访问 " + method.getAnnotation(MenuMapping.class).code() + "菜单");
