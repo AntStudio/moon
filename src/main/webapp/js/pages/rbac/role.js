@@ -1,3 +1,4 @@
+var ztree;
 var setting = {
         data: {  
             simpleData: {  
@@ -17,7 +18,6 @@ var setting = {
 				if ($.fn.zTree.getZTreeObj("roleTree").getSelectedNodes()[0]){
 					$("*:not('.ztree')").one("click",function(e){
 						 $("#rmenu").css("display","none");
-						// $("*:not('.ztree')").unbind("click");
 					});
 					$("#rmenu").css("left",event.pageX).css("top",event.pageY).css("display","inline");
 				}
@@ -49,22 +49,18 @@ function filter(treeId, parentNode, childNodes) {
 		 $("#rmenu").css("display","none");
 		 $("*").unbind("mousedown");
  }
- var ztree;
-$(document).ready(function(){
-	$("#rmenu").menu();
+ 
+$(function(){
 	$.fn.zTree.init($("#roleTree"), setting,znodes);
 	 ztree = $.fn.zTree.getZTreeObj("roleTree");
 });
 
 function addRole(){
 	$("#roleForm").dialog({
-		modal:true,
 		title:'添加角色',
-		buttonAlign:'center',
-		show:'flod',
-		hide: "explode",
 		buttons:[{
 			text:'添加',
+			css:"btn btn-primary",
 			click:function(){
 				$("#roleForm").ajaxSubmitForm(contextPath+"/role/add",{"role.parentId":$.fn.zTree.getZTreeObj("roleTree").getSelectedNodes()[0].id},
 						function(){
@@ -78,6 +74,7 @@ function addRole(){
 			}
 		},{
 			text:'取消',
+			css:"btn",
 			click:function(){
 				$("#roleForm").dialog("close");
 				$("#roleForm").reset();
@@ -102,33 +99,32 @@ function deleteRole(){
 function editRole(){
 	$(":input[name='role.roleName']","#roleForm").val($.fn.zTree.getZTreeObj("roleTree").getSelectedNodes()[0].name);
 	$("#roleForm").dialog({
-		modal:true,
 		title:'编辑角色',
-		buttonAlign:'center',
-		show:'flod',
-		hide: "explode",
 		buttons:[{
-			text:'保存',
-			click:function(){
-				$("#roleForm").ajaxSubmitForm(contextPath+"/role/update",{"role.id":$.fn.zTree.getZTreeObj("roleTree").getSelectedNodes()[0].id},
-						function(){
-							$("#roleForm").dialog("close");
-							var nodes = ztree.getSelectedNodes();
-							nodes[0].name = $(":input[name='role.roleName']","#roleForm").val();
-							ztree.updateNode(nodes[0]);
-							$("#roleForm").reset();
-						},
-						function(){alert("服务器出错，请稍后再试...");});
-			}
-		},{
-			text:'取消',
-			click:function(){
-				$("#roleForm").dialog("close");
-				$("#roleForm").reset();
-			}
-			}
-		 
-		         ]
+					text:'保存',
+					css:"btn btn-primary",
+					click:function(){
+						$("#roleForm").ajaxSubmitForm(contextPath+"/role/update",
+								{"role.id":$.fn.zTree.getZTreeObj("roleTree").getSelectedNodes()[0].id},
+								function(){
+									$("#roleForm").dialog("close");
+									var nodes = ztree.getSelectedNodes();
+									nodes[0].name = $(":input[name='role.roleName']","#roleForm").val();
+									ztree.updateNode(nodes[0]);
+									$("#roleForm").reset();
+								},
+								function(){alert("服务器出错，请稍后再试...");});
+					}
+				},
+				{
+					text:'取消',
+					css:"btn",
+					click:function(){
+						$("#roleForm").dialog("close");
+						$("#roleForm").reset();
+					}
+				}
+			  ]
 	});  
 }
 
@@ -155,29 +151,25 @@ function assignMenu(){
 
 	}; 
 	function filter(treeId, parentNode, childNodes) {
-	if (!childNodes) 
-		{
-		return null;
+		if (!childNodes) {
+			return null;
 		}
-	for (var i=0, l=childNodes.length; i<l; i++) {
-		childNodes[i].name = childNodes[i].menuName.replace(/\.n/g, '.')+"   路径："+childNodes[i].url;
-		childNodes[i].url = "";
-		childNodes[i].isParent = true;
+		for (var i=0, l=childNodes.length; i<l; i++) {
+			childNodes[i].name = childNodes[i].menuName.replace(/\.n/g, '.')+"   路径："+childNodes[i].url;
+			childNodes[i].url = "";
+			childNodes[i].isParent = true;
+		}
+		return childNodes;
 	}
-	return childNodes;
-}
+	
 	var menuNodes = [{name:'菜单管理',id:-1,isParent:true,checked:true}];
 	$.fn.zTree.init($("#menuTree"), menuTreeSetting,menuNodes);
 	$("#menuTree").dialog({
-		modal:true,
 		title:'分配菜单',
-		width:500,
-		buttonAlign:'center',
-		show:'flod',
-		hide: "explode",
 		buttons:[
 		         {
 					text:'保存',
+					css:"btn btn-primary",
 					click:function(){
 						var ids="",checkStatus="" ;
 						$.each($.fn.zTree.getZTreeObj("menuTree").getChangeCheckedNodes(),function(index,e){
@@ -192,6 +184,7 @@ function assignMenu(){
 		         },
 		         {
 					text:'取消',
+					css:"btn",
 					click:function(){
 						$("#menuTree").dialog("close");
 					}
@@ -205,55 +198,44 @@ function assignPermission(){
 	if(!rid){
 		return false;
 	}
-	var grid = $("#permissionTable").flexigrid({
+	var grid = $("#permissionTable").table({
 		url: contextPath+'/permission/getPermissionDataByRole?rid='+rid,
-		dataType: 'json',
-		singleSelect:false,
-		colModel : [
-					{display: 'ID', name : 'id', width : 20, sortable : false, align: 'center'},
-					{display: '权限代码', name : 'code', width : 150, sortable : false, align: 'center'},
-					{display: '权限名称', name : 'name', width :250, sortable : false, align: 'center'}
+		multiSelect:true,
+		columns : [
+					{display: 'ID', name : 'id', width : 20, sort : false, align: 'center'},
+					{display: '权限代码', name : 'code', width : 150, sort : false, align: 'center'},
+					{display: '权限名称', name : 'name', width :250, sort : false, align: 'center'}
 				   ],
-		searchitems : [
-		               {display: '权限代码', name : 'code'}
-		               ],
-		sortname: "id",
-		sortorder: "asc",
-		usepager: true,
 		title: '权限列表',
-		useRp: true,
-		rp: 15,
-		showTableToggleBtn: true,
-		width: '100%',
-		height: 200
+		formatData:function(data){
+			 return data.rows;
+		}
 	});   
-	$(grid).flexReload({url: contextPath+'/permission/getPermissionDataByRole?rid='+rid});
-	$(".flexigrid").dialog({
-		modal:true,
+	$("#permissionTable").dialog({
 		title:'分配权限',
 		width:480,
-		buttonAlign:'center',
-		show:'flod',
-		hide: "explode",
 		buttons:[
 		         {
 					text:'确定',
+					css:"btn btn-primary",
 					click:function(){
+						var dialog = this;
 						var ids = "",status="";
-						$($(grid).flexChangedRows()).each(function(){
-							ids +="pids="+$(this).val()+"&";
-							status += "status="+($(this).attr("checked")=="checked")+"&";
+						$(grid.getChangedRows()).each(function(index,e){
+							ids +="pids="+e.id+"&";
+							status += "status="+(e.checked||false)+"&";
 						});
 						if(ids!=""){
 						  $.post(contextPath+"/permission/assignPermission",ids+status+"rids="+ztree.getSelectedNodes()[0].id,function(result){
 								alert("权限分配成功");
-								$(".flexigrid").dialog("close");
+								dialog.close();
 						  });  
 						}
 					}
 		         },
 		         {
 					text:'取消',
+					css:"btn",
 					click:function(){
 						$(this).dialog("close");
 					}

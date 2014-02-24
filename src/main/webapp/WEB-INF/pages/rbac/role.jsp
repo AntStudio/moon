@@ -5,14 +5,24 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<m:require src="jquery,common,zt,js/ztree.extend.js,jqueryui,flexgrid,js/pages/rbac/role.js"></m:require>
+<m:require src="jquery,common,bootstrap,zt,js/ztree.extend.js,font,dialog,table,js/pages/rbac/role.js"></m:require>
 <title>角色管理</title>
  <style type="text/css">
-.label{
-width:80px;
-text-align: right;
-float:left;
+.rmenu {
+	position: absolute;
+	display: none;
 }
+
+.rmenu i {
+	color: #44A1CC;
+	margin-right: 10px;
+}
+
+.label-text {
+	width: 70px;
+	display: inline-block;
+}
+
 </style>
  
 </head>
@@ -20,22 +30,22 @@ float:left;
 <!-- 角色树 -->
    <div id="roleTree" class="ztree"></div>
    <!-- 右键菜单 -->
-<ul id="rmenu" style="width: 100px;position:absolute;display:none">
-    <li><a href="#" onclick="addRole()"><span class="ui-icon ui-icon-disk"></span>添加角色</a></li>
-    <li><a href="#" onclick="editRole()"><span class="ui-icon ui-icon-zoomin"></span>编辑角色</a></li>
-    <li><a href="#" onclick="deleteRole()"><span class="ui-icon ui-icon-zoomout"></span>删除角色</a></li>
-    <li><a href="#" onclick="assignMenu()"><span class="ui-icon ui-icon-zoomin"></span>分配菜单</a></li>
-    <li><a href="#" onclick="assignPermission()"><span class="ui-icon ui-icon-zoomin"></span>分配权限</a></li>
+<ul id="rmenu"  class="dropdown-menu rmenu">
+    <li><a href="#" onclick="addRole()"><i class="fa fa-plus"></i>添加角色</a></li>
+    <li><a href="#" onclick="editRole()"><i class="fa fa-edit"></i>编辑角色</a></li>
+    <li><a href="#" onclick="deleteRole()"><i class="fa fa-minus-square-o"></i>删除角色</a></li>
+    <li><a href="#" onclick="assignMenu()"><i class="fa fa-share"></i>分配菜单</a></li>
+    <li><a href="#" onclick="assignPermission()"><i class="fa fa-share"></i>分配权限</a></li>
 </ul>
    
    <!-- 创建角色表单 -->
    <form action="" id="roleForm" style="display:none;">
-    <p><span class="label">角色名:</span><input type="text" name="role.roleName"/>
+    <p><span class="label-text">角色名:</span><input type="text" name="role.roleName"/>
    </form>
    <!-- 菜单树 -->
    <div id="menuTree" class="ztree"></div>
    
    <!-- 权限列表 -->
-    <table id="permissionTable" style="display:none;"></table> 
+    <div id="permissionTable" style="display:none;"></div> 
 </body>
 </html>

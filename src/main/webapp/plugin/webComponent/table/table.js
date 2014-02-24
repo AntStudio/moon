@@ -19,7 +19,8 @@
 		showSelectBox:false,//是否显示单选框或者复选框
 		multiSelect:true,//是否允许多选
 		showNumber:true,//是否显示序号(从1开始计数)
-		buttons:[]
+		buttons:[],
+		emptyParent:true//是否清空容器
 	};
 
 	var methods  = {
@@ -32,7 +33,11 @@
 				var dataHtml="<tbody>";
 				tableDataCache[$container.selector]=data;
 				$.each(data,function(index,columnData){
-					dataHtml+="<tr data-number=\""+(index)+"\" data-id=\"tr_"+columnData[(opts.rowId||{})]+"\">";//data-number表示当前行的序号,用户获取选择行使用,从0开始计数
+					dataHtml+="<tr data-number=\""+(index)+"\" data-id=\"tr_"+columnData[(opts.rowId||{})]+"\"";//data-number表示当前行的序号,用户获取选择行使用,从0开始计数
+					if(columnData.checked){//是否选中
+						dataHtml+=" class=\"selected\" ";
+					}
+					dataHtml+=">";
 					if(opts.showNumber){//处理序号列
 						dataHtml+="<td class=\"number\">"+(index+1)+"</td>";
 					}
@@ -104,7 +109,11 @@
 				tableHtml+=methods.renderModal();
 				tableHtml+=methods.renderSelection();
 				tableHtml+="</div>";
-				$container.append($tableDiv.append($(tableHtml)));
+				if(opts.emptyParent){
+					$container.html($tableDiv.append($(tableHtml)));
+				}else{
+					$container.append($tableDiv.append($(tableHtml)));
+				}
 				tableCache[$container.selector] = table;
 				methods.bindEvents.call($container,opts);
 			});
@@ -172,7 +181,11 @@
 				tableDataCache[$container.selector]=data;
 				var dataHtml="";
 				$.each(data,function(index,columnData){
-					dataHtml+="<tr data-number=\""+(index)+"\">";//data-number表示当前行的序号,用户获取选择行使用,从0开始计数
+					dataHtml+="<tr data-number=\""+(index)+"\" data-id=\"tr_"+columnData[(opts.rowId||{})]+"\"";//data-number表示当前行的序号,用户获取选择行使用,从0开始计数
+					if(columnData.checked){//是否选中
+						dataHtml+=" class=\"selected\" ";
+					}
+					dataHtml+=">";
 					if(opts.showNumber){//处理序号列
 						dataHtml+="<td class=\"number\">"+(index+1)+"</td>";
 					}
@@ -206,6 +219,20 @@
 				 }
 			 });
 			return selectedData;
+		},
+		getChangedRows:function(opts){
+			var $container = $(table.selector);
+			var changedRows = [],tableData = tableDataCache[$container.selector];
+			 $("tbody tr",$container).each(function(index,tr){
+				 var $tr=$(tr); 
+				 if(tableData[$tr.attr("data-number")].checked!=$tr.hasClass("selected")){
+					 changedRows.push($.extend({}, tableData[$tr
+									.attr("data-number")], {
+								checked : $tr.hasClass("selected")
+							}));
+				 }
+			 });
+			return changedRows;
 		},
 		getData:function(opts){
 			var dfd = $.Deferred();
@@ -421,6 +448,9 @@
 			},
 			getSelect:function(){
 				return methods.getSelect.call(table.selector);
+			},
+			getChangedRows:function(){
+				return methods.getChangedRows.call(table);
 			}
 	};
 	var tableCache = {};//用于存储表对象
