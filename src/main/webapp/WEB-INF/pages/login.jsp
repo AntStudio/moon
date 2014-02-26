@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<m:require src="jquery,bootstrap,common,ev"/>
+<m:require src="jquery,common,ev,font,bootstrap"/>
 <title>Moon</title>
 <script>
 $(function(){
@@ -27,83 +27,149 @@ $(function(){
 			$("#loginForm").reset();
 		});
 		
-		$('#myModal').animate({
+	/* 	$('#myModal').animate({
 			top:"50%"
-		});
+		},function(){
+			$(".form-inline").animate({"margin-left":0});
+		}); */
 				
+		$(".form-container").animate({
+			"margin-top":"-120px"
+		},2000,"linear",function(){
+			$(".system-info-container").animate({
+				"margin-left":0
+			});
+		});
 		$("#loginForm").validate({align:'right',theme:"darkblue"});
 	});
 </script>
 <style type="text/css">
-#myModal.modal {
-	margin-top: -130px;
-	top: -200px;
-}
-
-.loginForm span {
-	text-align: right;
-	font-size: 20px;
-	width: 100px;
-	display: inline-block;
-}
-
-.form-inline {
-	margin-top: 20px;
-}
-
-.modal-header {
-	text-align: center;
-}
-
-#msg {
-	width: auto;
-}
 
 .system-info-container{
-	margin-top:30px;
+	padding-top:30px;
+	color:#C4BDC3;
+	margin-left:-150%;
 }
 .system-info {
 	text-align: center;
 	font-size: 20px;
 	padding:10px;
 }
-</style>
 
+  input[type="text"],input[type="password"]{
+  	background: url('${pageContext.request.contextPath}/css/images/input.png');
+  	border: 0;
+	outline: none;
+	height: 40px;
+	width: 330px;
+	line-height: 30px;
+	text-align: center;
+	font-size:25px;
+	color:#FFFFFF;
+	padding-left: 35px;
+  }
+  
+  .bg-image{
+  	position: absolute;
+	z-index: -1;
+	width: 100%;
+	height: 100%;
+  }
+  
+  .body{
+  	margin:0;
+  	background: url("${pageContext.request.contextPath}/css/images/bg.png");
+  }
+  
+  .form-inline{
+  	margin-bottom: 20px;
+  	display: inline-block;;
+  }
+  
+  .form-container{
+  	text-align: center;
+  	position: absolute;
+	top: 50%;
+	/* margin-top: -120px; */
+	margin-top:-50%;
+	left: 50%;
+	margin-left: -430px;
+  }
+  
+  .input-icon{
+  	color: #FFFFFF;
+	font-size: 25px;
+	margin-right: -40px;
+  }
+  
+  input[type="button"]{
+  	width: 90px;
+	font-size: 20px;
+	height: 46px;
+	margin-left: -11px;
+  }
+  
+  #submit{
+  	margin-right:25px;
+  }
+  
+  .title{
+  	color: white;
+	font-size: 70px;
+	font-family: cursive;
+  }
+  
+  .sub-title{
+  	color: #816944;
+	font-size: 25px;
+	margin-left:20px;
+  }
+  
+  .split-line{
+  	border: solid 1px rgba(159, 185, 231, 0.08);
+	margin: 40px 0;
+	width: 120%;
+	display: inline-block;
+	margin-left: -10%;
+  }
+</style>
+  
 </head>
-<body style="background: url('${pageContext.request.contextPath}/css/images/login_bg.jpg')">
+<body class="body">
+
 <div class="system-info-container">
 	<div class="system-info">用户名:System_user</div>
     <div class="system-info">密码：<m:systemUserPassword/></div>
 </div>
-<div class="modal" id="myModal">
-  <div class="modal-header">
-    <h3>登&nbsp;&nbsp;录</h3>
-  </div>
-  <div class="modal-body"> 
 
+<%-- 
  	 <div id="msg" class="alert alert-error  <c:choose>
    <c:when test="${info}">   
    </c:when>
    <c:otherwise>  hide
    </c:otherwise>
-</c:choose>">${info}</div>
+</c:choose>">${info}</div> --%>
+
+<div class="form-container">
+   <%-- <div style="margin-bottom:20px;"><img src="${pageContext.request.contextPath}/css/images/title.png"/></div> --%>
+   
+   <div class="title-container">
+   	<span class="title">Moon</span>
+   	<span class="sub-title">Web Platform</span>
+   </div>
+   <div class="split-line"></div>
    <form id="loginForm" class="loginForm">
      <div class="form-inline">
-     	<span>用户名：</span>
+     	<i class="fa fa-user input-icon"></i>
      	<input type="text" name="user.userName" value="system_user" validate="validate[minsize(6),maxsize(15)]" errMsg="用户名为6~15个字符"/>
      </div>
      <div class="form-inline">
-     	<span>密&nbsp;&nbsp;码：</span>
+     	<i class="fa fa-lock input-icon"></i>
      	<input  name="user.password" type="password" validate="validate[minsize(6)]" errMsg="密码须6位以上"/>
      </div> 
+     
+    <input  type="button" id="submit" class="btn btn-default  btn-info" value="登   录"/>
 </form>
-
-
-</div>
-  <div class="modal-footer">
-    <input  type="button" id="submit" class="btn" value="登录"/>
-	<input  type="button" id="reset" class="btn" value="重置"/>
-	</div>
   
 </div>
 </body>
