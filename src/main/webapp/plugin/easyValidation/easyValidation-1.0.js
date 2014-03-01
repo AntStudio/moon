@@ -548,7 +548,7 @@
 	             deferred = length <= 1 && dfds[0] && jQuery.isFunction(dfds[0].promise) ?
 	                 dfds[0] :
 	                 jQuery.Deferred();
-				 var result = false; 
+				 var result = true; 
 	              // 构造成功（resolve）回调函数
 	             function resolveFunc(i) {
 	                 return function (value) {
@@ -627,8 +627,7 @@ var resultMap = {};
 		var $form = $(this);
 		var formId = $form.attr("id")+"-"+$form.attr("name");
 		if(options=="validate"){
-			doValidate();
-			return;
+			return doValidate();
 		}
 		
 		 
@@ -691,18 +690,14 @@ var resultMap = {};
 			getFields();
 			var dfd  = $.Deferred();
 			var $resultDfds = new Array();
-			if(!result){//如果之前验证通过就不用再次验证了
-				$.each(fields,function(index,data){
-					$resultDfds.push(method.validate(data.field, data.types, data.options1));
-				});
-				method.when($resultDfds).done(function(data){
-					 result = data;
-					 resultMap[formId]=data;
-					 dfd.resolve(result);
-				 });
-			}else{
-				dfd.resolve(result);
-			}
+			$.each(fields,function(index,data){
+				$resultDfds.push(method.validate(data.field, data.types, data.options1));
+			});
+			method.when($resultDfds).done(function(data){
+				 result = data;
+				 resultMap[formId]=data;
+				 dfd.resolve(result);
+			 });
 
 			return dfd.promise();
 		}
