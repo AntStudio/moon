@@ -54,8 +54,9 @@ function btnHandler(btnTest){
 			 			        		 $("#userForm").dialog("close");
 			 			        		 $("#userTable").table("refresh");
 			 			        		 $("#userForm").reset();
+			 			        		 moon.success("用户添加成功");
 			 			        	 },
-			 			        	 function(){alert("失败");}
+			 			        	 function(){moon.error("失败");}
 			 			     );
 			        	 }
 			         },
@@ -71,7 +72,7 @@ function btnHandler(btnTest){
 	}else if(btnTest=='editBtn'){//编辑用户
 		var selectRows = table.getSelect();
 		if(selectRows.length!=1){
-			alert("请选中一条数据进行编辑.");
+			moon.warn("请选中一条数据进行编辑.");
 			return false;
 		}
 		var id = selectRows[0].id;
@@ -90,7 +91,7 @@ function btnHandler(btnTest){
 			 			        		 table.refresh();
 			 			        		 $("#userForm").reset();
 			 			        	 },
-			 			        	 function(){alert("失败");}
+			 			        	 function(){moon.error("失败");}
 			 			     );
 			        	 }
 			         },
@@ -106,7 +107,7 @@ function btnHandler(btnTest){
 	}else if(btnTest=='deleteBtn'){//删除数据
 		var selectRows =  table.getSelect();
 		if(selectRows.length<1){
-			alert("请选择要删除的数据");
+			moon.warn("请选择要删除的数据");
 			return false;
 		}
 		if(confirm("确认删除这"+selectRows.length+"条数据?")){
@@ -122,7 +123,7 @@ function btnHandler(btnTest){
 	}else{//分配角色
 		var selectRows = table.getSelect();
 		if(selectRows.length!=1){
-			alert("请选择一个用户进行角色分配.");
+			moon.warn("请选择一个用户进行角色分配.");
 			return false;
 		}
 		var uid = selectRows[0].id;
@@ -152,14 +153,14 @@ function btnHandler(btnTest){
 				   css : "btn btn-primary",
 				   click:function(){
 					   if(ztree.getSelectedNodes().length!=1){
-						   alert("请选择一个角色进行分配");
+						   moon.warn("请选择一个角色进行分配");
 						   return false;
 					   }
 					  $.post(contextPath+"/role/assignRoleToUser",
 							  {uid:uid,
 						       rid:ztree.getSelectedNodes()[0].id},
 						       function(result){
-						    	   alert("角色分配成功");
+						    	   moon.info("角色分配成功");
 						    	   table.refresh();
 						    	   $("#roleTree").dialog("close");
 						    	   ztree.cancelSelectedNode(ztree.getSelectedNodes[0]);

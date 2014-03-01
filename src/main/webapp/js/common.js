@@ -175,19 +175,33 @@ $.fn.reset = function(){
 	var moon = {};
 	
 (function(m){
-	m.alert = function(options){
-		_noty(formatParam(options),{type:'alert'});
+	m.alert = function(options,layout){
+		_noty(formatParam(options),{type:'alert',layout:layout||"topCenter"});
 	};
 	
-	m.notify = function(options){
-		var _n = _noty(formatParam(options),{type:'information'});
+	m.info = function(options,layout){
+		var _n = _noty(formatParam(options),{type:'information',layout:layout||"topCenter"});
 		setTimeout(function(){
 			$.noty.close(_n.options.id);
 		},3000);
 	};
 	
-	m.error = function(options){
-		var _n = _noty(formatParam(options),{type:'error'});
+	m.error = function(options,layout){
+		var _n = _noty(formatParam(options),{type:'error',layout:layout||"topCenter"});
+		setTimeout(function(){
+			$.noty.close(_n.options.id);
+		},3000);
+	};
+	
+	m.warn = function(options,layout){
+		var _n = _noty(formatParam(options),{type:'warning',layout:layout||"topCenter"});
+		setTimeout(function(){
+			$.noty.close(_n.options.id);
+		},3000);
+	};
+	
+	m.success = function(options,layout){
+		var _n = _noty(formatParam(options),{type:'success',layout:layout||"topCenter"});
 		setTimeout(function(){
 			$.noty.close(_n.options.id);
 		},3000);
@@ -201,6 +215,6 @@ $.fn.reset = function(){
 	}
 	
 	function _noty(op1,op2){
-		return noty($.extend(op1,op2));
+		return noty($.extend({layout:"topCenter"},op1,op2));
 	}
 })(moon);

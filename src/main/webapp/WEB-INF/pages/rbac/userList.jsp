@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<m:require src="jquery,common,zt,js/ztree.extend.js,bootstrap,table,dialog,{rbac/userList}"></m:require>
+<m:require src="jquery,common,zt,js/ztree.extend.js,bootstrap,table,dialog,noty,{rbac/userList}"></m:require>
 <title>用户管理</title>
 </head>
 <body style="margin:0;">

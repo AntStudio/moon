@@ -1,6 +1,6 @@
 $(function(){
 	//登录页面欢迎信息
-	moon.notify("Welcome to Moon!");
+	moon.info("Welcome to Moon!","top");
 	
 	//登录动作
 	$("#submit").click(function(){
