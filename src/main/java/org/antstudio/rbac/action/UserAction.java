@@ -43,8 +43,8 @@ public class UserAction extends BaseAction{
 	 * @return
 	 */
 	@RequestMapping(value = "/login")
-	public ModelAndView login(){
-		 return new ModelAndView("pages/login");
+	public ModelAndView login(@RequestParam("from") String from){
+		 return new ModelAndView("pages/login","from",from);
 	}
 	 
 	/**

@@ -6,16 +6,17 @@ $(function(){
 	$("#submit").click(function(){
 		$("form").validate("validate").done(function(result){
 			if(result){
-				$("#loginForm").ajaxSubmitForm("${pageContext.request.contextPath}/user/login/validate",{},
+				$("#loginForm").ajaxSubmitForm(contextPath+"/user/login/validate",{},
 						function(result) {
-						if("${from}")
-							$.href("${from}");
-						else
-							$.href("${pageContext.request.contextPath}/index");
-							}, 
-							function(result) {
-								moon.error("用户名或密码错误");
-							});
+							if(from){
+								$.href(from);
+							}else{
+								$.href(contextPath+"/index");
+							}
+						}, 
+						function(result) {
+							moon.error("用户名或密码错误");
+						});
 			}
 		});
 		

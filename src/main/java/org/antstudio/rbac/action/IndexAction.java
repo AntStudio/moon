@@ -2,6 +2,7 @@ package org.antstudio.rbac.action;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.antstudio.rbac.domain.User;
 import org.antstudio.rbac.domain.annotation.LoginRequired;
@@ -34,13 +35,15 @@ public class IndexAction {
 	 * @throws Exception 
 	 */
 	@RequestMapping("/index")
-	//@LogRecord(action="登录系统,进入主页")
 	public ModelAndView index(HttpServletRequest request) throws Exception{
-		//throw new Exception("出错了");
 		User currentUser = userService.getCurrentUser(request);
 		return new ModelAndView("pages/index")
 		.addObject("currentUser",currentUser)
 		.addObject("menus",menuService.getTopMenusByRole(currentUser.getRoleId()));
 	}
 	
+	@RequestMapping("/")
+	public void home(HttpServletResponse response) throws Exception{
+		response.sendRedirect("index");
+	}
 }
