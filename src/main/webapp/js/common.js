@@ -171,3 +171,36 @@ $.fn.reset = function(){
 		
 		return dfd.promise();
 	};
+	
+	var moon = {};
+	
+(function(m){
+	m.alert = function(options){
+		_noty(formatParam(options),{type:'alert'});
+	};
+	
+	m.notify = function(options){
+		var _n = _noty(formatParam(options),{type:'information'});
+		setTimeout(function(){
+			$.noty.close(_n.options.id);
+		},3000);
+	};
+	
+	m.error = function(options){
+		var _n = _noty(formatParam(options),{type:'error'});
+		setTimeout(function(){
+			$.noty.close(_n.options.id);
+		},3000);
+	};
+	
+	function formatParam(options){
+		if(typeof(options)=='string'){
+			options={text:options};
+		}
+		return options;
+	}
+	
+	function _noty(op1,op2){
+		return noty($.extend(op1,op2));
+	}
+})(moon);

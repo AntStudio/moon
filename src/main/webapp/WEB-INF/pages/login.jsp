@@ -6,33 +6,33 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<m:require src="jquery,common,ev,font,bootstrap"/>
+<m:require src="jquery,common,ev,font,bootstrap,noty"/>
 <title>Moon</title>
 <script>
 $(function(){
+	moon.notify("Welcome to Moon!");
 	$("#submit").click(function(){
-		$("#loginForm").ajaxSubmitForm("${pageContext.request.contextPath}/user/login/validate",{},
-			function(result) {
-			if("${from}")
-				$.href("${from}");
-			else
-				$.href("${pageContext.request.contextPath}/index");
-				}, 
-				function(result) {
-					$("#msg").html("用户名或密码错误.").show();
-				});
+		$("form").validate("validate").done(function(result){
+			if(result){
+				$("#loginForm").ajaxSubmitForm("${pageContext.request.contextPath}/user/login/validate",{},
+						function(result) {
+						if("${from}")
+							$.href("${from}");
+						else
+							$.href("${pageContext.request.contextPath}/index");
+							}, 
+							function(result) {
+								moon.error("用户名或密码错误");
+							});
+			}
 		});
+		
+	});
 
 		$("#reset").click(function() {
 			$("#loginForm").reset();
 		});
 		
-	/* 	$('#myModal').animate({
-			top:"50%"
-		},function(){
-			$(".form-inline").animate({"margin-left":0});
-		}); */
-				
 		$(".form-container").animate({
 			"margin-top":"-120px"
 		},2000,"linear",function(){
@@ -40,7 +40,7 @@ $(function(){
 				"margin-left":0
 			});
 		});
-		$("#loginForm").validate({align:'right',theme:"darkblue"});
+		$("#loginForm").validate({align:'bottom',theme:"darkblue"});
 	});
 </script>
 <style type="text/css">
