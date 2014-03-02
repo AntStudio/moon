@@ -42,6 +42,7 @@ var temp = [];
 function btnHandler(btnTest){
 	btnTest = btnTest.name;
 	if(btnTest=='addBtn'){//添加用户
+		$('#userForm').reset();
 		$('#userForm').dialog({
 			title:"添加用户",
 			buttons:[

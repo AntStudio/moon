@@ -15,7 +15,7 @@ $(function(){
 							}
 						}, 
 						function(result) {
-							moon.error("用户名或密码错误");
+							moon.error("用户名或密码错误","top");
 						});
 			}
 		});

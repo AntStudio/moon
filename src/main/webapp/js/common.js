@@ -2,11 +2,9 @@
  * reset all the field of form,call like $("#loginForm").reset();
  */
 $.fn.reset = function(){
-	$(':input',this)  
-	 .not(':button, :submit, :reset, :hidden')  
-	 .val('')  
-	 .removeAttr('checked')  
-	 .removeAttr('selected'); 
+	$(":text,:password",this).val("");
+	$(":radio",this).prop("selected",false);
+	$(":checkbox",this).prop("checked",false);
 };
  
  /**
