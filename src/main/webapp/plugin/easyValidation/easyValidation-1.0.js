@@ -9,6 +9,7 @@
 
 (function($) {
 
+	var formCache={};//表单缓存
 	var method = {
 		/**
 		 * 验证表单里的每一个值
@@ -627,6 +628,7 @@ var resultMap = {};
 		var $form = $(this);
 		var formId = $form.attr("id")+"-"+$form.attr("name");
 		if(options=="validate"){
+			options = formCache[$form.selector].options; 
 			return doValidate();
 		}
 		
@@ -656,6 +658,11 @@ var resultMap = {};
 			});
 		}
 		getFields();
+		if(isCached($form.selector)){
+			console.log(options);
+			formCache[$form.selector].options = options;
+			return;
+		}
 		$.each(fields,function(index,e){
 			/**
 			 * 各个表单项的blur或click事件绑定
@@ -713,10 +720,10 @@ var resultMap = {};
 		});
 
 		if(options == "getResult"){
-			console.log(resultMap);
 			return resultMap[formId]||false;
 		}
-
+		
+		formCache[$form.selector]={"form":$form,"options":options};
 	};
 	/**
 	 * 四舍五入
@@ -752,4 +759,15 @@ var resultMap = {};
 		return s / temp;
 	};
 
+	/**
+	 * 表单是否被缓存
+	 */
+	function isCached(selector){
+		for(var s in formCache){
+			if(selector==s){
+				return true;
+			}
+		}	
+		return false;
+	}
 })(jQuery);

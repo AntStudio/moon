@@ -4,7 +4,7 @@ $(function(){
 	
 	//登录动作
 	$("#submit").click(function(){
-		$("form").validate("validate").done(function(result){
+		$("#loginForm").validate("validate").done(function(result){
 			if(result){
 				$("#loginForm").ajaxSubmitForm(contextPath+"/user/login/validate",{},
 						function(result) {

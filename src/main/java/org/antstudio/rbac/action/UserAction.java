@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.antstudio.base.action.BaseAction;
 import org.antstudio.log.domain.Log;
 import org.antstudio.log.service.LogService;
+import org.antstudio.moon.rest.annotation.Post;
 import org.antstudio.rbac.domain.Role;
 import org.antstudio.rbac.domain.User;
 import org.antstudio.rbac.domain.annotation.LoginRequired;
@@ -191,5 +192,17 @@ public class UserAction extends BaseAction{
 		 user.setPassword(newPassword);
 		 user.updateUser();
 		 return MessageUtils.getMapMessage(true);
+	 }
+	 
+	 /**
+	  * 检查用户名是否存在
+	  * @param userName
+	  * @return
+	  */
+	 @LoginRequired
+	 @Post("/checkUserName")
+	 @ResponseBody
+	 public Map<String,Object> checkUserName(@RequestParam("userName")String userName){
+		 return MessageUtils.getMapMessage(true,"userNameExists",userService.isUserNameExists(userName));
 	 }
 }

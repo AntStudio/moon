@@ -73,6 +73,10 @@
 		)
 	</update>
 
+	<select id="isUserNameExists" resultType="Boolean">
+		select count(*)>0 from tab_user where user_name=#{userName}
+	</select>
+
 	<resultMap type="org.antstudio.rbac.domain.User" id="user">
 		<result column="role_id" property="roleId" />
 		<result column="user_name" property="userName" />

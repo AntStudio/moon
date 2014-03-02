@@ -43,5 +43,5 @@ public interface UserRepository{
 	
 	public void logicDeleteUser(@Param("ids") Long[] ids);
 	
-	
+	public boolean isUserNameExists(@Param("userName")String userName);
 }

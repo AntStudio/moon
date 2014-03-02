@@ -1,3 +1,6 @@
+.easyValidation{
+	z-index: 1052;
+}
 .easyValidation.transparent{
 	position:absolute;
 	filter:alpha(opacity=0);

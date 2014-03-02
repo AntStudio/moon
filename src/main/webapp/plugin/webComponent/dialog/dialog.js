@@ -4,12 +4,14 @@
  * @Date 2014-01-06
  */
 
-var dialogCache = {};
 (function(){
+	var dialogCache = {};
+	
 	var defaults = {
 		title:"",
 		buttons:[],
-		width:560
+		width:560,
+		callBack:{}
 	};
 
 	var methods  = {
@@ -52,25 +54,62 @@ var dialogCache = {};
 							 "margin-left":-opts.width/2});
 			dialogCache[selector] = $dialogDiv;
 			$dialogDiv.modal("show");
-
 		},
 		/**
 		** 绑定事件，如.close的关闭对话框
 		**/
 		bindEvents:function(opts){
 			var $dialog = this;
-			$(".close",$dialog).bind("click",function(){
-				$dialog.modal("hide");
+			if(isCached(opts.selector)){
+				$dialog.unbind();
+			}else{
+				$(".close",$dialog).bind("click",function(){
+					$dialog.modal("hide");
+				});
+			}
+			$dialog.on('show.bs.moda', function (e) {
+				if(opts.beforeShow){
+					opts.beforeShow.call($dialog);
+				}
+			});
+			$dialog.on('shown.bs.modal', function (e) {
+				if(opts.afterShown){
+					opts.afterShown.call($dialog);
+				}
+			});
+			$dialog.on('hide.bs.modal', function (e) {
+				if(opts.beforeClose){
+					opts.beforeClose.call($dialog);
+				}
+			});
+			$dialog.on('hidden.bs.modal', function (e) {
+				if(opts.afterClosed){
+					opts.afterClosed.call($dialog);
+				}
 			});
 		}
 	};
 
+	/**
+	 * 对话框是否被缓存
+	 */
+	function isCached(selector){
+		for(var s in dialogCache){
+			if(selector==s){
+				return true;
+			}
+		}	
+		return false;
+	}
 	var dialog = {
 			renderDialog:function(){
 				methods.renderDialog.call($(this),dialog.opts);
 			},
 			close:function(){
 				dialogCache[dialog.selector].modal("hide");
+			},
+			reBindEvents:function(){
+				methods.bindEvents.call($(this),dialog.opts);
 			}
 	};
 	$.fn.dialog=function(opts){
@@ -81,6 +120,15 @@ var dialogCache = {};
 			}
 		}else{
 			opts=$.extend({},defaults,opts);
+			for(var selector in dialogCache){
+				if($(this).selector==selector){
+					dialog.opts = opts;
+					dialog.reBindEvents.call(dialogCache[dialog.selector]);
+					dialogCache[dialog.selector].modal("show");
+					return;
+				}
+			}	
+				
 			dialog.opts = opts;
 			dialog.selector=$(this).selector;
 			dialog.renderDialog.call($(this),opts);

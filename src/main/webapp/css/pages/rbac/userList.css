@@ -10,3 +10,9 @@
 #userForm {
 	margin: 0px;
 }
+
+.fa-check{
+	color: #6cc644;
+	font-size: 20px;
+	margin-left: 2px;
+}

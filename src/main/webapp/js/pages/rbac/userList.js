@@ -45,20 +45,30 @@ function btnHandler(btnTest){
 		$('#userForm').reset();
 		$('#userForm').dialog({
 			title:"添加用户",
+			afterShown:function(){
+				$("#userForm").validate({align:'right',theme:"darkblue"});
+			},
+			beforeClose:function(){
+				$("#userForm").validate("hide");
+			},
 			buttons:[
 			         {
 			        	 text : "保存",
 			        	 css  : "btn btn-primary",
 			        	 click:function(){
-			        		 $("#userForm").ajaxSubmitForm(contextPath+"/user/add","",
-			        				 function(){
-			 			        		 $("#userForm").dialog("close");
-			 			        		 $("#userTable").table("refresh");
-			 			        		 $("#userForm").reset();
-			 			        		 moon.success("用户添加成功");
-			 			        	 },
-			 			        	 function(){moon.error("失败");}
-			 			     );
+			        		 $("#userForm").validate("validate").done(function(result){
+			        			 if(result){
+			        				 $("#userForm").ajaxSubmitForm(contextPath+"/user/add","",
+					        				 function(){
+					 			        		 $("#userForm").dialog("close");
+					 			        		 $("#userTable").table("refresh");
+					 			        		 $("#userForm").reset();
+					 			        		 moon.success("用户添加成功");
+					 			        	 },
+					 			        	 function(){moon.error("失败");}
+					 			     );
+			        			 }
+			        		 });
 			        	 }
 			         },
 			         {
@@ -80,20 +90,31 @@ function btnHandler(btnTest){
 		$("#userForm").autoCompleteForm(contextPath+"/user/get",{id:id});
 		$('#userForm').dialog({
 			title:"编辑用户",
+			afterShown:function(){
+				$("#userForm").validate({align:'right',theme:"darkblue",model:"update"});
+			},
+			beforeClose:function(){
+				$("#userForm").validate("hide");
+			},
 			buttons:[
 			         {
 			        	 text : "保存",
 			        	 css  : "btn btn-primary",
 			        	 click:function(){
-			        		 $("#userForm").ajaxSubmitForm(contextPath+"/user/update",
-				        			 {"user.id":id},
-			        				 function(){
-			 			        		 $("#userForm").dialog("close");
-			 			        		 table.refresh();
-			 			        		 $("#userForm").reset();
-			 			        	 },
-			 			        	 function(){moon.error("失败");}
-			 			     );
+			        		 $("#userForm").validate("validate").done(function(result){
+			        			 if(result){
+					        		 $("#userForm").ajaxSubmitForm(contextPath+"/user/update",
+						        			 {"user.id":id},
+					        				 function(){
+					 			        		 $("#userForm").dialog("close");
+					 			        		 table.refresh();
+					 			        		 $("#userForm").reset();
+					 			        		 moon.success("修改用户信息成功");
+					 			        	 },
+					 			        	 function(){moon.error("失败");}
+					 			     );
+			        			 }
+			        		 });
 			        	 }
 			         },
 			         {
@@ -222,3 +243,19 @@ function filter(treeId, parentNode, childNodes) {
 	return childNodes;
 }
  
+function isUserNameExists(field,type,opts){
+	console.log(opts.model);
+	if(opts.model=="update"){
+		return "";
+	}else{
+		var dfd = $.Deferred();
+		$.getJsonData(contextPath+"/user/checkUserName",{userName:field.val()},{type:"Post"}).done(function(result){
+			if(result.userNameExists){
+				dfd.resolve("用户名已经存在.<br/>");
+			}else{
+				dfd.resolve("");
+			}
+		});
+		return dfd.promise();
+	}
+}

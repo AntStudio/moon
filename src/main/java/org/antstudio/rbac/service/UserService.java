@@ -48,5 +48,6 @@ public interface UserService extends BaseService<User>,ModelLoader{
 	
 	public void delete(Long ids[],boolean logicDel);
 	
+	public boolean isUserNameExists(String userName);
 	
 }
