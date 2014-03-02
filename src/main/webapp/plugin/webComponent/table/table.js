@@ -20,7 +20,8 @@
 		multiSelect:true,//是否允许多选
 		showNumber:true,//是否显示序号(从1开始计数)
 		buttons:[],
-		emptyParent:true//是否清空容器
+		emptyParent:true,//是否清空容器
+		dragSelect:false
 	};
 
 	var methods  = {
@@ -313,21 +314,21 @@
 			/**********************拖动事件处理***********************************/
 			var topY,bottomY;//拖动区域的上下边界
 			var mouseDown = false;
-			var _TitleWidth = 37;
-			if(opts.multiSelect){//允许多选时才绑定拖动事件
-				$($container).mousedown(function(event){
+			var _TitleWidth = 37+36;
+			if(opts.multiSelect&&opts.dragSelect){//允许多选时才绑定拖动事件
+				$("tbody",$container).mousedown(function(event){
 					mouseDown = true;
 					var x = event.pageX,y=event.pageY;
-					 $(this).mousemove(function(e){
+					 $($container).mousemove(function(e){
 						 if(mouseDown){
 							$("#area").removeClass("hide");
 							var ex = e.pageX,ey=e.pageY;
-							topY = (ey>y?y:ey)- $container.find("table").offset().top+_TitleWidth;
+							topY = (ey>y?y:ey)- $container.find("tbody").offset().top+_TitleWidth;
 							bottomY = topY+Math.abs(ey-y);
-
+							
 							$("#area").css({
 								top:topY,
-								left:(ex>x?x:ex)-$container.find("table").offset().left,
+								left:(ex>x?x:ex)-$container.find("tbody").offset().left,
 								width:Math.abs(ex-x),
 								height:Math.abs(ey-y)
 							});
@@ -369,7 +370,7 @@
 			}
 			function select(){
 			   $("tbody tr",$container).each(function(index,e){
-				if($(e).offset().top-$container.find("table").offset().top+$(e).height()+_TitleWidth>=topY&&$(e).offset().top-$container.find("table").offset().top+_TitleWidth<=bottomY){
+				if($(e).offset().top-$container.find("tbody").offset().top+$(e).height()+_TitleWidth>=topY&&$(e).offset().top-$container.find("tbody").offset().top+_TitleWidth<=bottomY){
 						$(e).trigger("select");
 					}else{
 						$(e).trigger("unselect");
