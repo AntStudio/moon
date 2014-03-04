@@ -46,7 +46,6 @@ public class PermissionServiceImpl implements PermissionService,ModelLoader{
 
 	@Override
 	public Object loadModel(Object identifier) {
-		System.out.println(identifier);
 		return load((Long) identifier);
 	}
 
