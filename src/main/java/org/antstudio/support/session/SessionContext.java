@@ -14,6 +14,25 @@ public class SessionContext {
    public static void setRequest(HttpServletRequest request) {  
        requestLocal.set(request);  
    }  
+   
+   public static String getFullPath(){
+	   HttpServletRequest request = getRequest();
+	   StringBuilder fullPath = new StringBuilder();
+	   if(request.getProtocol().contains("HTTPS")){
+		   fullPath.append("https://");
+	   }else{
+		   fullPath.append("http://");
+	   }
+	   
+	   fullPath.append(request.getServerName());
+	   
+	   if(request.getServerPort()!=80){
+		   fullPath.append(":").append(request.getServerPort());
+	   }
+	   fullPath.append(request.getContextPath());
+	   return fullPath.toString();
+   }
+   
    public static HttpServletResponse getResponse() {  
        return (HttpServletResponse)responseLocal.get();  
    }  

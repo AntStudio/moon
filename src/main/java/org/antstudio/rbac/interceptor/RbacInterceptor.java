@@ -51,7 +51,7 @@ public class RbacInterceptor implements MethodInterceptor {
 		Method method = methodInvocation.getMethod();
 		if((method.isAnnotationPresent(LoginRequired.class)||method.getDeclaringClass().isAnnotationPresent(LoginRequired.class))
 				&&currentUserId==null){//需要登录的操作，如果没有登录返回登录页面
-		    SessionContext.getResponse().sendRedirect("user/login?from="+from);
+		    SessionContext.getResponse().sendRedirect(SessionContext.getFullPath()+"/user/login?from="+from);
 		}
 		
 		if(currentUserId!=null){

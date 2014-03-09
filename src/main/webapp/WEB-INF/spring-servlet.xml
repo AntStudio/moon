@@ -47,18 +47,9 @@
 	  <property name="optimize" value="true"></property>
 	  <property name="frozen" value="true"></property>
 	</bean>
-	 	<bean id="autoProxyCreator" class="org.antstudio.support.spring.AutoProxyCreator">
+ 	<bean id="autoProxyCreator" class="org.antstudio.support.spring.AutoProxyCreator">
 	   <property name="optimize" value="true"></property>
-	  <property name="frozen" value="true"></property>
-	  <property name="basePackages">
-	  <list>
-	  <value>org.antstudio.rbac.action</value>
-	  </list>
-	  </property>
-	  <property name="interceptors">
-	  <list>
-	  <value>rbacInterceptor</value>
-	  </list>
+	   <property name="frozen" value="true"></property>
 	  </property>
 	</bean> 
 <context:component-scan base-package="com.reeham" />

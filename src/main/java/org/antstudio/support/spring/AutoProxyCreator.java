@@ -3,6 +3,7 @@ package org.antstudio.support.spring;
 import org.springframework.aop.TargetSource;
 import org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator;
 import org.springframework.beans.BeansException;
+import org.springframework.stereotype.Controller;
 
 public class AutoProxyCreator extends AbstractAutoProxyCreator {
 
@@ -22,11 +23,14 @@ public class AutoProxyCreator extends AbstractAutoProxyCreator {
 	@Override
 	protected Object[] getAdvicesAndAdvisorsForBean(Class<?> beanClass, String beanName, TargetSource targetSource)
 			throws BeansException {
-		if(beanClass.getPackage()!=null&&underPackages(beanClass.getPackage().getName()))
+		if(isController(beanClass))
 			return getInterceptorsByNames();
 		return DO_NOT_PROXY;
 	}
 	
+	private boolean isController(Class<?> beanClass){
+		return beanClass.isAnnotationPresent(Controller.class);
+	}
 	private Object[] getInterceptorsByNames(){
 		if(interceptors==null){
 			interceptors = new String[1];
