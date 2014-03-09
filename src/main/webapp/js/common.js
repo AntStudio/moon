@@ -205,6 +205,35 @@ $.fn.reset = function(){
 		},3000);
 	};
 	
+	m.confirm = function(options,layout){
+		var dfd = $.Deferred();
+		_noty(formatParam(options),
+			 {type:'confirm',
+			  layout:layout||"center",
+			  modal:true,
+			  buttons:[
+			           {
+			        	   text:"确认",
+			        	   addClass:"btn btn-small btn-primary",
+			        	   onClick:function(_n){
+			        		   dfd.resolve(true);
+			        		   _n.close();
+			        	   }
+			           },
+			           {
+			        	   text:"取消",
+			        	   addClass:"btn btn-small",
+			        	   onClick:function(){
+			        		   dfd.resolve(false);
+			        		   _n.close();
+			        	   }
+			           }
+			           ] 
+			 });
+		
+		return dfd.promise();
+	};
+	
 	function formatParam(options){
 		if(typeof(options)=='string'){
 			options={text:options};

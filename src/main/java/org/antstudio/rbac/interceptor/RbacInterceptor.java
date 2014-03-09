@@ -52,6 +52,7 @@ public class RbacInterceptor implements MethodInterceptor {
 		if((method.isAnnotationPresent(LoginRequired.class)||method.getDeclaringClass().isAnnotationPresent(LoginRequired.class))
 				&&currentUserId==null){//需要登录的操作，如果没有登录返回登录页面
 		    SessionContext.getResponse().sendRedirect(SessionContext.getFullPath()+"/user/login?from="+from);
+		    return null;
 		}
 		
 		if(currentUserId!=null){
@@ -103,7 +104,6 @@ public class RbacInterceptor implements MethodInterceptor {
                 o = methodInvocation.proceed();
             } catch (Exception e) {// 捕获系统级日志,记录详细信息
                 String message = e.getClass().getName() + ":" + e.getLocalizedMessage();
-                log.error(message+" for details,please look for the tab_log in db");
                 StringBuffer bf = new StringBuffer(message + "\n");
                 for (StackTraceElement se : e.getStackTrace()) {
                     bf.append("at " + se.getClassName()
@@ -115,7 +115,9 @@ public class RbacInterceptor implements MethodInterceptor {
                                             + se.getLineNumber()
                                             + ")\n");
                 }
+                log.error(bf);
                 Log log;
+                message = message.substring(0,200);
                 if (currentUser == null) {
                     log = new Log("Not Login", -1L, message, bf.toString(), Constants.SYSTEM_LOG);
                 } else {

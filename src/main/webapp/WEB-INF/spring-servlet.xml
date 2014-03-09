@@ -50,7 +50,6 @@
  	<bean id="autoProxyCreator" class="org.antstudio.support.spring.AutoProxyCreator">
 	   <property name="optimize" value="true"></property>
 	   <property name="frozen" value="true"></property>
-	  </property>
 	</bean> 
 <context:component-scan base-package="com.reeham" />
 <context:component-scan base-package="org.antstudio" use-default-filters="true" >

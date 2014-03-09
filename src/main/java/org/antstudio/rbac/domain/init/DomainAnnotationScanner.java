@@ -40,10 +40,10 @@ public class DomainAnnotationScanner implements BeanPostProcessor{
         		 MenuMappingHelper.addMappingMenu(menu);
         		 
         	 }
-        	 		 if(method.isAnnotationPresent(PermissionMapping.class)){//扫描@PermissionMapping
-        			PermissionMapping permissionMapping = method.getAnnotation(PermissionMapping.class);
-        			 PermissionMappingHelper.addMappingPermission(new Permission(permissionMapping.code(),permissionMapping.name()));
-        		 }
+	 		 if(method.isAnnotationPresent(PermissionMapping.class)){//扫描@PermissionMapping
+    			PermissionMapping permissionMapping = method.getAnnotation(PermissionMapping.class);
+    			PermissionMappingHelper.addMappingPermission(new Permission(permissionMapping.code(),permissionMapping.name()));
+    		 }
          }
 		return bean;
 	}
