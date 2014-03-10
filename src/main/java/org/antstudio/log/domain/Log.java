@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.antstudio.base.domain.BaseDomain;
+import org.antstudio.support.session.SessionContext;
 import org.antstudio.utils.Constants;
 
 import com.reeham.component.ddd.annotation.Model;
@@ -33,25 +34,10 @@ public class Log extends BaseDomain{
 	private String type;
 	
 	private byte[] detail;
+	
+	private String ip;
 
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-	
-	
-	public Log(){}
-	
-	public Log(String action){
-		this(action,action,Constants.OPERATE_LOG);
-	}
-	
-	public Log(String action,String detail){
-		this(action,detail,detail);
-	}
-	
-	public Log(String action,String detail,String type){
-		this.action = action;
-		this.detail = detail.getBytes();
-		this.type = type;
-	}
 	
 	public Log(String userName,Long userId,String action){
 		this(userName,userId,action,action,Constants.OPERATE_LOG);
@@ -68,6 +54,7 @@ public class Log extends BaseDomain{
 		this.action = action;
 		this.type = type;
 		this.detail = detail.getBytes();
+		this.ip = SessionContext.getRequest().getRemoteAddr();
 	}
 	
 	public Map<String,Object> toMap(){
@@ -78,6 +65,7 @@ public class Log extends BaseDomain{
 		m.put("action",  action);
 		m.put("id", id);
 		m.put("type", type);
+		m.put("ip", ip);
 		return m;
 	}
 	
@@ -147,6 +135,14 @@ public class Log extends BaseDomain{
 	public void setDetail(byte[] detail) {
 		this.detail = detail;
 	}
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 	
 	/***********************properties getter and setter********************************/
 	

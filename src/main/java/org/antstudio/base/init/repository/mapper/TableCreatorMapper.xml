@@ -11,6 +11,7 @@
   time datetime default NULL,
   type varchar(20) default NULL,
   detail blob,
+  ip varchar(20),
   PRIMARY KEY  (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 

@@ -4,9 +4,9 @@
 
 	<insert id="save" parameterType="org.antstudio.log.domain.Log"
 	useGeneratedKeys="true" keyProperty="log.id" keyColumn="id">
-		insert tab_log(user_name,user_id,action,time,type,detail)
+		insert tab_log(user_name,user_id,action,time,type,detail,ip)
 		values
-		(#{log.userName},#{log.userId},#{log.action},CURRENT_TIMESTAMP,#{log.type},#{log.detail})
+		(#{log.userName},#{log.userId},#{log.action},CURRENT_TIMESTAMP,#{log.type},#{log.detail},#{log.ip})
 	</insert>
 
 	<update id="update" parameterType="org.antstudio.log.domain.Log">
