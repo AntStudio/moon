@@ -13,7 +13,7 @@ import java.io.InputStream;
 public class FileUtils {
 
 	/**
-	 * 根据属于刘保存文件
+	 * 保存文件
 	 * @param in
 	 * @param path
 	 */
