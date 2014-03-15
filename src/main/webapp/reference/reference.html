@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script type="text/javascript" src="../plugin/jquery/jquery-1.8.3.js"></script>
+	<script type="text/javascript" src="../plugin/bootstrap/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../plugin/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="../plugin/font-awesome/css/font-awesome.min.css">
+	<title>Moon说明文档</title>
+	<style>
+		.nav>li>a{
+			margin: 0 0 -1px;
+			padding: 8px 14px;
+			border: 1px solid #e5e5e5;
+		}
+		.icon-chevron-right{
+			float: right;
+			opacity: .25;
+		}
+		.nav{
+			position: fixed;
+		}
+		.nav.affix{
+		    top: 20px;
+		    width: 250px;
+		}
+		.correct{
+			color: #19B93F;
+			font-size: 28px;
+		}
+
+		.incorrect{
+			color: #FA4C4C;
+			font-size: 28px;
+		}
+		td,th{
+			text-align: center !important;
+		}
+		.top-level{
+			color:#6297F5;
+		}
+		
+		.note:BEFORE{
+			display: inline-block;
+			font-family: FontAwesome;
+			font-style: normal;
+			font-weight: normal;
+			line-height: 1;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+			content: "\f0eb";
+			color: #E78B00;
+			font-size: 30px;
+		}
+	</style>
+	<script type="text/javascript">
+	$(function(){
+		var $sections = $("section");
+		var sectionsLength = $sections.length;
+		var activeIndex = 0;
+		$('.nav').affix({
+			 offset: {
+			 	top:function(){
+			 		var currentTop = $('.nav').offset().top;
+			 		activeIndex = 0;
+			 		for(var i=0;i<sectionsLength;i++){
+			 			if(currentTop+$("section:eq(0)").offset().top<$($sections.get(i)).offset().top){
+			 				activeIndex = i;
+			 				break;
+			 			}
+			 		}
+			 		if(activeIndex == 0){
+			 			activeIndex = sectionsLength;
+			 		}
+			 		if(document.body.scrollTop+document.documentElement.clientHeight==document.body.scrollHeight){
+			 			activeIndex = sectionsLength;
+			 		}
+			 		$("li").removeClass("active");
+	 				$("[href='#"+$("section:eq("+(activeIndex-1)+")").attr("id")+"']").parent().addClass("active");
+			 	}
+			 }
+		});
+	});
+	</script>
+</head>
+<body>
+	<div>
+		<div class="span4">
+			<ul class="nav nav-list">
+				<li class="active">
+					<a href="#menu">
+						<i class="icon-chevron-right"></i>
+						菜单
+					</a>
+				</li>
+				<li>
+					<a href="#permission">
+						<i class="icon-chevron-right"></i>
+						权限
+					</a>
+				</li>
+				<li>
+					<a href="#role">
+						<i class="icon-chevron-right"></i>
+						角色
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div class="content span12">
+			<h1 class="title">Moon参考文档</h1>
+			<section id="menu">
+				<h3>菜单</h3>
+				<span>
+					<table class="table table-bordered">
+						<tr>
+							<th>菜单代码</th>
+							<th>菜单名称</th>
+							<th>菜单路径</th>
+							<th>系统菜单</th>
+						</tr>
+						<tr>
+							<td>platform</td>
+							<td>平台管理</td>
+							<td><span class="top-level">顶级菜单</span></td>
+							<td><i class="fa fa-check-circle correct"></td>
+						</tr>
+						<tr>
+							<td>platform_1</td>
+							<td>用户列表</td>
+							<td>/user</td>
+							<td><i class="fa fa-check-circle correct"></td>
+						</tr>
+						<tr>
+							<td>platform_2</td>
+							<td>菜单管理</td>
+							<td>/menu</td>
+							<td><i class="fa fa-check-circle correct"></td>
+						</tr>
+						<tr>
+							<td>platform_3</td>
+							<td>权限管理</td>
+							<td>/permission</td>
+							<td><i class="fa fa-check-circle correct"></td>
+						</tr>
+						<tr>
+							<td>platform_4</td>
+							<td>角色管理</td>
+							<td>/role</td>
+							<td><i class="fa fa-check-circle correct"></td>
+						</tr>
+						<tr>
+							<td>platform_5</td>
+							<td>修改密码</td>
+							<td>/user/changePassword</td>
+							<td><i class="fa fa-check-circle correct"></td>
+						</tr>
+						<tr>
+							<td>platform_6</td>
+							<td>日志列表</td>
+							<td>/log</td>
+							<td><i class="fa fa-check-circle correct"></td>
+						</tr>
+						<tr>
+							<td>platform_7</td>
+							<td>数据维护</td>
+							<td>/dbMaintenance</td>
+							<td><i class="fa fa-check-circle correct"></td>
+						</tr>
+						<tr>
+							<td>test</td>
+							<td>测试菜单</td>
+							<td><span class="top-level">顶级菜单</span></td>
+							<td><i class="fa fa-times-circle incorrect"></td>
+						</tr>
+						<tr>
+							<td>test_1</td>
+							<td>table测试</td>
+							<td>/webComponentTest</td>
+							<td><i class="fa fa-times-circle incorrect"></td>
+						</tr>
+						<tr>
+							<td>doc</td>
+							<td>文档</td>
+							<td><span class="top-level">顶级菜单</span></td>
+							<td><i class="fa fa-times-circle incorrect"></td>
+						</tr>
+						<tr>
+							<td>doc_1</td>
+							<td>API文档</td>
+							<td>/doc/index.html</td>
+							<td><i class="fa fa-times-circle incorrect"></td>
+						</tr>
+					</table>
+					<div>
+						菜单格式规则:<code>父菜单代码_子菜单索引</code>,如:用户列表的父菜单为平台管理,并且用户列表为平台管理的第一个菜单。因此
+						用户列表的菜单代码为:platform_1
+						<div class="note alert">
+							菜单代码的长度不应该超过20个字符
+						</div>
+					</div>
+				</span>
+			</section>
+			<section id="permission">
+				<h3>权限</h3>
+				<span>
+				</span>
+			</section>
+			<section id="role">
+				<h3>角色</h3>
+				<span>
+				
+				</span>
+			</section>
+		</div>
+	</div>
+</body>
+</html>

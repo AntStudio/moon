@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class WebComponentTest {
 
 	@RequestMapping("table")
-	@MenuMapping(code="200001",name="table测试",parentCode="200000",url="/webComponentTest/table")
+	@MenuMapping(code="test_1",name="table测试",parentCode="test",url="/webComponentTest/table")
 	public String tableTest(){
 		
 		return "pages/test/table";

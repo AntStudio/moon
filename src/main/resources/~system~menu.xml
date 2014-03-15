@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <menus>
-	<menu code="200000" name="测试菜单"></menu>
-	<menu code="210000" name="文档">
-		<menu  code="210001" name="API文档" url="/doc/index.html"/>
+	<menu code="test" name="测试菜单"></menu>
+	<menu code="doc" name="文档">
+		<menu  code="doc_1" name="API文档" url="/doc/index.html"/>
 	</menu>
 </menus>
