@@ -53,7 +53,7 @@ public class DBInitialization {
 	}
 	
 	@Get("")
-	@MenuMapping(code="platform_6",name="数据维护",url="/dbMaintenance",parentCode="platform")
+	@MenuMapping(code="platform_7",name="数据维护",url="/dbMaintenance",parentCode="platform")
 	public ModelAndView showMaintenancePage(){
 		return new ModelAndView("/pages/maintenance/DBMaintenance");
 	}
