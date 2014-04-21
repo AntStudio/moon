@@ -54,27 +54,27 @@ public class Require extends TagSupport{
 		String contextPath = RequestUtils.getContextPath(pageContext);
 		if(type==null||"js".equals(type)){//for js
 			for(String s:src.split(",")){
-				if(pattern.matcher(s).matches()){//当时{Name}时,从默认路径获取
+				if(pattern.matcher(s).matches()){//当是{Name}时,从默认路径获取
 					s = s.replaceAll("[\\s\\{\\}]", "");
-					sb.append(importCss(contextPath+cssDefaultFolder+s+".css"));
-					sb.append(importJs(contextPath+jsDefaultFolder+s+".js"));
+					sb.append(importCss(contextPath,cssDefaultFolder+s+".css"));
+					sb.append(importJs(contextPath,jsDefaultFolder+s+".js"));
 				}else if(p.containsKey("js."+s)){
 					if(p.containsKey("js."+s)){
-						sb.append(importJs(contextPath+p.getProperty("js."+s)));
+						sb.append(importJs(contextPath,p.getProperty("js."+s)));
 					}
 				}else{
-					sb.append(importJs(contextPath+s));
+					sb.append(importJs(contextPath,s));
 				}
 				if(type==null&&p.containsKey("css."+s)){
-					sb.append(importCss(contextPath+p.getProperty("css."+s)));
+					sb.append(importCss(contextPath,p.getProperty("css."+s)));
 				}
 			}
 		}else{//for css
 			for(String s:src.split(",")){
 				if(p.containsKey("css."+s)){
-					sb.append(importCss(contextPath+p.getProperty("css."+s)));
+					sb.append(importCss(contextPath,p.getProperty("css."+s)));
 				}else{
-					sb.append(importCss(contextPath+s));
+					sb.append(importCss(contextPath,s));
 				}
 			}
 		}
@@ -86,12 +86,20 @@ public class Require extends TagSupport{
 		return EVAL_PAGE;
 	}
 	
-	private String importJs(String path){
-		return "<script type=\"text/javascript\" src=\""+path+"\"></script>\n";
+	private String importJs(String contextPath,String path){
+	    StringBuffer js = new StringBuffer();
+	    for(String jsPath:path.split(",")){
+	        js.append("<script type=\"text/javascript\" src=\""+contextPath+jsPath+"\"></script>\n");
+	    }
+		return js.toString();
 	}
 	
-	private String importCss(String path){
-		return " <link rel=\"stylesheet\" href=\""+path+"\" type=\"text/css\" />\n";
+	private String importCss(String contextPath,String path){
+	    StringBuffer css = new StringBuffer();
+        for(String cssPath:path.split(",")){
+            css.append(" <link rel=\"stylesheet\" href=\""+contextPath+cssPath+"\" type=\"text/css\" />\n");
+        }
+        return css.toString();
 	}
 	
 	public void setType(String type) {

@@ -21,7 +21,27 @@ import java.lang.annotation.Target;
 @Documented
 public @interface FormParam {
 
+	/**
+	 * 参数名称
+	 * @return
+	 */
 	String value();
 	
+	/**
+	 * 当有文件类型时,是否自动保存
+	 * @return
+	 */
+	boolean autoSave() default false;
+	
+	/**
+	 * 文件保存的路径
+	 * @return
+	 */
+	String savePath() default "";
+	
+	/**
+	 * 是否从域模型缓存中获取
+	 * @return
+	 */
 	boolean model() default false;
 }

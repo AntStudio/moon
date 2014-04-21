@@ -15,6 +15,10 @@ public class SessionContext {
        requestLocal.set(request);  
    }  
    
+   /**
+    * 返回请求的具体访问路径
+    * @return
+    */
    public static String getFullPath(){
 	   HttpServletRequest request = getRequest();
 	   StringBuilder fullPath = new StringBuilder();
@@ -33,6 +37,13 @@ public class SessionContext {
 	   return fullPath.toString();
    }
    
+   /**
+    * 返回web应用的真实路径
+    * @return
+    */
+   public static String getWebAppPath(){
+	   return getSession().getServletContext().getRealPath("/");
+   }
    public static HttpServletResponse getResponse() {  
        return (HttpServletResponse)responseLocal.get();  
    }  
