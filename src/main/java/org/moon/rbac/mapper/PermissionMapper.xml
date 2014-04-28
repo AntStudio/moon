@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.moon.rbac.repository.PermissionRepository">
+
+  <insert id="save">insert tab_permission (code,name) values(
+    #{permission.code},#{permission.name}
+    )</insert>
+  <insert id="batchSave">
+    insert tab_permission (code,name) values
+    <foreach collection="permissions" separator="," item="permission">( #{permission.code},#{permission.name})</foreach>
+  </insert>
+  <update id="update">update tab_permission set code = #{permission.code},name=#{permission.name}
+    where id = #{permission.id}</update>
+  <delete id="delete">
+    delete from tab_permission where id in (-1,
+    <foreach collection="permissions" item="permission" separator=",">#{permission.id}</foreach>
+    )
+  </delete>
+  <select id="get" resultType="org.moon.rbac.domain.Permission">select * from tab_permission where id = #{id}</select>
+  <select id="getPermissions" resultType="Long">
+    select id from tab_permission
+    <if test="orderBy">order by ${orderBy}</if>
+    limit ${curcount},${ps}
+  </select>
+  <select id="getPermission_count" resultType="Long">select count(*) from tab_permission</select>
+  
+  <insert id="assignAddPermission">
+    insert tab_role_permission values
+    <foreach collection="rids" item="rid" separator=",">
+      <foreach collection="pids" item="pid" separator=",">(#{pid},#{rid})</foreach>
+    </foreach>
+  </insert>
+  
+  <delete id="assignDeletePermission">
+    delete from tab_role_permission where
+    role_id in (-1
+    <foreach collection="rids" item="rid" open="," separator=",">#{rid}</foreach>
+    )
+    and permission_id in(-1
+    <foreach collection="pids" item="pid" open="," separator=",">#{pid}</foreach>
+    )
+  </delete>
+  <select id="getPermissionsByRole" resultType="Long">
+    select permission_id from tab_role_permission where role_id = #{rid}
+    <if test="orderBy">order by ${orderBy}</if>
+    limit ${curcount},${ps}
+  </select>
+  <select id="getPermissionsByRole_count" resultType="Long">select count(*) from tab_permission</select>
+</mapper>

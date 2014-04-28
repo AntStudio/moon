@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.moon.rbac.repository.UserRepository">
+	<select id="get" resultMap="user">
+		select * from tab_user where id = #{id}
+	</select>
+
+	<select id="login" resultType="Long" parameterType="org.moon.rbac.domain.User">
+		select id 
+		from tab_user
+		where user_name=#{user.userName} and
+		      password=#{user.password}
+	</select>
+
+	<update id="assign" parameterType="Map">
+		update tab_user set role_id = #{rid} where id = #{uid}
+	</update>
+
+	<select id="getUsersByCreator" resultType="Long" parameterType="Map">
+		select id from tab_user where create_by = #{uid} and
+		<if test="deleteFlag==null">
+			delete_flag is null
+		</if>
+		<if test="deleteFlag!=null">
+			delete_flag = #{deleteFlag}
+		</if>
+		<if test="orderBy">
+			order by ${orderBy}
+		</if>
+		limit ${curcount},${ps}
+	</select>
+
+	<select id="getUsersByCreatorCount" resultType="Long"
+		parameterType="Map">
+		select count(*)from tab_user where create_by = #{uid} and
+		<if test="deleteFlag==null">
+			delete_flag is null
+		</if>
+		<if test="deleteFlag!=null">
+			delete_flag = #{deleteFlag}
+		</if>
+	</select>
+
+	<insert id="addUser" parameterType="org.moon.rbac.domain.User"
+		useGeneratedKeys="true" keyProperty="user.id" keyColumn="id">
+		insert tab_user(user_name,password,real_name,create_by,delete_flag,create_time)
+		values(
+			#{user.userName},#{user.password},#{user.realName},#{user.createBy},false,now()
+		)
+
+	</insert>
+
+	<update id="updateUser" parameterType="org.moon.rbac.domain.User">
+		update tab_user set
+		user_name=#{user.userName},password=#{user.password},
+		real_name=#{user.realName},delete_flag = #{user.deleteFlag} where
+		id=#{user.id}
+	</update>
+
+	<delete id="deleteUser">
+		delete from tab_user where id in (-1,
+		<foreach collection="ids" item="id" separator=",">
+			#{id}
+		</foreach>
+		)
+	</delete>
+
+	<update id="logicDeleteUser">
+		update tab_user set delete_flag = true where id in (-1,
+		<foreach collection="ids" item="id" separator=",">
+			#{id}
+		</foreach>
+		)
+	</update>
+
+	<select id="isUserNameExists" resultType="Boolean">
+		select count(*)>0 from tab_user where user_name=#{userName}
+	</select>
+
+	<resultMap type="org.moon.rbac.domain.User" id="user">
+		<result column="role_id" property="roleId" />
+		<result column="user_name" property="userName" />
+		<result column="real_name" property="realName" />
+		<result column="delete_flag" property="deleteFlag" />
+		<result column="create_time" property="createTime" />
+	</resultMap>
+</mapper>

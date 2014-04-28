@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.moon.rbac.repository.RoleRepository">
+  <select id="get" resultMap="role">select * from tab_role where id =
+    #{id}</select>
+  <select id="getSubRoles" resultType="Long">
+    select id from tab_role where parent_id
+    <if test="rid==null">is null</if>
+    <if test="rid!=null">= #{rid}</if>
+    and delete_flag = false
+  </select>
+  <select id="getRolesByPermission" resultType="Long">select role_id from
+    tab_role_permission where permission_id = #{pid}</select>
+  <delete id="delete">
+    delete from tab_role where id in (-1,
+    <foreach collection="ids" item="id" separator=",">#{id}</foreach>
+    )
+  </delete>
+  <update id="logicDelete">
+    update tab_role set delete_flag = true where id in (-1,
+    <foreach collection="ids" item="id" separator=",">#{id}</foreach>
+    )
+  </update>
+  <update id="update" parameterType="org.moon.rbac.domain.Role">update tab_role set
+    role_name=#{role.roleName} where id=#{role.id}</update>
+  <insert id="save" parameterType="org.moon.rbac.domain.Role"
+  useGeneratedKeys="true" keyProperty="role.id" keyColumn="id">insert
+    tab_role(role_name,parent_id,create_by,delete_flag)values(
+    #{role.roleName},#{role.parentId},#{role.createBy},false
+    )</insert>
+  <select id="hasPermission" resultType="Boolean">SELECT COUNT(*) FROM
+    tab_role_permission trp
+    JOIN tab_permission tp ON trp.permission_id =
+    tp.id
+    AND tp.code=#{code} AND trp.role_id=#{rid}</select>
+  <select id="accessMenu" resultType="Boolean">SELECT COUNT(*) FROM
+    tab_role_Menu trm
+    JOIN tab_menu tm ON trm.menu_id = tm.id
+    AND
+    tm.code=#{code} AND trm.role_id=#{rid}</select>
+  <resultMap type="org.moon.rbac.domain.Role" id="role">
+    <result column="role_name" property="roleName" />
+    <result column="create_by" property="createBy" />
+    <result column="parent_id" property="parentId" />
+    <result column="delete_flag" property="deleteFlag" />
+  </resultMap>
+
+</mapper>

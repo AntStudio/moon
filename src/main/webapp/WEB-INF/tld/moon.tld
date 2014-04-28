@@ -16,7 +16,7 @@
       	 导入资源文件
     </description>
     <name>require</name>
-    <tag-class>org.antstudio.moon.tag.Require</tag-class>
+    <tag-class>org.moon.tag.Require</tag-class>
     <body-content>JSP</body-content>
     <attribute>
         <description>
@@ -39,7 +39,7 @@
       	 显示系统内置用户密码
     </description>
     <name>systemUserPassword</name>
-    <tag-class>org.antstudio.moon.tag.SystemUserPassword</tag-class>
+    <tag-class>org.moon.tag.SystemUserPassword</tag-class>
     <body-content>JSP</body-content>
   </tag>
 </taglib>

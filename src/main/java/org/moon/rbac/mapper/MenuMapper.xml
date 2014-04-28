@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.moon.rbac.repository.MenuRepository">
+	<select id="get" resultMap="menuDomain">select * from tab_menu where id =
+		#{0}</select>
+	<select id="getSubMenuByRole" resultType="Long" parameterType="Object">
+		select menu_id from tab_role_menu where role_id=#{rid}
+		<if test="pid==null">and parent_id is null</if>
+		<if test="pid!=null">and parent_id=#{pid}</if>
+
+	</select>
+	<select id="getByCode" resultType="Long">select id from tab_menu where
+		code = #{code} limit 1</select>
+	<insert id="addMenusToRole">
+		insert tab_role_menu values
+		<foreach collection="menus" item="menu" separator=",">(#{rid},#{
+			menu.id},#{menu.parentId})</foreach>
+	</insert>
+	<delete id="removeMenusFromRole">
+		delete from tab_role_menu where menu_id in (-1
+		<foreach collection="menus" item="menu" open="," separator=",">#{menu.id}
+		</foreach>
+		) and role_id=#{rid}
+
+	</delete>
+	<select id="getSubMenu" resultType="Long">
+		select id from tab_menu where
+		<if test="pid==null">parent_id is null and parent_code is null</if>
+		<if test="pid!=null">parent_id=#{pid} or parent_code =(select code from
+			tab_menu where id=#{pid})</if>
+		order by menu_order,code
+	</select>
+	<select id="getAllMenus" resultType="Long">
+		select id from tab_menu
+		<if test="system==null"></if>
+		<if test="system==true">where code is not null</if>
+		<if test="system==false">where code is null and delete_flag = #{deleteFlag}</if>
+		order by menu_order asc;
+	</select>
+	<insert id="addMenus">
+		insert into
+		tab_menu(menu_name,url,parent_id,delete_flag,create_by,code,parent_code)
+		values
+		<foreach collection="menus" separator="," item="menu">(#{menu.menuName},#{menu.url},#{menu.parentId},#{menu.deleteFlag},#{menu.createBy},#{menu.code},#{menu.parentCode})
+		</foreach>
+	</insert>
+	<delete id="deleteMenus" parameterType="org.moon.rbac.domain.Menu">
+		delete from tab_menu where id in(-1
+		<foreach collection="menus" open="," separator="," item="menu">
+			#{menu.id}
+		</foreach>
+		)
+	</delete>
+	<update id="sortMenu">
+		<foreach collection="childrenIds" index="index" item="id">
+		update tab_menu  set menu_order=#{index},parent_id=#{parentId},parent_code=#{parentCode} where id = #{id};
+		</foreach>
+	</update>
+	
+	<update id="update" parameterType="org.moon.rbac.domain.Menu">
+		update tab_menu set menu_name
+		= #{menu.menuName},url=#{menu.url},parent_id=#{menu.parentId},
+		code = #{menu.code},parent_code=#{menu.parentCode} where id=#{menu.id}
+	</update>
+
+	<resultMap type="org.moon.rbac.domain.Menu" id="menuDomain">
+		<result column="menu_name" property="menuName" />
+		<result column="parent_id" property="parentId" />
+		<result column="parent_code" property="parentCode" />
+	</resultMap>
+</mapper>

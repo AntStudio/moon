@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.moon.log.repository.LogRepository">
+
+	<insert id="save" parameterType="org.moon.log.domain.Log"
+	useGeneratedKeys="true" keyProperty="log.id" keyColumn="id">
+		insert tab_log(user_name,user_id,action,time,type,detail,ip)
+		values
+		(#{log.userName},#{log.userId},#{log.action},CURRENT_TIMESTAMP,#{log.type},#{log.detail},#{log.ip})
+	</insert>
+
+	<update id="update" parameterType="org.moon.log.domain.Log">
+		update tab_log set
+		action = #{log.action},
+		user_name=#{log.userName},
+		userId=#{log.userId},
+		time=#{log.time}
+		detail=#{log.detail}
+		where id = #{log.id}
+	</update>
+
+	<select id="getLogs" resultType="Long">
+		select id from tab_log
+		<if test="orderBy">
+			order by ${orderBy}
+		</if>
+		limit ${curcount},${ps}
+	</select>
+
+	<select id="getLogs_count" resultType="Long">
+		select count(id) from tab_log
+	</select>
+	<select id="getLog" resultMap="log">
+		select * from tab_log where id = #{id}
+	</select>
+
+	<resultMap type="org.moon.log.domain.Log" id="log">
+		<result column="user_name" property="userName" />
+		<result column="user_id" property="userId" />
+		<result column="action" property="action"/>
+	</resultMap>
+</mapper>
