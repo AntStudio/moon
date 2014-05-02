@@ -84,4 +84,25 @@ public class FileUtils {
 		}
 		return file;
 	}
+	
+	/**
+	 * 创建文件,如果有依赖的父目录不存在，也会自动创建.
+	 * @param path
+	 * @param dir
+	 * @return
+	 * @throws IOException
+	 */
+	public static File createIfNotExists(String path,boolean dir) throws IOException{
+		File file = new File(path);
+		if(!file.exists()){
+			if(dir){
+				file.mkdirs();
+			}else{
+				file.getParentFile().mkdirs();
+				file.createNewFile();
+			}
+		}
+		return file;
+	}
+	
 }
