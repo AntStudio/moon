@@ -42,6 +42,10 @@ public class DBManager {
     @Resource
     private SqlSessionFactoryBean sqlSessionFactoryBean;
 
+    /**
+     * 删除数据表,目前只适用于mysql
+     * @param tables
+     */
     public void dropTables(List<String> tables) {
         StringBuilder sql = new StringBuilder();
         sql.append("SET FOREIGN_KEY_CHECKS = 0;");// 忽略外键
@@ -55,15 +59,24 @@ public class DBManager {
         dbManagerRepository.excuteUpdate(sql.toString());
     }
 
+    /**
+     * 创建缺失的数据表
+     */
     public void createTableIfNecessary() {
         batchExecute(Strings.getContentFromInputStream(Resources.load("~schema.config"),"UTF-8"));
     }
 
+    /**
+     * 重新加载权限到数据库
+     */
     public void reLoadPermissions() {
         cachingModelContainer.clearModelCache();
         permissionService.batchSave(PermissionMappingHelper.getMappedPermissions());
     }
 
+    /**
+     * 重新加载菜单到数据库
+     */
     public void reLoadMenus() {
         cachingModelContainer.clearModelCache();
         menuService.addMenus(MenuMappingHelper.getMappingMenus());
@@ -81,6 +94,11 @@ public class DBManager {
         batchExecute(sqls, 500);
     }
 
+    /**
+     * 批量执行更新语句
+     * @param sqls
+     * @param batchSize
+     */
     public void batchExecute(Iterable<String> sqls, int batchSize) {
         SqlSession session = null;
         try {
@@ -88,7 +106,7 @@ public class DBManager {
             int currentTime = 1;
             for (String sql : sqls) {
                 session.update(
-                        "org.antstudio.db.manager.repository.DBManagerRepository.excuteUpdate",
+                        "org.moon.db.manager.repository.DBManagerRepository.excuteUpdate",
                         Maps.mapIt("sql", sql));
                 if (currentTime % 500 == 0) {
                     session.commit();
