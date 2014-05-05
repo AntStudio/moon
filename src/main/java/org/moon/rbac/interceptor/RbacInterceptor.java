@@ -18,6 +18,7 @@ import org.moon.rbac.domain.annotation.PermissionMapping;
 import org.moon.rbac.service.UserService;
 import org.moon.support.session.SessionContext;
 import org.moon.utils.Constants;
+import org.moon.utils.Strings;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -117,7 +118,8 @@ public class RbacInterceptor implements MethodInterceptor {
                 }
                 log.error(bf);
                 Log log;
-                message = message.substring(0,200);
+                message = Strings.subString(message, 0, 200); 
+                
                 if (currentUser == null) {
                     log = new Log("Not Login", -1L, message, bf.toString(), Constants.SYSTEM_LOG);
                 } else {

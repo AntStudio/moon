@@ -14,8 +14,11 @@
 				if(confirm){
 					$(".loading").removeClass("hide");
 					$.getJsonData(contextPath+"/dbMaintenance/initDb",{},{type:"Post"}).done(function(data){
-						console.log(data);
-						moon.info("数据库初始化完成");
+						if(data){
+							moon.info("数据库初始化完成");
+						}else{
+							moon.info("数据库初始化失败，详情请查看系统日志");
+						}
 						$(".loading").addClass("hide");
 					});
 				}

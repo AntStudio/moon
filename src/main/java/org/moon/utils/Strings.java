@@ -45,4 +45,25 @@ public class Strings {
         }
         return dist.toString();
     }
+    
+    /**
+     * 截取字符串，当截取长度大于最大能截取的长度时，直接返回最大长度的子字符串。该方法返回的结果的长度应该小于或等于count
+     * @param src 需要截取的原字符串
+     * @param startIndex 开始位置
+     * @param count 截取的最大长度
+     * @return
+     */
+    public static String subString(String src,int startIndex,int count){
+    	if(src==null){
+    		return "";
+    	}
+    	byte[] stringBytes = src.getBytes();
+    	if(startIndex<0){
+    		startIndex = 0;
+    	}
+    	if(count>stringBytes.length-startIndex){
+    		count = stringBytes.length-startIndex;
+    	}
+    	return new String(stringBytes,startIndex,count);
+    }
 }
