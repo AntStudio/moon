@@ -1,7 +1,7 @@
 package org.moon.base.repository;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.InsertProvider;
@@ -36,5 +36,5 @@ public interface BaseRepository<T> {
     public T get(@Param("ids")Long id);
     
     @SelectProvider(type=SQLProvider.class,method="list")
-    public List<HashMap> list(@Param("domain")Class<T> t);
+    public List<Map> list(@Param("domain")Class<T> t);
 }

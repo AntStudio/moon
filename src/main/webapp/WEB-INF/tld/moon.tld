@@ -42,4 +42,20 @@
     <tag-class>org.moon.tag.SystemUserPassword</tag-class>
     <body-content>JSP</body-content>
   </tag>
+  <tag>
+  	<description>字典下拉框</description>
+  	<name>dicSelect</name>
+  	<tag-class>org.moon.tag.DictionarySelect</tag-class>
+  	<body-content>JSP</body-content>
+  	<attribute>
+  		<description>字典代码</description>
+  		<name>code</name>
+  		<required>true</required>
+  	</attribute>
+  	<attribute>
+  		<description>下拉框样式</description>
+  		<name>css</name>
+  		<required>false</required>
+  	</attribute>
+  </tag>
 </taglib>
