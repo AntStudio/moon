@@ -17,6 +17,7 @@ import org.moon.utils.Resources;
 import org.moon.utils.Strings;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.reeham.component.ddd.model.CachingModelContainer;
 
@@ -105,6 +106,9 @@ public class DBManager {
             session = sqlSessionFactoryBean.getObject().openSession(ExecutorType.BATCH, false);
             int currentTime = 1;
             for (String sql : sqls) {
+            	if(StringUtils.isEmpty(StringUtils.trimWhitespace(sql))){
+            		continue;
+            	}
                 session.update(
                         "org.moon.db.manager.repository.DBManagerRepository.excuteUpdate",
                         Maps.mapIt("sql", sql));

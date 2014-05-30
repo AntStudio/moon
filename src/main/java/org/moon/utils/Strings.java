@@ -66,4 +66,13 @@ public class Strings {
     	}
     	return new String(stringBytes,startIndex,count);
     }
+    
+    /**
+     * 将驼峰命令方式修改为下划线方式
+     * @param src
+     * @return
+     */
+    public static String changeCamelBakToUnderline(String src){
+    	return src.replaceAll("([A-Z])", "_$1").toLowerCase();
+    }
 }

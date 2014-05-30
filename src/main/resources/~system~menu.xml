@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <menus>
 	<menu code="test" name="测试菜单">
-		<menu  code="test_2" name="文件上傳" url="/turn?page=pages/test/fileupload"/>
+		<menu  code="test_2" name="文件上传" url="/turn?page=pages/test/fileupload"/>
 	</menu>
 	<menu code="doc" name="文档">
 		<menu  code="doc_1" name="API文档" url="/doc/index.html"/>
+		<menu  code="doc_2" name="Moon说明文档" url="/reference/reference.html"/>
 	</menu>
 </menus>

@@ -45,6 +45,7 @@ public class DBInitialization {
 		tableNames.add("tab_role_menu");
 		tableNames.add("tab_role_permission");
 		tableNames.add("tab_user");
+		tableNames.add("tab_dictionary");
 		dbManager.dropTables(tableNames);
 		dbManager.createTableIfNecessary();
 		dbManager.reLoadMenus();

@@ -42,12 +42,12 @@ public class BaseDomain implements Serializable{
 	/**
 	 * 如果 <code>deleteFlag 为 true;</code>,则表示删除
 	 */
-	protected boolean deleteFlag;
+	protected boolean deleteFlag = false;
 	
 	/**
 	 * 域编号,主要用于多个用户或其他原因引起的数据分块，则此字段可用于标示每个不同数据块
 	 */
-	protected Long domainNo;
+	protected Long domainNo = 0L;
 
 	public BaseDomain(){}
 	

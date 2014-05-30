@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+  
+ <configuration>
+ 	<settings>
+ 		<!-- @see http://mybatis.github.io/mybatis-3/zh/configuration.html and org.apache.ibatis.session.Configuration -->
+ 		<setting name="callSettersOnNulls" value="true"/><!-- 用于映射value为空的字段 -->
+ 	</settings>
+ </configuration>

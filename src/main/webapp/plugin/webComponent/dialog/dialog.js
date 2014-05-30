@@ -1,3 +1,4 @@
+
 /**
  * 对话框组件
  * @author Gavin Cook
@@ -41,33 +42,36 @@
 			$.each(opts.buttons,function(index,btn){
 				var $btn = $(document.createElement("button"));
 				$btn.addClass(btn.css).html(btn.text);
-				$btn.bind("click",function(){
-					btn.click.call(dialog);
-				});
+				if($.isFunction(btn.click)){
+					$btn.bind("click",function(){
+						btn.click.call(dialogCache[selector],btn);
+					});
+				}
 				$btnGroup.append($btn);
 			});
 
 			$dialogDiv.append($dialogHeader).append($dialogContent).append($btnGroup);
-
 			methods.bindEvents.call($dialogDiv,opts);
 			$dialogDiv.css({"width":opts.width,
 							 "margin-left":-opts.width/2});
-			dialogCache[selector] = $dialogDiv;
 			$dialogDiv.modal("show");
+			return $dialogDiv;
 		},
 		/**
 		** 绑定事件，如.close的关闭对话框
 		**/
 		bindEvents:function(opts){
 			var $dialog = this;
-			if(isCached(opts.selector)){
+			if(isCached(dialog.selector)){
+				$dialog.off();
 				$dialog.unbind();
-			}else{
-				$(".close",$dialog).bind("click",function(){
-					$dialog.modal("hide");
-				});
 			}
-			$dialog.on('show.bs.moda', function (e) {
+			
+			$(".close",$dialog).bind("click",function(){
+				$dialog.modal("hide");
+			});
+			
+			$dialog.on('show.bs.modal', function (e) {
 				if(opts.beforeShow){
 					opts.beforeShow.call($dialog);
 				}
@@ -101,37 +105,54 @@
 		}	
 		return false;
 	}
-	var dialog = {
-			renderDialog:function(){
-				methods.renderDialog.call($(this),dialog.opts);
-			},
-			close:function(){
-				dialogCache[dialog.selector].modal("hide");
-			},
-			reBindEvents:function(){
-				methods.bindEvents.call($(this),dialog.opts);
-			}
+	var dialog = function(selector,opts){
+		var dialogInstance = this;
+		var triggerStatusChange = function(){
+			dialogCache[selector] = dialogInstance;
+		};
+		triggerStatusChange();//新建时，先存储到缓存，因为创建过程会使用到该对象
+		
+		this.opts = opts;
+		this.selector = selector;
+		this.renderDialog = function(){
+			dialogInstance.$e = methods.renderDialog.call($(this),opts);
+			triggerStatusChange();
+			return dialogInstance;
+		};
+		this.close = function(){
+			dialogInstance.$e.modal("hide");
+			return dialogInstance;
+		};
+		this.reBindEvents = function(){
+			methods.bindEvents.call(dialogInstance.$e,opts);
+			triggerStatusChange();
+			return dialogInstance;
+		};
+		this.show = function(){
+			dialogInstance.$e.modal("show");
+			return dialogInstance;
+		};
+		
+		return dialogInstance;
 	};
+	
 	$.fn.dialog=function(opts){
 		if(typeof(opts)=="string"){
 			if(opts=="close"){
-				dialog.close();
-				dialogCache[$(this).selector].modal("hide");
+				dialogCache[$(this).selector].close();
 			}
 		}else{
 			opts=$.extend({},defaults,opts);
+			var dialogSelector = $(this).selector;
 			for(var selector in dialogCache){
-				if($(this).selector==selector){
-					dialog.opts = opts;
-					dialog.reBindEvents.call(dialogCache[dialog.selector]);
-					dialogCache[dialog.selector].modal("show");
+				if(dialogSelector==selector){
+					dialogCache[selector].reBindEvents().show();
 					return;
 				}
 			}	
-				
-			dialog.opts = opts;
-			dialog.selector=$(this).selector;
-			dialog.renderDialog.call($(this),opts);
+			
+			var newDialog = new dialog(dialogSelector,opts);
+			newDialog.renderDialog.call($(this),opts);
 		}
 	};
 })();

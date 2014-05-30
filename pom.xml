@@ -103,13 +103,11 @@
 			<artifactId>ehcache-core</artifactId>
 			<version>2.4.4</version>
 		</dependency>
-
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.14</version>
+		<dependency> 
+		  <groupId>org.slf4j</groupId>
+		  <artifactId>slf4j-log4j12</artifactId>
+		  <version>1.7.7</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
@@ -150,6 +148,11 @@
 		    <groupId>sax</groupId>
 		    <artifactId>sax</artifactId>
 		    <version>2.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.persistence</groupId>
+			<artifactId>persistence-api</artifactId>
+			<version>1.0.2</version>
 		</dependency>
 		<dependency>  
 		    <groupId>org.apache</groupId>  
