@@ -60,7 +60,6 @@ public class SQLProvider {
 						|| Modifier.isFinal(field.getModifiers()));
 			}
 		});
-		
 		sqlString = sql.toString();
 		logger.debug("{} : {}" ,logger.getName(), sqlString);
 		return sqlString;

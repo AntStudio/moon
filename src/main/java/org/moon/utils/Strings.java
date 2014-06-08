@@ -2,6 +2,8 @@ package org.moon.utils;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.Collection;
+import java.util.Objects;
 
 /**
  * 字符串处理类
@@ -75,4 +77,86 @@ public class Strings {
     public static String changeCamelBakToUnderline(String src){
     	return src.replaceAll("([A-Z])", "_$1").toLowerCase();
     }
+    
+    /**
+     * 是否两端加单引号，只对String和Character有效
+     * @param o
+     * @return
+     */
+    public static String wrapIfNecessary(Object o){
+    	if(o==null){
+			return "";
+		}
+		if(o instanceof String||o instanceof Character){
+			return "'"+"'";
+		}
+		return o.toString();
+    }
+    
+    /**
+     * 将集合中的所有值连接为以 delimiter分割的字符串，分隔符默认是逗号
+     * @param values
+     * @param delimiter
+     * @return
+     */
+    public static String join(Collection<? extends Object> values,String delimiter){
+    	if(Objects.isNull(values)||values.size()==0){
+    		return "";
+    	}
+    	
+    	if(Objects.isNull(delimiter)){
+    		delimiter = ",";
+    	}
+    	
+    	boolean begin = true;
+    	StringBuffer sb = new StringBuffer();
+    	
+    	for(Object o:values){
+    		if(begin){
+    			begin = false;
+    		}else{
+    			sb.append(o);
+    		}
+    		sb.append(delimiter);
+    	}
+    	if(sb.length()>0){
+    		sb.deleteCharAt(0);
+    	}
+    	return sb.toString();
+    }
+    
+    /**
+     * 将集合中的所有值,通过StringCustomerHandler处理后,连接为以 delimiter分割的字符串，分隔符默认是逗号
+     * @param values
+     * @param delimiter
+     * @param handler
+     * @return
+     */
+    public static  <T> String  join(Collection<T> values,String delimiter,StringCustomerHandler<T> handler){
+    	if(Objects.isNull(values)||values.size()==0){
+    		return "";
+    	}
+    	
+    	boolean begin = true;
+    	if(Objects.isNull(delimiter)){
+    		delimiter = ",";
+    	}
+    	StringBuffer sb = new StringBuffer();
+    	for(T o:values){
+    		if(begin){
+    			begin = false;
+    		}else{
+    			sb.append(handler.handle(o));
+    		}
+    		sb.append(delimiter);
+    	}
+    	return sb.toString();
+    }
+    
+    /**
+     * 自定义解析值的方法
+     */
+	public  static interface StringCustomerHandler<T>{
+		String handle(T t);
+	}
 }
