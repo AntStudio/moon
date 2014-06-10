@@ -5,6 +5,7 @@ import javax.annotation.Resource;
 import org.moon.base.action.BaseAction;
 import org.moon.dictionary.domain.Dictionary;
 import org.moon.dictionary.repository.DictionaryRepository;
+import org.moon.dictionary.service.DictionaryService;
 import org.moon.message.WebResponse;
 import org.moon.rbac.domain.annotation.MenuMapping;
 import org.moon.rest.annotation.Get;
@@ -28,7 +29,8 @@ public class DictionaryAction extends BaseAction{
 	SqlSessionFactoryBean sessionFactoryBean;
 	@Resource
 	private DictionaryRepository dictionaryRepository;
-	
+	@Resource
+	private DictionaryService dictionaryService;
 	@Get("")
 	@MenuMapping(code="platform_8",name="数据字典",parentCode="platform",url="/dictionary")
 	public ModelAndView showDictionaryPage(){
@@ -55,7 +57,7 @@ public class DictionaryAction extends BaseAction{
 	
 	@Get("/list")
 	public @ResponseBody WebResponse listDictionary() throws Exception{
-		 return WebResponse.build().setResult(dictionaryRepository.list(Dictionary.class));
+		 return WebResponse.build().setResult(dictionaryService.list());
 	}
 	
 }

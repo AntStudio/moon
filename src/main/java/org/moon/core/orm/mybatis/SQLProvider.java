@@ -15,6 +15,7 @@ import org.apache.ibatis.jdbc.SQL;
 import org.moon.base.domain.BaseDomain;
 import org.moon.dictionary.domain.Dictionary;
 import org.moon.utils.Iterators;
+import org.moon.utils.Objects;
 import org.moon.utils.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,7 @@ public class SQLProvider {
 	private Logger logger = LoggerFactory.getLogger(SQLProvider.class);
 
 	/**
-	 * 持久化域对象,传入的对象需以'o'为key,并且要继承自
+	 * 持久化域对象,传入的对象需以'o'为key,并且要继承自{@link BaseDomain}
 	 * @param params
 	 * @return
 	 */
@@ -100,7 +101,7 @@ public class SQLProvider {
 		String sqlString;
 		SQL sql = new SQL();
 		String tableName = getTable((Class<? extends BaseDomain>) params.get("domain"));
-		Long[] ids = (Long[]) params.getOrDefault("ids", new Long[]{});
+		Long[] ids = (Long[]) Objects.getDefault(params.get("ids"),new Long[]{});
 		final StringBuilder idsCondition = new StringBuilder("(-1");
 		
 		Iterators.forEach(Arrays.asList(ids).iterator(),new Iterators.CustomerHandler<Long>() {
@@ -126,14 +127,38 @@ public class SQLProvider {
 	 */
 	public String list(Map<String, Object> params) {
 		Class domainClass = (Class<? extends BaseDomain>) params.get("domain");
+		Criteria criteria = (Criteria) params.get("criteria");
 		String tableName = getTable(domainClass);
 		String sqlString;
 		SQL sql = new SQL().SELECT("*").FROM(tableName);
+		
+		if(Objects.nonNull(criteria)&&criteria.nonEmpty()){
+			sql.WHERE(criteria.toSqlString());
+		}
+		
 		sqlString = sql.toString();
 		logger.debug("{} : {}" ,logger.getName(), sqlString);
 		return sqlString;
 	}
 
+	/**
+	 * 
+	 * @param params
+	 * @return
+	 */
+	public String get(Map<String, Object> params) {
+		Long id = (Long) params.get("id");
+		Class domainClass = (Class<? extends BaseDomain>) params.get("domain");
+		String tableName = getTable(domainClass);
+		String sqlString;
+		SQL sql = new SQL().SELECT("*").FROM(tableName).WHERE("id="+id);
+		
+		sqlString = sql.toString();
+		logger.debug("{} : {}" ,logger.getName(), sqlString);
+		return sqlString;
+	}
+	
+	
 	/**
 	 * <p>
 	 * 获取当前Domain所指向的Table,如果没有{@link Table}注解,默认使用 tab_

@@ -10,6 +10,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 import org.moon.core.spring.ApplicationContextHelper;
 import org.moon.dictionary.domain.Dictionary;
 import org.moon.dictionary.repository.DictionaryRepository;
+import org.moon.dictionary.service.DictionaryService;
 
 /**
  * 字典下拉框(tag-name-->dicSelect)
@@ -20,7 +21,7 @@ public class DictionarySelect extends TagSupport{
 
 	private static final long serialVersionUID = -1L;
 	
-	private DictionaryRepository dictionaryRepository = ApplicationContextHelper.getBean(DictionaryRepository.class);
+	private DictionaryService dictionaryService = ApplicationContextHelper.getBean(DictionaryService.class);
 	
 	//字典代码
 	private String code;
@@ -49,7 +50,7 @@ public class DictionarySelect extends TagSupport{
 	}
 	
 	private List<Map> getDicForCode(){
-		return dictionaryRepository.list(Dictionary.class);
+		return dictionaryService.list();
 	}
 	
 	public void setCode(String code) {

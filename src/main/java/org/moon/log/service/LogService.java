@@ -3,9 +3,9 @@ package org.moon.log.service;
 import java.util.List;
 import java.util.Map;
 
+import org.moon.base.service.BaseService;
 import org.moon.log.domain.Log;
 import org.moon.pagination.Pager;
-import org.moon.rbac.service.BaseService;
 
 
 /**

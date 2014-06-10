@@ -3,6 +3,7 @@ package org.moon.rbac.service;
 import java.util.List;
 import java.util.Map;
 
+import org.moon.base.service.BaseService;
 import org.moon.rbac.domain.Role;
 
 import com.reeham.component.ddd.model.ModelLoader;

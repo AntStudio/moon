@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.moon.base.service.BaseService;
 import org.moon.pagination.Pager;
 import org.moon.rbac.domain.User;
 

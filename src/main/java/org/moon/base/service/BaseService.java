@@ -1,4 +1,11 @@
-package org.moon.rbac.service;
+package org.moon.base.service;
+
+import java.util.List;
+import java.util.Map;
+
+import org.moon.core.orm.mybatis.Criteria;
+
+
 
 /**
  * 服务类通用接口
@@ -22,5 +29,16 @@ public interface BaseService<T> {
 	 */
 	public T load(Long id);
 	
+	/**
+	 * 查询所有的对象列表，等同于 {@link BaseService#list(Criteria)}-->list(null)
+	 * @return
+	 */
+	public List<Map> list();
 	
+	/**
+	 * 根据条件查询对象列表
+	 * @param criteria
+	 * @return
+	 */
+	public List<Map> list(Criteria criteria);
 }
