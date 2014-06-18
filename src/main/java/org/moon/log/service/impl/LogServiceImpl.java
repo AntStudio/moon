@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.moon.core.orm.mybatis.Criteria;
 import org.moon.log.domain.Log;
 import org.moon.log.repository.LogRepository;
 import org.moon.log.service.LogService;
@@ -94,6 +95,18 @@ public class LogServiceImpl implements LogService,ModelLoader{
 			}
 		}
 		modelContainer.enhanceModel(log).save();
+	}
+
+	@Override
+	public List<Map> list() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Map> list(Criteria criteria) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

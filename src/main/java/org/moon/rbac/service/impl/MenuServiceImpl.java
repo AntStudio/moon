@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.moon.core.orm.mybatis.Criteria;
 import org.moon.rbac.domain.Menu;
 import org.moon.rbac.repository.MenuRepository;
 import org.moon.rbac.service.MenuService;
@@ -203,5 +204,17 @@ public class MenuServiceImpl implements MenuService {
 			menuRepository.sortMenu(parentId, childrenIds,get(parentId).getCode());
 		}
 		
+	}
+
+	@Override
+	public List<Map> list() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Map> list(Criteria criteria) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

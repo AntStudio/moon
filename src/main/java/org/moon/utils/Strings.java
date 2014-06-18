@@ -87,7 +87,7 @@ public class Strings {
 			return "";
 		}
 		if(o instanceof String||o instanceof Character){
-			return "'"+"'";
+			return "'"+o+"'";
 		}
 		return o.toString();
     }

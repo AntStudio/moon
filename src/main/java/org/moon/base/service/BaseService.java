@@ -30,13 +30,13 @@ public interface BaseService<T> {
 	public T load(Long id);
 	
 	/**
-	 * 查询所有的对象列表，等同于 {@link BaseService#list(Criteria)}-->list(null)
+	 * 获取数据列表
 	 * @return
 	 */
 	public List<Map> list();
 	
 	/**
-	 * 根据条件查询对象列表
+	 * 根据限制criteria查询数据列表
 	 * @param criteria
 	 * @return
 	 */

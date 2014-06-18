@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.moon.core.orm.mybatis.Criteria;
 import org.moon.rbac.domain.Role;
 import org.moon.rbac.repository.RoleRepository;
 import org.moon.rbac.service.RoleService;
@@ -106,6 +107,18 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	public List<Role> getRoleByPermission(Long pid) {
 		return modelContainer.identifiersToModels((List)roleRepository.getRolesByPermission(pid), Role.class, this);
+	}
+
+	@Override
+	public List<Map> list() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Map> list(Criteria criteria) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

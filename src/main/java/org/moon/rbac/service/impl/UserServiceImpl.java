@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.moon.core.orm.mybatis.Criteria;
 import org.moon.pagination.Pager;
 import org.moon.rbac.domain.User;
 import org.moon.rbac.repository.UserRepository;
@@ -170,5 +171,17 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean isUserNameExists(String userName) {
 		return userRepository.isUserNameExists(userName);
+	}
+
+	@Override
+	public List<Map> list() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Map> list(Criteria criteria) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
