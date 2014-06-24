@@ -1,5 +1,8 @@
 package org.moon.support.session;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -42,7 +45,13 @@ public class SessionContext {
     * @return
     */
    public static String getWebAppPath(){
-	   return getSession().getServletContext().getRealPath("/");
+	   try{
+		   System.out.println("======"+URLDecoder.decode(getSession().getServletContext().getRealPath("/"),"UTF-8"));
+		   return URLDecoder.decode(getSession().getServletContext().getRealPath("/"),"UTF-8");
+	   }catch(UnsupportedEncodingException e){
+		   e.printStackTrace();
+		   return "";
+	   }
    }
    public static HttpServletResponse getResponse() {  
        return (HttpServletResponse)responseLocal.get();  
