@@ -17,7 +17,7 @@ public class MySQLDiaect extends  Dialect{
 
 	@Override
 	public String getLimitSql(int offset, int limit) {
-		return " limit "+offset+" "+limit;
+		return " limit "+offset+","+limit;
 	}
 
 }

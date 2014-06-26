@@ -22,7 +22,7 @@
     <if test="orderBy">order by ${orderBy}</if>
     limit ${curcount},${ps}
   </select>
-  <select id="getPermission_count" resultType="Long">select count(*) from tab_permission</select>
+  <select id="getPermission_count" resultType="Integer">select count(*) from tab_permission</select>
   
   <insert id="assignAddPermission">
     insert tab_role_permission values
@@ -45,5 +45,5 @@
     <if test="orderBy">order by ${orderBy}</if>
     limit ${curcount},${ps}
   </select>
-  <select id="getPermissionsByRole_count" resultType="Long">select count(*) from tab_permission</select>
+  <select id="getPermissionsByRole_count" resultType="Integer">select count(*) from tab_permission</select>
 </mapper>

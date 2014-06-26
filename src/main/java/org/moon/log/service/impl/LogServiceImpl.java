@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.moon.base.service.AbstractService;
 import org.moon.core.orm.mybatis.Criteria;
 import org.moon.log.domain.Log;
 import org.moon.log.repository.LogRepository;
@@ -23,7 +24,7 @@ import com.reeham.component.ddd.model.ModelLoader;
 import com.reeham.component.ddd.model.ModelUtils;
 
 @Service
-public class LogServiceImpl implements LogService,ModelLoader{
+public class LogServiceImpl extends AbstractService<Log> implements LogService,ModelLoader{
 	@Resource
 	private ModelContainer modelContainer;
 	@Resource
@@ -33,7 +34,8 @@ public class LogServiceImpl implements LogService,ModelLoader{
 	@Override
 	public Pager getLogsForPage(Map<String, Object> params) {
 		
-		return new Pager(logRepository.getLogs_count(params),getLogsForMap(params),params);
+		return new Pager(logRepository.getLogs_count(params),(List)getLogsForMap(params),
+				Integer.parseInt(params.get("ps").toString()),Integer.parseInt(params.get("cp").toString()));
 	}
 
 	public List<Map<String,Object>> getLogsForMap(Map<String, Object> params){

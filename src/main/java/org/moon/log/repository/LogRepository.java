@@ -36,7 +36,7 @@ public interface LogRepository {
 	 */
 	public List<Long> getLogs(Map<String,Object> params);
 	
-	public Long getLogs_count(Map<String,Object> params);
+	public Integer getLogs_count(Map<String,Object> params);
 	
 	/**
 	 * 获取日志详情

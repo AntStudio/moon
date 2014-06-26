@@ -3,7 +3,7 @@
 			var table = $("#dictionaryTable").table({
 				url:contextPath+"/dictionary/list",
 				columns:[{name:"id"},{name:"code",display:"字典代码"},{name:"name",display:"字典名称"}],
-				formatData:function(data){return data.result;},
+				formatData:function(data){return data.result.items;},
 				title:"字典",
 				rowId:"id",
 				buttons:[

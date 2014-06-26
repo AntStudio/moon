@@ -27,7 +27,7 @@
 		limit ${curcount},${ps}
 	</select>
 
-	<select id="getLogs_count" resultType="Long">
+	<select id="getLogs_count" resultType="Integer">
 		select count(id) from tab_log
 	</select>
 	<select id="getLog" resultMap="log">

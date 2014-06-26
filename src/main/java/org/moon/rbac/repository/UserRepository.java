@@ -33,7 +33,7 @@ public interface UserRepository{
 	
 	public List<Long> getUsersByCreator(Map<String,Object> paramsMap);
 	
-	public Long getUsersByCreatorCount(Map<String,Object> paramsMap);
+	public Integer getUsersByCreatorCount(Map<String,Object> paramsMap);
 	
 	public Long addUser(@Param("user") User user);
 	

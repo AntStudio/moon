@@ -135,12 +135,62 @@ public class SQLProvider {
 		if(Objects.nonNull(criteria)&&criteria.nonEmpty()){
 			sql.WHERE(criteria.toSqlString());
 		}
+		sqlString = sql.toString();
+		if(Objects.nonNull(criteria)&&criteria.nonEmpty()){
+			sqlString+=criteria.toOrderSqlString();
+			sqlString+=criteria.toLimitSqlString();
+		}
+		logger.debug("{} : {}" ,logger.getName(), sqlString);
+		return sqlString;
+	}
+
+
+	/**
+	 * 计数
+	 * @param params
+	 * @return
+	 */
+	public String count(Map<String, Object> params) {
+		Class domainClass = (Class<? extends BaseDomain>) params.get("domain");
+		Criteria criteria = (Criteria) params.get("criteria");
+		String tableName = getTable(domainClass);
+		String sqlString;
+		SQL sql = new SQL().SELECT("count(*)").FROM(tableName);
+		
+		if(Objects.nonNull(criteria)&&criteria.nonEmpty()){
+			sql.WHERE(criteria.toSqlString());
+		}
 		
 		sqlString = sql.toString();
 		logger.debug("{} : {}" ,logger.getName(), sqlString);
 		return sqlString;
 	}
-
+	
+	/**
+	 * 获取单表数据列表(暂不支持多表)
+	 * 
+	 * @param params
+	 * @return
+	 */
+	public String listIds(Map<String, Object> params) {
+		Class domainClass = (Class<? extends BaseDomain>) params.get("domain");
+		Criteria criteria = (Criteria) params.get("criteria");
+		String tableName = getTable(domainClass);
+		String sqlString;
+		SQL sql = new SQL().SELECT("id").FROM(tableName);
+		
+		if(Objects.nonNull(criteria)&&criteria.nonEmpty()){
+			sql.WHERE(criteria.toSqlString());
+		}
+		sqlString = sql.toString();
+		if(Objects.nonNull(criteria)&&criteria.nonEmpty()){
+			sqlString+=criteria.toOrderSqlString();
+			sqlString+=criteria.toLimitSqlString();
+		}
+		logger.debug("{} : {}" ,logger.getName(), sqlString);
+		return sqlString;
+	}
+	
 	/**
 	 * 
 	 * @param params

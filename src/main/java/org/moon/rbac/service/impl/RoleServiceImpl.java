@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.moon.base.service.AbstractService;
 import org.moon.core.orm.mybatis.Criteria;
 import org.moon.rbac.domain.Role;
 import org.moon.rbac.repository.RoleRepository;
@@ -17,7 +18,7 @@ import com.reeham.component.ddd.model.ModelContainer;
 import com.reeham.component.ddd.model.ModelUtils;
 
 @Service
-public class RoleServiceImpl implements RoleService {
+public class RoleServiceImpl extends AbstractService<Role> implements RoleService {
 
 	@Resource
 	private ModelContainer modelContainer;

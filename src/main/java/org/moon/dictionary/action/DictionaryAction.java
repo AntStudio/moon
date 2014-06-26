@@ -1,6 +1,7 @@
 package org.moon.dictionary.action;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.moon.base.action.BaseAction;
 import org.moon.dictionary.domain.Dictionary;
@@ -11,6 +12,7 @@ import org.moon.rbac.domain.annotation.MenuMapping;
 import org.moon.rest.annotation.Get;
 import org.moon.rest.annotation.Post;
 import org.moon.support.spring.annotation.FormParam;
+import org.moon.utils.ParamUtils;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,8 +58,8 @@ public class DictionaryAction extends BaseAction{
 	}
 	
 	@Get("/list")
-	public @ResponseBody WebResponse listDictionary() throws Exception{
-		 return WebResponse.build().setResult(dictionaryService.list());
+	public @ResponseBody WebResponse listDictionary(HttpServletRequest request) throws Exception{
+		 return WebResponse.build().setResult(dictionaryService.listForPage(ParamUtils.getParamsAsCerteria(request)));
 	}
 	
 }

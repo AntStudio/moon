@@ -3,8 +3,6 @@ package org.moon.base.repository;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Arg;
-import org.apache.ibatis.annotations.ConstructorArgs;
 import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Param;
@@ -37,12 +35,14 @@ public interface BaseRepository<T> {
 	public void logicDelete(@Param("ids") Long[] ids);
 	
 	@SelectProvider(type=SQLProvider.class,method="get")
-	@ConstructorArgs(value = {
-			@Arg(column="id",javaType=Integer.class),
-			@Arg(column="url",javaType=String.class)
-			})
     public T get(@Param("domain")Class<T> t,@Param("id")Long id);
     
     @SelectProvider(type=SQLProvider.class,method="list")
     public List<Map> list(@Param("domain")Class<T> t,@Param("criteria")Criteria criteria);
+    
+    @SelectProvider(type=SQLProvider.class,method="listIds")
+    public List<Long> listIds(@Param("domain")Class<T> t,@Param("criteria")Criteria criteria);
+    
+    @SelectProvider(type=SQLProvider.class,method="count")
+    public Integer count(@Param("domain")Class<T> t,@Param("criteria")Criteria criteria);
 }

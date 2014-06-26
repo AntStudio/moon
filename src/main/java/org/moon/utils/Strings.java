@@ -69,12 +69,37 @@ public class Strings {
     }
     
     /**
-     * 将驼峰命令方式修改为下划线方式
+     * 将驼峰命名方式修改为下划线方式
      * @param src
      * @return
      */
     public static String changeCamelBakToUnderline(String src){
     	return src.replaceAll("([A-Z])", "_$1").toLowerCase();
+    }
+    
+    /**
+     * 将下划线命名方式修改为驼峰命名方式
+     * @param src
+     * @return
+     */
+    public static String changeUnderlineToCamelBak(String src){
+    	if(src==null||src.length()==0){
+    		return "";
+    	}
+    	byte[] data = src.getBytes();
+    	byte[] result = new byte[data.length];
+    	int position = -1;
+    	for(int i=0,l=data.length;i<l;i++){
+    		if(data[i]==95&&i+1<l){
+    			result[++position] = (byte) (data[++i]-32);
+    		}else{
+    			result[++position] = data[i];
+    		}
+    	}
+    	if(position==-1){
+    		return src;
+    	}
+    	return new String(result,0,position+1);
     }
     
     /**
@@ -114,9 +139,9 @@ public class Strings {
     		if(begin){
     			begin = false;
     		}else{
-    			sb.append(o);
+    			sb.append(delimiter);
     		}
-    		sb.append(delimiter);
+    		sb.append(o);
     	}
     	if(sb.length()>0){
     		sb.deleteCharAt(0);
@@ -145,9 +170,9 @@ public class Strings {
     		if(begin){
     			begin = false;
     		}else{
-    			sb.append(handler.handle(o));
+    			sb.append(delimiter);
     		}
-    		sb.append(delimiter);
+    		sb.append(handler.handle(o));
     	}
     	return sb.toString();
     }

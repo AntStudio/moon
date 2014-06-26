@@ -7,19 +7,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DictionaryServiceImpl extends AbstractService<Dictionary> implements DictionaryService{
-
-	@Override
-	public Dictionary get(Long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Dictionary load(Long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	
 	
 }

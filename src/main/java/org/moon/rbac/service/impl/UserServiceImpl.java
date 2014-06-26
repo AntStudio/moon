@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.moon.base.service.AbstractService;
 import org.moon.core.orm.mybatis.Criteria;
 import org.moon.pagination.Pager;
 import org.moon.rbac.domain.User;
@@ -30,7 +31,7 @@ import com.reeham.component.ddd.model.ModelUtils;
  */
 @Introduce("message")
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends AbstractService<User> implements UserService {
 
     @Resource
     private UserRepository userRepository;
@@ -134,7 +135,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public Pager getUsersByCreatorForPager(Map<String, Object> paramsMap) {
 
-        return new Pager(userRepository.getUsersByCreatorCount(paramsMap), getUsersByCreatorForMap(paramsMap), paramsMap);
+        return new Pager(userRepository.getUsersByCreatorCount(paramsMap), (List)getUsersByCreatorForMap(paramsMap),
+        		Integer.parseInt(paramsMap.get("ps").toString()),Integer.parseInt(paramsMap.get("cp").toString()));
     }
 
     @Override

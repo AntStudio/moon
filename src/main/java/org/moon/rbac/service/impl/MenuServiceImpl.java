@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.moon.base.service.AbstractService;
 import org.moon.core.orm.mybatis.Criteria;
 import org.moon.rbac.domain.Menu;
 import org.moon.rbac.repository.MenuRepository;
@@ -18,7 +19,7 @@ import com.reeham.component.ddd.annotation.OnEvent;
 import com.reeham.component.ddd.model.ModelContainer;
 import com.reeham.component.ddd.model.ModelUtils;
 @Service
-public class MenuServiceImpl implements MenuService {
+public class MenuServiceImpl extends AbstractService<Menu> implements MenuService {
 	@Resource
 	MenuRepository menuRepository;
 	

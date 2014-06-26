@@ -25,16 +25,23 @@ public class Criteria implements Serializable {
 	
 	private Collection<Order> orders = new ArrayList<Order>();
 	
-	private int offset = 0 ,limit = -1;
+	private int offset = 0 ,limit = 15,currentPage = 1;
 	
 	private boolean statusChanged = false;//标示Criteria中是否有状态发生变化，如果发生了变化，toSqlString()需要重新构建sql语句，否则直接返回已有的sql语句
 	
+	private boolean isLimited = false;//是否需要加限制
+	
 	private String sqlString = "";
+	
+	private String limitSql = "";
+	
+	private String orderSql = "";
 	
 	private boolean empty = true;//标示是否有限制条件
 	
 	public Criteria add(Criterion criterion) {
 		this.criteria.add(criterion);
+		empty = false;
 		triggerStatusChange();
 		return this;
 	}
@@ -45,8 +52,15 @@ public class Criteria implements Serializable {
 		return this;
 	}
 	
+	public Criteria currentPage(int currentPage){
+		this.currentPage = currentPage;
+		triggerStatusChange();
+		return this;
+	}
+	
 	public Criteria limit(int limit){
 		Assert.isTrue(limit>=0, "the limit of Criteria should be large than 0.");
+		this.isLimited = true;
 		this.limit = limit;
 		triggerStatusChange();
 		return this;
@@ -66,6 +80,14 @@ public class Criteria implements Serializable {
 		}
 	}
 	
+	public String toLimitSqlString(){
+		return limitSql;
+	}
+	
+	public String toOrderSqlString(){
+		return orderSql;
+	}
+	
 	public boolean isEmpty(){
 		return empty;
 	}
@@ -78,7 +100,6 @@ public class Criteria implements Serializable {
 	 */
 	private void triggerStatusChange(){
 		statusChanged = true;
-		empty = false;
 	}
 	
 	/**
@@ -95,20 +116,43 @@ public class Criteria implements Serializable {
 		}));
 		
 		if(orders.size()>0){
-			sql.append(" order by ");
+			orderSql = (" order by ");
 			
-			sql.append(Strings.join(orders, " , ",new Strings.StringCustomerHandler<Order>() {
+			orderSql+=(Strings.join(orders, " , ",new Strings.StringCustomerHandler<Order>() {
 				@Override
 				public String handle(Order o) {
 					return o.toSqlString();
 				}
 			}));
 		}
-		if(limit!=-1){//当limit大于0时(不等于初始值)，才加limit后缀
-			sql.append(" ").append(applicationContext.getBean(Dialect.class).getLimitSql(offset, limit));
+		if(isLimited){//当limit大于0时(不等于初始值)，才加limit后缀
+			if(offset<=0){
+				offset = (currentPage-1)*limit; 
+			}
+			limitSql = " "+applicationContext.getBean(Dialect.class).getLimitSql(offset, limit);
 		}
 		sqlString =  sql.toString();
 		statusChanged = false;
 		return sqlString;
+	}
+
+	public String getSqlString() {
+		return sqlString;
+	}
+
+	public String getLimitSql() {
+		return limitSql;
+	}
+
+	public String getOrderSql() {
+		return orderSql;
+	}
+	
+	public int getPageIndex(){
+		return currentPage;
+	}
+	
+	public int getPageSize(){
+		return limit;
 	}
 }

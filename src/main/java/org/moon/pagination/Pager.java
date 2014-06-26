@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.moon.utils.ParamUtils;
-
 import com.reeham.component.ddd.pagination.PagedList;
 
 /**
@@ -16,7 +14,7 @@ import com.reeham.component.ddd.pagination.PagedList;
  * @version 1.0
  * @date 2012-12-5
  */
-public class Pager implements PagedList<Map<String,Object>>{
+public class Pager implements PagedList<Object>{
 
 	/**
 	 * 
@@ -26,7 +24,7 @@ public class Pager implements PagedList<Map<String,Object>>{
 	/**
 	 * 总记录数
 	 */
-	private Long totalItemsCount;
+	private int totalItemsCount;
 
 	/**
 	 * 分页大小
@@ -46,28 +44,19 @@ public class Pager implements PagedList<Map<String,Object>>{
 	/**
 	 * 当前分页数据
 	 */
-	private List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
+	private List<Object> items = new ArrayList<Object>();
 
 	
-	
-	/**
-	 * 参数map 如页码参数(当前页,页面大小,查询参数等等)
-	 */
-	private Map<String,Object> paramsMap = ParamUtils.getDefaultParamMap();
-	
-	public Pager(Long totalItemsCount,List<Map<String,Object>> items,Map<String,Object> paramsMap){
+	public Pager(int totalItemsCount,List<Object> items,int pageSize,int currentPageIndex){
 		this.totalItemsCount = totalItemsCount;
 		this.items = items;
-		if(paramsMap!=null){
-			this.paramsMap = paramsMap;
-		}
-		this.pageSize = Integer.parseInt(this.paramsMap.get("ps").toString());
-		this.currentPageIndex = Integer.parseInt(this.paramsMap .get("cp").toString());
+		this.pageSize = pageSize;
+		this.currentPageIndex = currentPageIndex;
 	}
 	
 	
 	@Override
-	public List<Map<String,Object>> getItems() {
+	public List<Object> getItems() {
 		return items;
 	}
 
@@ -81,10 +70,7 @@ public class Pager implements PagedList<Map<String,Object>>{
 
 	@Override
 	public int getTotalItemCount() {
-		if(totalPagesCount<=0)
-		return 0;
-		else
-			return totalPagesCount;
+		return totalItemsCount;
 	}
 
 

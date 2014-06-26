@@ -29,7 +29,7 @@ public interface PermissionRepository {
 	
 	public List<Long> getPermissions(Map<String,Object> paramsMap);
 	
-	public Long getPermission_count(Map<String,Object> paramMap);
+	public Integer getPermission_count(Map<String,Object> paramMap);
 	
 	public void assignAddPermission(@Param("pids")Long[] pids,@Param("rids")Long[] rids);
 	
@@ -37,6 +37,6 @@ public interface PermissionRepository {
 	
 	public List<Long> getPermissionsByRole(Map<String,Object> paramsMa);
 	
-	public Long getPermissionsByRole_count(Map<String,Object> paramsMap);
+	public Integer getPermissionsByRole_count(Map<String,Object> paramsMap);
 	
 }

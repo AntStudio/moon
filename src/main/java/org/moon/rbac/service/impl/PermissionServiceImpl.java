@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.moon.base.service.AbstractService;
 import org.moon.core.orm.mybatis.Criteria;
 import org.moon.pagination.Pager;
 import org.moon.rbac.domain.Permission;
@@ -26,7 +27,7 @@ import com.reeham.component.ddd.model.ModelUtils;
  * @date 2012-12-14
  */
 @Service
-public class PermissionServiceImpl implements PermissionService,ModelLoader{
+public class PermissionServiceImpl extends AbstractService<Permission> implements PermissionService,ModelLoader{
 	
 	@Resource
 	private PermissionRepository permissionRepository;
@@ -74,7 +75,8 @@ public class PermissionServiceImpl implements PermissionService,ModelLoader{
 	@Override
 	public Pager getPermissionsForPage(Map<String, Object> paramsMap) {
 		
-	 return new Pager(permissionRepository.getPermission_count(paramsMap),getPermissionsForMap(paramsMap),paramsMap);
+	 return new Pager(permissionRepository.getPermission_count(paramsMap),(List)getPermissionsForMap(paramsMap),
+			 Integer.parseInt(paramsMap.get("ps").toString()),Integer.parseInt(paramsMap.get("cp").toString()));
 	}
 
 	@Override
@@ -130,7 +132,8 @@ public class PermissionServiceImpl implements PermissionService,ModelLoader{
 	@Override
 	public Pager getPermissionsByRoleForPage(Map<String,Object> paramsMap) {
 		
-		return new Pager(permissionRepository.getPermissionsByRole_count(paramsMap),getPermissionsByRoleForMap(paramsMap),paramsMap);
+		return new Pager(permissionRepository.getPermissionsByRole_count(paramsMap),(List)getPermissionsByRoleForMap(paramsMap),
+				 Integer.parseInt(paramsMap.get("ps").toString()),Integer.parseInt(paramsMap.get("cp").toString()));
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

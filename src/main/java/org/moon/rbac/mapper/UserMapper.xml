@@ -30,7 +30,7 @@
 		limit ${curcount},${ps}
 	</select>
 
-	<select id="getUsersByCreatorCount" resultType="Long"
+	<select id="getUsersByCreatorCount" resultType="Integer"
 		parameterType="Map">
 		select count(*)from tab_user where create_by = #{uid} and
 		<if test="deleteFlag==null">

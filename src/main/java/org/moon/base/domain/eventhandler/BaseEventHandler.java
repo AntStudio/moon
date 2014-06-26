@@ -9,6 +9,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.moon.base.domain.BaseDomain;
+import org.moon.base.repository.CommonRepository;
 import org.moon.utils.Strings;
 import org.springframework.beans.factory.BeanNameAware;
 
@@ -21,12 +23,19 @@ import com.reeham.component.ddd.message.disruptor.consumer.ConsumerMethodHolder;
  * @author Gavin
  * @Date 2013-12-30
  */
-public abstract class BaseEventHandler<T> implements BeanNameAware{
+public abstract class BaseEventHandler<T extends BaseDomain> implements BeanNameAware{
 
     @Resource
     private ConsumerLoader consumerLoader;
+    
+    @Resource
+    private CommonRepository commonRepository;
+    
     private String beanName;
     protected Logger logger  = Logger.getLogger(getClass());
+    
+    protected BaseEventHandler(){}
+    
     
     @SuppressWarnings("unchecked")
 	private Class<T> getTClass(){
@@ -71,12 +80,18 @@ public abstract class BaseEventHandler<T> implements BeanNameAware{
         }
     }
     
-    /******************** 子类必须复写的方法 ********************/
+    public  T save(T domain){
+    	domain.setId(commonRepository.save(domain));
+    	return domain;
+    }
     
-    public abstract T save(T domain);
-    public abstract void delete(T domain);
-    public abstract void update(T domain);
+    public void delete(T domain){
+    	commonRepository.delete(getTClass(), new Long[]{domain.getId()});
+    }
     
-    /******************** /子类必须复写的方法 ********************/
+    public void update(T domain){
+    	commonRepository.update(domain);
+    }
+    
     
 }
