@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.moon.base.action.BaseAction;
 import org.moon.dictionary.domain.Dictionary;
-import org.moon.dictionary.repository.DictionaryRepository;
 import org.moon.dictionary.service.DictionaryService;
 import org.moon.message.WebResponse;
 import org.moon.rbac.domain.annotation.MenuMapping;
@@ -13,7 +12,6 @@ import org.moon.rest.annotation.Get;
 import org.moon.rest.annotation.Post;
 import org.moon.support.spring.annotation.FormParam;
 import org.moon.utils.ParamUtils;
-import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,40 +24,37 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller
 @RequestMapping("/dictionary")
-public class DictionaryAction extends BaseAction{
-@Resource
-	SqlSessionFactoryBean sessionFactoryBean;
-	@Resource
-	private DictionaryRepository dictionaryRepository;
+public class DictionaryAction extends BaseAction {
 	@Resource
 	private DictionaryService dictionaryService;
+
 	@Get("")
-	@MenuMapping(code="platform_8",name="数据字典",parentCode="platform",url="/dictionary")
-	public ModelAndView showDictionaryPage(){
+	@MenuMapping(code = "platform_8", name = "数据字典", parentCode = "platform", url = "/dictionary")
+	public ModelAndView showDictionaryPage() {
 		return new ModelAndView("pages/dictionary/dictionary");
 	}
-	
+
 	@Post("/add")
-	public @ResponseBody WebResponse addDictionary(@FormParam("dictionary") Dictionary dictionary){
-		 dictionaryRepository.save(dictionary);
-		 return WebResponse.build();
+	public @ResponseBody WebResponse addDictionary(@FormParam("dictionary") Dictionary dictionary) {
+		dictionary.sync(dictionary.save());
+		return WebResponse.build();
 	}
-	
+
 	@Post("/update")
-	public @ResponseBody WebResponse updateDictionary(@FormParam("dictionary") Dictionary dictionary){
-		 dictionaryRepository.update(dictionary);
-		 return WebResponse.build();
+	public @ResponseBody WebResponse updateDictionary(@FormParam("dictionary") Dictionary dictionary) {
+		dictionary.sync(dictionary.update());
+		return WebResponse.build();
 	}
-	
+
 	@Post("/delete")
-	public @ResponseBody WebResponse deleteDictionary(@RequestParam("ids")Long[] ids){
-		 dictionaryRepository.delete(Dictionary.class, ids);
-		 return WebResponse.build();
+	public @ResponseBody WebResponse deleteDictionary(@RequestParam("ids") Long[] ids) {
+		dictionaryService.delete(ids);
+		return WebResponse.build();
 	}
-	
+
 	@Get("/list")
-	public @ResponseBody WebResponse listDictionary(HttpServletRequest request) throws Exception{
-		 return WebResponse.build().setResult(dictionaryService.listForPage(ParamUtils.getParamsAsCerteria(request)));
+	public @ResponseBody WebResponse listDictionary(HttpServletRequest request) throws Exception {
+		return WebResponse.build().setResult(dictionaryService.listForPage(ParamUtils.getParamsAsCerteria(request)));
 	}
-	
+
 }

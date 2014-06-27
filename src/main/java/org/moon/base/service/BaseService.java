@@ -49,4 +49,10 @@ public interface BaseService<T> {
 	 * @return
 	 */
 	public Pager listForPage(Criteria criteria);
+	
+	/**
+	 * 根据id删除
+	 * @param ids
+	 */
+	public void delete(Long[] ids);
 }

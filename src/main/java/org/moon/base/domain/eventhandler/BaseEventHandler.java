@@ -52,9 +52,10 @@ public abstract class BaseEventHandler<T extends BaseDomain> implements BeanName
      * 注册通用的事件处理器,包括save,update,delete
      */
     private void registerHandlerForGenericEvent(){
-        registerHandlerForEvent("save",getTClass());
-        registerHandlerForEvent("delete",getTClass());
-        registerHandlerForEvent("update",getTClass());
+    	Class<T> c = (Class<T>) BaseDomain.class;
+        registerHandlerForEvent("save",c);
+        registerHandlerForEvent("delete",c);
+        registerHandlerForEvent("update",c);
     }
     
     private void registerHandlerForEvent(String methodName,Class<T> paramType){
@@ -65,7 +66,7 @@ public abstract class BaseEventHandler<T extends BaseDomain> implements BeanName
         }
         Map<String, Collection<ConsumerMethodHolder>> consumerMethods =  consumerLoader.getConsumerMethods();
         try{
-            Method method = this.getClass().getDeclaredMethod(methodName,paramType);
+            Method method = this.getClass().getMethod(methodName,paramType);
             Collection<ConsumerMethodHolder> methods = consumerMethods.get(topicName);
             if (methods == null) {
                 methods = new LinkedList<ConsumerMethodHolder>();
@@ -76,7 +77,7 @@ public abstract class BaseEventHandler<T extends BaseDomain> implements BeanName
                 logger.debug("Success regist handler for event{topicName:"+topicName+",method:"+method+"}");
             }
         }catch(NoSuchMethodException e){
-            logger.error("error register handler for event{topicName:"+topicName+"},caused by "+methodName+" not existed in "+getTClass());
+            logger.error("error register handler for event{topicName:"+topicName+"},caused by "+methodName+" not existed in "+this.getClass());
         }
     }
     

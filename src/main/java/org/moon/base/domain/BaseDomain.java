@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.annotation.Resource;
 
+import org.moon.core.spring.ApplicationContextHelper;
 import org.moon.utils.Strings;
 
 import com.reeham.component.ddd.message.DomainMessage;
@@ -104,6 +105,7 @@ public class BaseDomain implements Serializable{
 	 * @return
 	 */
 	public DomainMessage save(){
+		enhanceIfNecessary();
 	    DomainMessage dm = new DomainMessage(this);
 	    eventMessageFirer.fireDisruptorEvent(Strings.lowerFirst(this.getClass().getSimpleName())+"/save",dm);
 	    return dm;
@@ -114,6 +116,7 @@ public class BaseDomain implements Serializable{
      * @return
      */
 	public DomainMessage update(){
+		enhanceIfNecessary();
 	    DomainMessage dm = new DomainMessage(this);
         eventMessageFirer.fireDisruptorEvent(Strings.lowerFirst(this.getClass().getSimpleName())+"/update",dm);
         return dm;
@@ -124,6 +127,7 @@ public class BaseDomain implements Serializable{
      * @return
      */
     public DomainMessage delete(){
+    	enhanceIfNecessary();
         DomainMessage dm = new DomainMessage(this);
         eventMessageFirer.fireDisruptorEvent(Strings.lowerFirst(this.getClass().getSimpleName())+"/delete",dm);
         modelContainer.removeModel(ModelUtils.asModelKey(this.getClass(), getId()));
@@ -143,5 +147,22 @@ public class BaseDomain implements Serializable{
         }
     }
     
+    /**
+     * 同步执行
+     * @param domainMessage
+     * @return
+     */
+    public Object sync(DomainMessage domainMessage){
+    	return domainMessage.getResultEvent();
+    }
+    
+    private void enhanceIfNecessary(){
+    	if(this.eventMessageFirer==null){
+    		ApplicationContextHelper.getBean(ModelContainer.class).enhanceModel(this);
+    		if(this.getId()!=null){
+                modelContainer.addModel(ModelUtils.asModelKey(this.getClass(),this.getId()), this,false);
+            }
+    	}
+    }
 	/******************** /领域方法  ********************/
 }

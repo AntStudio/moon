@@ -3,7 +3,7 @@
 			var table = $("#dictionaryTable").table({
 				url:contextPath+"/dictionary/list",
 				columns:[{name:"id"},{name:"code",display:"字典代码"},{name:"name",display:"字典名称"}],
-				formatData:function(data){return data.result.items;},
+				formatData:function(data){return data.result;},
 				title:"字典",
 				rowId:"id",
 				buttons:[
@@ -135,6 +135,7 @@
 			$.getJsonData(contextPath+"/dictionary/delete",{
 				ids:ids
 			},{type:'Post'}).done(function(){
+				$("#dictionaryTable").table("refresh");
 				moon.success("字典项成功删除");
 			});
 		};
@@ -154,6 +155,8 @@
 					$("#dictionaryForm").validate({align:'right',theme:"darkblue"});
 				},
 				beforeClose:function(){
+					$("[name='dictionary.code']","#dictionaryForm").val("");
+					$("[name='dictionary.name']","#dictionaryForm").val("");
 					$("#dictionaryForm").validate("hide");
 				},
 				buttons:[

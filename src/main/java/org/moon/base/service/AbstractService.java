@@ -162,4 +162,13 @@ public abstract class AbstractService<T> implements BaseService<T>,ModelLoader{
 	private int count(Criteria criteria){
 		return repository.count(getGeneric(), criteria);
 	}
+	
+	@Override
+	public void delete(Long[] ids) {
+		Assert.notEmpty(ids,"Can't delete for null ids");
+		for(Long id:ids){
+			modelContainer.removeModel(ModelUtils.asModelKey(getGeneric(), id));
+		}
+		repository.delete(getGeneric(), ids);
+	}
 }

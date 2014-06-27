@@ -144,13 +144,6 @@
 		}else{
 			opts=$.extend({},defaults,opts);
 			var dialogSelector = $(this).selector;
-			for(var selector in dialogCache){
-				if(dialogSelector==selector){
-					dialogCache[selector].reBindEvents().show();
-					return;
-				}
-			}	
-			
 			var newDialog = new dialog(dialogSelector,opts);
 			newDialog.renderDialog.call($(this),opts);
 		}
