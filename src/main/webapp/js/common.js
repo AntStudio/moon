@@ -196,9 +196,9 @@
 			return dfd.promise();
 		};
 		
-		var moon = moon||{};
-		
 })(jQuery);
+
+var moon = moon||{};
 
 (function(m){
 	m.format=function(){
