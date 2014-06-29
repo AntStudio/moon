@@ -119,6 +119,9 @@ public class BaseDomain implements Serializable{
 		enhanceIfNecessary();
 	    DomainMessage dm = new DomainMessage(this);
         eventMessageFirer.fireDisruptorEvent(Strings.lowerFirst(this.getClass().getSimpleName())+"/update",dm);
+        modelContainer.removeModel(ModelUtils.asModelKey(this.getClass(), this.getId()));
+        System.out.println("========="+ModelUtils.asModelKey(this.getClass(), this.getId()));
+        System.out.println("//////////"+modelContainer.getModel(ModelUtils.asModelKey(this.getClass(), getId())));
         return dm;
 	}
    

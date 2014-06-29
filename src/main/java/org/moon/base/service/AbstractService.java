@@ -12,7 +12,6 @@ import javax.annotation.Resource;
 import org.moon.base.repository.CommonRepository;
 import org.moon.core.orm.mybatis.Criteria;
 import org.moon.core.orm.mybatis.criterion.Restrictions;
-import org.moon.dictionary.domain.Dictionary;
 import org.moon.pagination.Pager;
 import org.moon.utils.Strings;
 import org.slf4j.Logger;
@@ -79,6 +78,7 @@ public abstract class AbstractService<T> implements BaseService<T>,ModelLoader{
     
 	@Override
 	public T load(Long id){
+		System.out.println(ModelUtils.asModelKey(getGeneric(), id));
 		Criteria criteria = new Criteria();
 		criteria.add(Restrictions.eq("id", id)).limit(1);
 		List<Map> list = repository.list(getGeneric(),criteria);
@@ -155,7 +155,7 @@ public abstract class AbstractService<T> implements BaseService<T>,ModelLoader{
 	@Override
 	public Pager listForPage(Criteria criteria) {
 		Class c = getGeneric();
-		List<T> results = modelContainer.identifiersToModels((List)repository.listIds(c, criteria), Dictionary.class, this);
+		List<T> results = modelContainer.identifiersToModels((List)repository.listIds(c, criteria), getGeneric(), this);
 		return new Pager(count(criteria),(List)results,criteria.getPageSize(), criteria.getPageIndex());
 	}
 	

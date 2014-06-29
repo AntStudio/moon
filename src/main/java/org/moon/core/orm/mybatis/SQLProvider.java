@@ -13,7 +13,6 @@ import javax.persistence.Transient;
 
 import org.apache.ibatis.jdbc.SQL;
 import org.moon.base.domain.BaseDomain;
-import org.moon.dictionary.domain.Dictionary;
 import org.moon.utils.Iterators;
 import org.moon.utils.Objects;
 import org.moon.utils.Strings;
@@ -44,7 +43,7 @@ public class SQLProvider {
 		final SQL sql = new SQL().INSERT_INTO(getTable(bd.getClass()));
 		String sqlString;
 		
-		ReflectionUtils.doWithFields(Dictionary.class, new FieldCallback() {
+		ReflectionUtils.doWithFields(bd.getClass(), new FieldCallback() {
 			@Override
 			public void doWith(Field field) throws IllegalArgumentException,
 					IllegalAccessException {
@@ -71,7 +70,7 @@ public class SQLProvider {
 		final SQL sql = new SQL().UPDATE(getTable(bd.getClass()));
 		String sqlString;
 		
-		ReflectionUtils.doWithFields(Dictionary.class, new FieldCallback() {
+		ReflectionUtils.doWithFields(bd.getClass(), new FieldCallback() {
 			@Override
 			public void doWith(Field field) throws IllegalArgumentException,
 					IllegalAccessException {
