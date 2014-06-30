@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.moon.core.orm.mybatis.Criteria;
+import org.moon.core.orm.mybatis.DataConverter;
 import org.moon.pagination.Pager;
 
 
@@ -50,6 +51,12 @@ public interface BaseService<T> {
 	 */
 	public Pager listForPage(Criteria criteria);
 	
+	/**
+	 * 获取分页结果
+	 * @param criteria
+	 * @return
+	 */
+	public Pager listForPage(Criteria criteria,DataConverter<T> dataConverter);
 	/**
 	 * 根据id删除
 	 * @param ids

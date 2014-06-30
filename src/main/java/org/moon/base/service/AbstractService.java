@@ -11,8 +11,10 @@ import javax.annotation.Resource;
 
 import org.moon.base.repository.CommonRepository;
 import org.moon.core.orm.mybatis.Criteria;
+import org.moon.core.orm.mybatis.DataConverter;
 import org.moon.core.orm.mybatis.criterion.Restrictions;
 import org.moon.pagination.Pager;
+import org.moon.utils.Dtos;
 import org.moon.utils.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -157,6 +159,13 @@ public abstract class AbstractService<T> implements BaseService<T>,ModelLoader{
 		Class c = getGeneric();
 		List<T> results = modelContainer.identifiersToModels((List)repository.listIds(c, criteria), getGeneric(), this);
 		return new Pager(count(criteria),(List)results,criteria.getPageSize(), criteria.getPageIndex());
+	}
+	
+	@Override
+	public Pager listForPage(Criteria criteria, DataConverter<T> dataConverter) {
+		Class c = getGeneric();
+		List<T> results = modelContainer.identifiersToModels((List)repository.listIds(c, criteria), getGeneric(), this);
+		return new Pager(count(criteria),Dtos.covert(results,dataConverter),criteria.getPageSize(), criteria.getPageIndex());
 	}
 	
 	private int count(Criteria criteria){
