@@ -9,11 +9,15 @@ import org.moon.core.orm.mybatis.criterion.Order;
 import org.moon.core.orm.mybatis.dialect.Dialect;
 import org.moon.core.spring.ApplicationContextHelper;
 import org.moon.utils.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 public class Criteria implements Serializable {
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
 	/**
 	 * 目前支持一种数据库，多数据库暂时不支持
 	 */
@@ -43,18 +47,21 @@ public class Criteria implements Serializable {
 		this.criteria.add(criterion);
 		empty = false;
 		triggerStatusChange();
+		logger.debug("Setting criterion : {} for criteria ",criterion.toString());
 		return this;
 	}
 
 	public Criteria offset(int offset){
 		this.offset = offset;
 		triggerStatusChange();
+		logger.debug("Setting offset {} for criteria ",offset);
 		return this;
 	}
 	
 	public Criteria currentPage(int currentPage){
 		this.currentPage = currentPage;
 		triggerStatusChange();
+		logger.debug("Setting current page {} for criteria ",currentPage);
 		return this;
 	}
 	
@@ -63,6 +70,7 @@ public class Criteria implements Serializable {
 		this.isLimited = true;
 		this.limit = limit;
 		triggerStatusChange();
+		logger.debug("Setting limit {} for criteria ",limit);
 		return this;
 	}
 	
@@ -81,10 +89,16 @@ public class Criteria implements Serializable {
 	}
 	
 	public String toLimitSqlString(){
+		if(StringUtils.isEmpty(limitSql)){
+			generateSqlString();
+		}
 		return limitSql;
 	}
 	
 	public String toOrderSqlString(){
+		if(StringUtils.isEmpty(orderSql)){
+			generateSqlString();
+		}
 		return orderSql;
 	}
 	
@@ -116,7 +130,7 @@ public class Criteria implements Serializable {
 		}));
 		
 		if(orders.size()>0){
-			orderSql = (" order by ");
+			orderSql = " order by ";
 			
 			orderSql+=(Strings.join(orders, " , ",new Strings.StringCustomerHandler<Order>() {
 				@Override
@@ -132,27 +146,24 @@ public class Criteria implements Serializable {
 			limitSql = " "+applicationContext.getBean(Dialect.class).getLimitSql(offset, limit);
 		}
 		sqlString =  sql.toString();
+		logger.debug("SQL generated successfully.{criteria sql:{} ,order sql :{}, limit sql: {} }",sqlString,orderSql,limitSql);
 		statusChanged = false;
 		return sqlString;
-	}
-
-	public String getSqlString() {
-		return sqlString;
-	}
-
-	public String getLimitSql() {
-		return limitSql;
-	}
-
-	public String getOrderSql() {
-		return orderSql;
 	}
 	
 	public int getPageIndex(){
 		return currentPage;
 	}
 	
+	public boolean isSorted(){
+		return orders.size()>0;
+	}
+	
 	public int getPageSize(){
 		return limit;
+	}
+
+	public boolean isLimited() {
+		return isLimited;
 	}
 }

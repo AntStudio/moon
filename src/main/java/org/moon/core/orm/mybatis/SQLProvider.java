@@ -135,8 +135,10 @@ public class SQLProvider {
 			sql.WHERE(criteria.toSqlString());
 		}
 		sqlString = sql.toString();
-		if(Objects.nonNull(criteria)&&criteria.nonEmpty()){
+		if(Objects.nonNull(criteria)&&criteria.isSorted()){
 			sqlString+=criteria.toOrderSqlString();
+		}
+		if(Objects.nonNull(criteria)&&criteria.isLimited()){
 			sqlString+=criteria.toLimitSqlString();
 		}
 		logger.debug("{} : {}" ,logger.getName(), sqlString);
@@ -182,8 +184,10 @@ public class SQLProvider {
 			sql.WHERE(criteria.toSqlString());
 		}
 		sqlString = sql.toString();
-		if(Objects.nonNull(criteria)&&criteria.nonEmpty()){
+		if(Objects.nonNull(criteria)&&criteria.isSorted()){
 			sqlString+=criteria.toOrderSqlString();
+		}
+		if(Objects.nonNull(criteria)&&criteria.isLimited()){
 			sqlString+=criteria.toLimitSqlString();
 		}
 		logger.debug("{} : {}" ,logger.getName(), sqlString);
