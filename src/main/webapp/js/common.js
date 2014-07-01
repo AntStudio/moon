@@ -1,6 +1,6 @@
 (function($){
 	/**
-	 * reset all the field of form,call like $("#loginForm").reset();
+	 * 重置表单
 	 */
 	$.fn.reset = function(){
 		$(":text,:password",this).val("");
@@ -8,9 +8,12 @@
 		$(":checkbox",this).prop("checked",false);
 	};
 	 
-	$.fn.formData = function(extraData){
+	/**
+	 * 获取表单数据,如果属性名相同,那么表单属性覆盖初始化属性
+	 */
+	$.fn.formData = function(initData){
 		var $inputs = $(':input',this) .not(':button, :submit, :reset,[name="repassword"]');
-		var data = extraData||{};
+		var data = initData||{};
 		$.each($inputs,function(index,input){
 			var $input = $(input);
 			data[$input.attr("name")] = $input.val();
@@ -59,48 +62,6 @@
 			});
 	 };
 	 
-	 /**
-	  * 异步获取数据
-	  * 以post--json的方式获取，已处理权限判断
-	  * @param url 请求路径
-	  * @param data 传递的参数
-	  * @param successFun  success=true或其他不等于false,0的值，则回调此方法
-	  * @param failureFun success=false回调方法
-	  * @param errorFun  异步获取出错回调
-	  * @param async 是否采用异步方式,默认为true
-	  */
-	 $.postData = function(url,data,successFun,failureFun,errorFun,async){
-			$.ajax({
-				url:url,
-				data:data,
-				type:'post',
-				async:async!==false,
-				dataType:'json',
-				beforeSend:function(){
-					  	   $(".loading").show();
-									},
-				success:function(result){
-					if(result.permission=='noPermission')
-					{
-						alert("您没有权限执行此操作.");
-						return false;
-					}
-					$(".loading").hide();
-					if(result.success){
-						successFun(result);
-					}
-					else{
-						if(failureFun)
-						failureFun(result);
-					}
-				},
-				failure:function(XMLHttpRequest, textStatus, errorThrown){
-					$(".loading").hide();
-					if(errorFun)
-					errorFun(XMLHttpRequest, textStatus, errorThrown);
-				}
-			});
-	};
 
 	 /**
 	  * to turn a new url by type
@@ -108,9 +69,10 @@
 	 $.href=function(url,type){
 		 if(typeof(type)=="undefined"||type=='current')
 		  window.location.href=url;
-		 else
+		 else{
 			 if(type=="new")
 				 window.open(url);
+		 }
 	 };
 	 
 	 $.serializeToUrl=function(o,prefix){
@@ -140,44 +102,10 @@
 					$(e).val(temp);
 			});
 		};
-	/**
-	 * 自动填充表单
-	 */
-		$.fn.autoCompleteForm = function(url,data,exclude){
-			var inputs = $(':input',this) .not(':button, :submit, :reset,[name="repassword"]');
-			$.ajax({
-				url:url,
-				data:data,
-				dataType:'json',
-				type:'post',
-				success:function(response){
-					$.each(inputs,function(index,e){
-						var temp;
-						var name = $(e).attr("name");
-						var position = name.indexOf(".");
-						if(position!=-1){
-							temp = response[name.substring(0,position)][name.substring(position+1)];
-						}else{
-							temp =response[name];
-						}
-						if(typeof(temp)!="undefined"&&temp!=null&&temp!="null")
-							$(e).val(temp);
-					});
-					
-					
-				}
-			});
-			
-		};
-		
-		$.returnValue=function(val){
-			return val;
-		};
-		
 		/**
 		 * 封装ajax数据交互
 		 */
-		var _defaults = {type:"Get",dataType:"json"};
+		var _defaults = {type:"Get",dataType:"json",checkPermission:true};
 		$.getJsonData = function(url,params,opts){
 			var dfd = $.Deferred();
 			opts = $.extend({},_defaults,opts);
@@ -188,7 +116,15 @@
 			  dataType : opts.dataType,
 			      data : params
 			}).done(function(data,textStatus, jqXHR ){
-				dfd.resolve(data,textStatus, jqXHR );
+				if(opts.checkPermission){
+					if(!data.permission){
+						moon.warn("对不起，无权限执行此操作");
+						dfd.reject(data);
+					}
+					dfd.resolve(data.result);
+				}else{
+					dfd.resolve(data,textStatus, jqXHR );
+				}
 			}).fail(function( jqXHR, textStatus, errorThrown ){
 				dfd.reject( jqXHR, textStatus, errorThrown );
 			});
