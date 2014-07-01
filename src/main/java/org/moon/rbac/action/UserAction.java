@@ -65,11 +65,11 @@ public class UserAction extends BaseAction{
 		 user.setId(null);//设置id为null，此后用id是否为空判断是否成功登录
 		 user = userService.login(user);
 		 if(user==null||user.getId()==null){
-			logService.log(new Log(loginName,-1L,"登录失败","{userName:"+loginName+",password:"+password+"}"));
+			//logService.log(new Log(loginName,-1L,"登录失败","{userName:"+loginName+",password:"+password+"}"));
 			return MessageUtils.getMapMessage(false);
 		 }else{
 			 request.getSession().setAttribute(User.CURRENT_USER_ID, user.getId());
-			 logService.log(new Log(user.getUserName(),user.getId(),"成功登录系统"));
+			 //logService.log(new Log(user.getUserName(),user.getId(),"成功登录系统"));
 			 return MessageUtils.getMapMessage(true);
 		 }
 	 }

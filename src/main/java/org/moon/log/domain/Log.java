@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.Table;
+
 import org.moon.base.domain.BaseDomain;
 import org.moon.support.session.SessionContext;
 import org.moon.utils.Constants;
@@ -19,6 +21,7 @@ import com.reeham.component.ddd.annotation.Model;
  * @date 2013-1-7
  */
 @Model
+@Table(name="tab_log")
 public class Log extends BaseDomain{
 
 	private static final long serialVersionUID = 1L;

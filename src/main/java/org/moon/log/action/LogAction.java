@@ -1,17 +1,18 @@
 package org.moon.log.action;
 
-import java.util.Map;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.moon.core.orm.mybatis.DataConverter;
+import org.moon.log.domain.Log;
 import org.moon.log.service.LogService;
+import org.moon.message.WebResponse;
 import org.moon.rbac.domain.annotation.MenuMapping;
-import org.moon.utils.MessageUtils;
+import org.moon.rest.annotation.Get;
 import org.moon.utils.ParamUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -26,20 +27,26 @@ public class LogAction {
 
 	@Resource
 	private LogService logService;
+	
 	/**
 	 * 查看日志
 	 * @return
 	 */
-	@RequestMapping("")
+	@Get("")
 	@MenuMapping(code="platform_6",name="日志列表",parentCode="platform",url="/log")
-	public ModelAndView showLogPage(){
+	public ModelAndView showPage(){
 		return new ModelAndView("pages/log/log");
 	}
 	
-	@RequestMapping("/getLogsData")
-	@ResponseBody
-	public Map<String,Object> getLogsData(HttpServletRequest request){
-		return logService.getLogsForPage(ParamUtils.getParamsMap(request)).toMap();
+	@Get("/list")
+	public @ResponseBody WebResponse list(HttpServletRequest request){
+		DataConverter<Log> converter = new DataConverter<Log>() {
+			@Override
+			public Object convert(Log t) {
+				return t.toMap();
+			}
+		};
+		return WebResponse.build().setResult(logService.listForPage(ParamUtils.getParamsAsCerteria(request),converter));
 	}
 	
 	/**
@@ -47,9 +54,8 @@ public class LogAction {
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping("/getLogDetail")
-	@ResponseBody
-	public Map<String,Object> getLogDetail(@RequestParam("id")Long id){
-		return MessageUtils.getMapMessage(true, "log", logService.get(id).toDetailMap());
+	@Get("/get/{id}")
+	public @ResponseBody WebResponse getLogDetail(@PathVariable("id")Long id){
+		return WebResponse.build().setResult(logService.get(id).toDetailMap());
 	}
 }
