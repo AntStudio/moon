@@ -5,15 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.persistence.Table;
 
 import org.moon.base.domain.BaseDomain;
-import org.moon.rbac.domain.repository.UserEvent;
+import org.moon.rbac.domain.eventsender.UserEventSender;
 import org.moon.utils.Constants;
 import org.moon.utils.MD5;
 
 import com.reeham.component.ddd.annotation.Model;
-
-
 
 /**
  * the domain for user
@@ -22,6 +21,7 @@ import com.reeham.component.ddd.annotation.Model;
  * @date 2012-11-27 9:00:43
  */
 @Model
+@Table(name="tab_user")
 public class User extends BaseDomain{
 
 	private static final long serialVersionUID = -7660365552913856672L;
@@ -82,7 +82,7 @@ public class User extends BaseDomain{
 	 */
 	private boolean isEncrypt = false;
 	@Resource
-	private UserEvent userEvent;
+	private UserEventSender userEventSender;
 	
 	public Role getRole() {
 		if(Constants.SYSTEM_ROLEID.equals(roleId)){
@@ -91,17 +91,17 @@ public class User extends BaseDomain{
 		if(roleId==null||roleId<=0){
 			return null;
 		}
-		return (Role) userEvent.getRole(this).getEventResult();
+		return (Role) userEventSender.getRole(this).getEventResult();
 	}
 	
 	public Map<String,Object> toMap(){
 		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", getId());
-		m.put("user_name", getUserName());
+		m.put("userName", getUserName());
 		if(roleId==null||getRole()==null){
-			m.put("role_name", "还未分配角色");
+			m.put("roleName", "还未分配角色");
 		}else{
-			m.put("role_name", getRole().getRoleName());
+			m.put("roleName", getRole().getRoleName());
 		}
 		return m;
 		
@@ -121,22 +121,18 @@ public class User extends BaseDomain{
 		return m;
 	}
 	
-	public void updateUser(){
-		if(!isSystemUser()){
-		    update();
-		}
+	public boolean isSysUser(){
+		return Constants.SYSTEM_USERID.equals(id);
 	}
 	
-	public boolean isSystemUser(){
-		return getId().equals(Constants.SYSTEM_USERID);
-	}
-	
-	public void encryptPassword(){
+	public User encryptPassword(){
 	    if(this.password!=null&&!isEncrypt){//密码不为空,并且未加密
 	        isEncrypt = true;
 	        this.password = MD5.getMD5(password+"Moon");
 	    }
+	    return this;
 	}
+	
 	/********************  setter/getter  ********************/
 	
 	/**

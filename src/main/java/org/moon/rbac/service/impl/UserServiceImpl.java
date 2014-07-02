@@ -1,25 +1,17 @@
 package org.moon.rbac.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.moon.base.service.AbstractService;
-import org.moon.core.orm.mybatis.Criteria;
-import org.moon.pagination.Pager;
 import org.moon.rbac.domain.User;
 import org.moon.rbac.repository.UserRepository;
 import org.moon.rbac.service.UserService;
-import org.moon.utils.ClassPropertiesUtil;
 import org.moon.utils.Constants;
+import org.moon.utils.Objects;
 import org.springframework.stereotype.Service;
 
 import com.reeham.component.ddd.annotation.Introduce;
-import com.reeham.component.ddd.annotation.OnEvent;
-import com.reeham.component.ddd.model.ModelContainer;
 import com.reeham.component.ddd.model.ModelUtils;
 
 /**
@@ -35,45 +27,28 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
 
     @Resource
     private UserRepository userRepository;
-    @Resource
-    public ModelContainer  modelContainer;
-
+    
     @Override
-    @OnEvent("user/get")
     public User get(Long id) {
-        if (Constants.SYSTEM_USERID.equals(id)) {
-            return (User) modelContainer.getModel(ModelUtils.asModelKey(User.class, id), this);
-        }
-        if (id == null || id <= 0)
-            return null;
-        return (User) modelContainer.getModel(ModelUtils.asModelKey(User.class, id), this);
+    	if(Constants.SYSTEM_USERID.equals(id)){
+    		return getSysUser();
+    	}
+    	return super.get(id);
     }
-
-    @Override
-    public User load(Long id) {
-        if (Constants.SYSTEM_USERID.equals(id)) {
-            return getSysUser();
-        }
-        return userRepository.get(id);
-    }
-
-    @Override
-    public Object loadModel(Object identifier) {
-        return load((Long) identifier);
-    }
-
+    
     @Override
     public User login(User user) {
-        if (isSysUser(user)) {// to validate the system user
+        if (Constants.SYSTEM_USERNAME.equals(user.getUserName())) {// to validate the system user
             return validateSysUser(user);
         }
         user.encryptPassword();
-        Object loginUser = get(userRepository.login(user));
-        if (loginUser != null)
-            return (User) loginUser;
-        else
-            return user;
-
+        
+        Long userId = userRepository.login(user);
+        if(Objects.isNull(userId)){
+        	return user;
+        }else{
+        	return get(userId);
+        }
     }
 
     @Override
@@ -91,14 +66,6 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
         }
     }
 
-    @Override
-    public boolean isSysUser(User user) {
-        if (Constants.SYSTEM_USERNAME.equals(user.getUserName()))
-            return true;
-        else
-            return false;
-    }
-
     private User validateSysUser(User user) {
         if (Constants.SYSTEM_PASSWORD.equals(user.getPassword())) {
             return getSysUser();
@@ -108,46 +75,15 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
     }
 
     private User getSysUser() {
-        User sysUser = new User();
-        sysUser.setId(Constants.SYSTEM_USERID);
-        sysUser.setUserName(Constants.SYSTEM_USERNAME);
-        sysUser.setRoleId(Constants.SYSTEM_ROLEID);
-        if (modelContainer.getModel(ModelUtils.asModelKey(User.class, Constants.SYSTEM_USERID)) == null)
-            modelContainer.addModel(ModelUtils.asModelKey(User.class, Constants.SYSTEM_USERID), sysUser);
-        return sysUser;
-    }
-
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    @Override
-    public List<User> getUsersByCreator(Map<String, Object> paramsMap) {
-        return modelContainer.identifiersToModels((List) userRepository.getUsersByCreator(paramsMap), User.class, this);
-    }
-
-    @Override
-    public List<Map<String, Object>> getUsersByCreatorForMap(Map<String, Object> paramsMap) {
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-        for (User user : getUsersByCreator(paramsMap)) {
-            list.add(user.toMap());
+        User sysUser = (User) modelContainer.getModel(ModelUtils.asModelKey(User.class, Constants.SYSTEM_USERID));
+        if(sysUser==null){
+        	 sysUser = new User();
+             sysUser.setId(Constants.SYSTEM_USERID);
+             sysUser.setUserName(Constants.SYSTEM_USERNAME);
+             sysUser.setRoleId(Constants.SYSTEM_ROLEID);
+             modelContainer.addModel(ModelUtils.asModelKey(User.class, Constants.SYSTEM_USERID), sysUser);
         }
-        return list;
-    }
-
-    @Override
-    public Pager getUsersByCreatorForPager(Map<String, Object> paramsMap) {
-
-        return new Pager(userRepository.getUsersByCreatorCount(paramsMap), (List)getUsersByCreatorForMap(paramsMap),
-        		Integer.parseInt(paramsMap.get("ps").toString()),Integer.parseInt(paramsMap.get("cp").toString()));
-    }
-
-    @Override
-    public boolean update(User user) {
-        if (user == null || user.getId() == null)
-            return false;
-        User oldUser = get(user.getId());
-        oldUser = (User) ClassPropertiesUtil.copyProperties(user, oldUser, true, "userName", "password", "realName");
-        oldUser.updateUser();
-        return true;
-
+        return sysUser;
     }
 
     @Override
@@ -173,17 +109,5 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
 	@Override
 	public boolean isUserNameExists(String userName) {
 		return userRepository.isUserNameExists(userName);
-	}
-
-	@Override
-	public List<Map> list() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Map> list(Criteria criteria) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

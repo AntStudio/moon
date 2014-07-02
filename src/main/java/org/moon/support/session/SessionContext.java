@@ -46,7 +46,6 @@ public class SessionContext {
     */
    public static String getWebAppPath(){
 	   try{
-		   System.out.println("======"+URLDecoder.decode(getSession().getServletContext().getRealPath("/"),"UTF-8"));
 		   return URLDecoder.decode(getSession().getServletContext().getRealPath("/"),"UTF-8");
 	   }catch(UnsupportedEncodingException e){
 		   e.printStackTrace();

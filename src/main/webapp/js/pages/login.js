@@ -6,20 +6,21 @@ $(function(){
 	$("#submit").click(function(){
 		$("#loginForm").validate("validate").done(function(result){
 			if(result){
-				$("#loginForm").ajaxSubmitForm(contextPath+"/user/login/validate",{},
-						function(result) {
-							if(from){
-								$.href(from);
-							}else{
-								$.href(contextPath+"/index");
-							}
-						}, 
-						function(result) {
-							moon.error("用户名或密码错误","top");
-						});
+				$("#loginForm").ajaxSubmitForm(contextPath+"/user/login/validate").done(function(data){
+					if(data.success){
+						if(from){
+							$.href(from);
+						}else{
+							$.href(contextPath+"/index");
+						}
+					}else{
+						moon.error("用户名或密码错误","top");
+					}
+				}).fail(function(){
+					moon.error("服务出错，请稍后再试","top");
+				});
 			}
 		});
-		
 	});
 	
 	//页面动画

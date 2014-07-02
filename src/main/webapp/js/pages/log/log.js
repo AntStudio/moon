@@ -22,7 +22,8 @@
 	}
  
   function showDetail(id){
-	  $.getJsonData(contextPath+"/log/get/"+id).done(function(log){
+	  $.getJsonData(contextPath+"/log/get/"+id).done(function(data){
+		  var log = data.result;
 		  var html = "";
 		  html+="<div><label>操作人：</label><span>"+log.user_name+"</span></div>";
 		  html+="<div><label>操作时间：</label><span>"+log.time+"</span></div>";

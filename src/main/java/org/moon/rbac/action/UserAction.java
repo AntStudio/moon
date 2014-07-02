@@ -1,25 +1,29 @@
 package org.moon.rbac.action;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.moon.base.action.BaseAction;
+import org.moon.core.orm.mybatis.Criteria;
+import org.moon.core.orm.mybatis.DataConverter;
+import org.moon.core.orm.mybatis.criterion.SimpleCriterion;
 import org.moon.log.domain.Log;
-import org.moon.log.service.LogService;
+import org.moon.message.WebResponse;
+import org.moon.pagination.Pager;
 import org.moon.rbac.domain.Role;
 import org.moon.rbac.domain.User;
 import org.moon.rbac.domain.annotation.LoginRequired;
 import org.moon.rbac.domain.annotation.MenuMapping;
 import org.moon.rbac.domain.annotation.PermissionMapping;
+import org.moon.rbac.domain.annotation.WebUser;
 import org.moon.rbac.service.UserService;
+import org.moon.rest.annotation.Get;
 import org.moon.rest.annotation.Post;
 import org.moon.support.spring.annotation.FormParam;
-import org.moon.utils.MessageUtils;
+import org.moon.utils.Objects;
 import org.moon.utils.ParamUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,16 +41,21 @@ public class UserAction extends BaseAction{
 	@Resource 
 	private UserService userService;
 	
-	@Resource
-	private LogService logService;
 	/**
 	 * 显示登录页面
 	 * @return
 	 */
-	@RequestMapping(value = "/login")
-	public ModelAndView login(@RequestParam("from") String from){
+	@Get("/login")
+	public ModelAndView showLoginPage(@RequestParam("from") String from){
 		 return new ModelAndView("pages/login","from",from);
 	}
+	 
+	 @Get("")
+	 @MenuMapping(url="/user",name="用户列表",code="platform_1",parentCode="platform")
+	 @PermissionMapping(code="000008",name="用户列表")
+	 public ModelAndView userList(HttpServletRequest request){
+		 return new ModelAndView("pages/rbac/userList");
+	 }
 	 
 	/**
 	 * 登录验证
@@ -54,108 +63,98 @@ public class UserAction extends BaseAction{
 	 * @param role
 	 * @return
 	 */
-	 @RequestMapping(value="/login/validate")
-	 @ResponseBody
-	 public Map<String,Object> userValidate(@FormParam(value="user")User user,HttpServletRequest request){
-		 if(user==null){
-			 return MessageUtils.getMapMessage(false);
+	 @Post("/login/validate")
+	 public @ResponseBody WebResponse userValidate(@FormParam("user")User user,HttpServletRequest request){
+		 if(Objects.isNull(user)){
+			 return WebResponse.build().setSuccess(false);
 		 }
 		 String loginName = user.getUserName();
 		 String password = user.getPassword();
 		 user.setId(null);//设置id为null，此后用id是否为空判断是否成功登录
 		 user = userService.login(user);
-		 if(user==null||user.getId()==null){
-			//logService.log(new Log(loginName,-1L,"登录失败","{userName:"+loginName+",password:"+password+"}"));
-			return MessageUtils.getMapMessage(false);
+		 if(Objects.isNull(user)||Objects.isNull(user.getId())){
+			new Log(loginName,-1L,"登录失败","{userName:"+loginName+",password:"+password+"}").save();
+			return WebResponse.build().setSuccess(false);
 		 }else{
 			 request.getSession().setAttribute(User.CURRENT_USER_ID, user.getId());
-			 //logService.log(new Log(user.getUserName(),user.getId(),"成功登录系统"));
-			 return MessageUtils.getMapMessage(true);
+			 new Log(user.getUserName(),user.getId(),"成功登录系统").save();
+			 return WebResponse.build().setSuccess(true);
 		 }
 	 }
 	 
-	 @MenuMapping(url="/user",name="用户列表",code="platform_1",parentCode="platform")
-	 @RequestMapping("")
-	 @PermissionMapping(code="000008",name="用户列表")
-	 public ModelAndView userList(HttpServletRequest request){
-		 return new ModelAndView("pages/rbac/userList");
-	 }
-	 
+
 	 @PermissionMapping(code="000001",name="用户列表")
-	 @RequestMapping("/getUsersData")
-	 @ResponseBody
-	 public Map<String,Object> getUsersData(HttpServletRequest request){
-		 Map<String,Object> paramsMap = ParamUtils.getParamsMap(request);
-		 paramsMap.put("uid", userService.getCurrentUserId(request));
-		 paramsMap.put("deleteFlag", false);
-		 return  userService.getUsersByCreatorForPager(paramsMap).toMap();
+	 @Get("/list")
+	 public @ResponseBody WebResponse getUsersList(HttpServletRequest request){
+		 Criteria criteria = ParamUtils.getParamsAsCerteria(request);
+		 criteria.add(new SimpleCriterion("delete_flag", "=", false));
+		 DataConverter<User> dto = new DataConverter<User>(){
+			public Object convert(User user){
+				return user.toMap();		 
+			};
+		 };
+		 Pager results =  userService.listForPage(criteria,dto);
+		 return WebResponse.build().setResult(results);
 	 }
 	 
-	 @RequestMapping("/add")
-	 @ResponseBody
-	 public Map<String,Object> addUser(@FormParam(value="user")User user,HttpServletRequest request){
-		 user.setCreateBy(userService.getCurrentUserId(request));
-		 user.encryptPassword();
-		 enhance(user).save();
-		 return MessageUtils.getMapMessage(true);
+	 @Post("/add")
+	 public @ResponseBody  WebResponse add(@WebUser User creator,@FormParam(value="user")User user){
+		 user.setCreateBy(creator.getId());
+		 user.sync(user.encryptPassword().save());
+		 return WebResponse.build().setSuccess(true);
 	 }
 	 
-	 @RequestMapping("/get")
-	 @ResponseBody
-	 public Map<String,Object> getUser(@RequestParam("id")Long id){
-		 Map<String,Object> m = new HashMap<String,Object>();
-		 m.put("user", userService.get(id).toAllMap());
-		 return m;
+	 @Get("/get/{id}")
+	 public @ResponseBody WebResponse getUser(@PathVariable("id")Long id){
+		 return WebResponse.build().setResult(userService.get(id).toAllMap());
 	 }
 	 
-	 @RequestMapping("/update")
-	 @ResponseBody
-	 public Map<String,Object> updateUser(@FormParam("user") User user){
-		 userService.update(user);
-		 return MessageUtils.getMapMessage(true);
+	 @Post("/update")
+	 public @ResponseBody WebResponse updateUser(@FormParam("user") User user){
+		 User oldUser = userService.get(user.getId());
+		 oldUser.setUserName(user.getUserName());
+		 oldUser.setRealName(user.getRealName());
+		 oldUser.setPassword(user.getPassword());
+		 oldUser.sync(oldUser.encryptPassword().update());
+		 return WebResponse.build();
 	 }
 	 
-	 @RequestMapping("/logicDelete")
-	 @ResponseBody
-	 public Map<String,Object> logicDeleteUser(@RequestParam("ids")Long[] ids){
+	 @Post("/logicDelete")
+	 public @ResponseBody WebResponse logicDeleteUser(@RequestParam("ids")Long[] ids){
 		 userService.delete(ids, true);
-		 return MessageUtils.getMapMessage(true);
-		 
+		 return WebResponse.build();
 	 }
 	 
 	 /**
 	  * 获取用户所在的角色路径
 	  * @return
 	  */
-	 @RequestMapping("/getRolePath")
-	 @ResponseBody
-	 public Map<String,Object> getRolePath(@RequestParam("uid")Long uid){
-		Map<String,Object> path = MessageUtils.getMapMessage(true);
+	 @Get("/getRolePath")
+	 public @ResponseBody WebResponse getRolePath(@RequestParam("uid")Long uid){
 		String rolePath = "";
 		Role role = userService.get(uid).getRole();
 		if(role!=null){
 			rolePath = role.getRolePath();
 		}
-		path.put("path", rolePath);
-		 return path;
+		return WebResponse.build().setResult(rolePath);
 	 }
 	 
 	 /**
 	  * 登出操作
 	  * @return
 	  */
-	 @RequestMapping("/loginOut")
+	 @Get("/loginOut")
 	 public ModelAndView loginOut(HttpServletRequest request){
 		 request.getSession().setAttribute(User.CURRENT_USER_ID, null);
 		 return new ModelAndView("pages/login");
 	 }
 	 
 	 @LoginRequired
-	 @RequestMapping("/changePassword")
+	 @Get("/changePassword")
 	 @MenuMapping(code="platform_5",name="修改密码",url="/user/changePassword",parentCode="platform")
-	 public ModelAndView showChangePasswordPage(HttpServletRequest request){
+	 public ModelAndView showChangePasswordPage(@WebUser User user){
 		 String info = null ;
-		 if(userService.isSysUser(userService.getCurrentUser(request))){
+		 if(user.isSysUser()){
 			 info = "对不起，系统管理员不能修改密码.";
 		 }
 		 return new ModelAndView("pages/rbac/changePassword","info",info);
@@ -167,13 +166,13 @@ public class UserAction extends BaseAction{
 	  * @return
 	  */
 	 @LoginRequired
-	 @RequestMapping("/matchOldPassword")
-	 @ResponseBody
-	 public Map<String,Object> matchOldPassword(@RequestParam("password")String newPassword,HttpServletRequest request){
-		 if(userService.getCurrentUser(request).getPassword().equals(newPassword))
-		 return MessageUtils.getMapMessage(true);
-		 else
-			 return MessageUtils.getMapMessage(false);
+	 @Get("/matchOldPassword")
+	 public @ResponseBody WebResponse matchOldPassword(@WebUser User user,@RequestParam("password")String newPassword){
+		if (user.getPassword().equals(newPassword)) {
+			return WebResponse.build().setSuccess(true);
+		} else {
+			return WebResponse.build().setSuccess(false);
+		}
 	 }
 	 /**
 	  * 修改密码
@@ -182,16 +181,14 @@ public class UserAction extends BaseAction{
 	  * @return
 	  */
 	 @LoginRequired
-	 @RequestMapping("/doChangePassword")
-	 @ResponseBody
-	 public Map<String,Object> changePassword(@RequestParam("password")String newPassword,HttpServletRequest request){
-		 User user = userService.getCurrentUser(request);
-		 if(user.isSystemUser()){
-			 return MessageUtils.getMapMessage(false);
+	 @Post("/doChangePassword")
+	 public @ResponseBody WebResponse changePassword(@WebUser User user,@RequestParam("password")String newPassword){
+		 if(user.isSysUser()){
+			 return WebResponse.build().setSuccess(false);
 		 }
 		 user.setPassword(newPassword);
-		 user.updateUser();
-		 return MessageUtils.getMapMessage(true);
+		 user.sync(user.encryptPassword().update());
+		 return WebResponse.build().setSuccess(true);
 	 }
 	 
 	 /**
@@ -201,8 +198,7 @@ public class UserAction extends BaseAction{
 	  */
 	 @LoginRequired
 	 @Post("/checkUserName")
-	 @ResponseBody
-	 public Map<String,Object> checkUserName(@RequestParam("userName")String userName){
-		 return MessageUtils.getMapMessage(true,"userNameExists",userService.isUserNameExists(userName));
+	 public @ResponseBody WebResponse checkUserName(@RequestParam("userName")String userName){
+		 return WebResponse.build().setResult(userService.isUserNameExists(userName));
 	 }
 }

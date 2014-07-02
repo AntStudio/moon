@@ -11,8 +11,7 @@ import org.moon.utils.Constants;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.reeham.component.ddd.model.ModelContainer;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
 /**
  * 平台异常处理,主要用于日志的记录
@@ -21,15 +20,14 @@ import com.reeham.component.ddd.model.ModelContainer;
  * @date 2013-1-9
  */
 @Component
-public class ExceptionHandler implements HandlerExceptionResolver   {
+public class ExceptionHandler extends SimpleMappingExceptionResolver  implements HandlerExceptionResolver   {
 
 	@Resource
 	private UserService userService;
 
-	@Resource
-	private ModelContainer modelContainer;
 	@Override
 	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+		System.out.println(determineViewName(ex, request)+"...................");
 		User  currentUser = userService.getCurrentUser(request);
 			
 		//捕获系统级日志,记录详细信息
@@ -38,13 +36,11 @@ public class ExceptionHandler implements HandlerExceptionResolver   {
 		 for(StackTraceElement se:ex.getStackTrace()){
 			 bf.append("at "+se.getClassName()+"."+se.getMethodName()+"("+se.getFileName()+":"+se.getLineNumber()+")\n");
 		 }
-		 Log log;
-		 if(currentUser!=null)
-		 log = new Log(currentUser.getUserName(),currentUser.getId(),message,bf.toString(),Constants.SYSTEM_LOG);
-		 else
-			 log = new Log("NOT LOGINED",-1L,message,"当前用户未登录,The Session id is "+request.getSession().getId()+"\n"+bf.toString(),Constants.SYSTEM_LOG);
-		 
-		 modelContainer.enhanceModel(log).save();
+		 if(currentUser!=null) {
+		  new Log(currentUser.getUserName(),currentUser.getId(),message,bf.toString(),Constants.SYSTEM_LOG).save();
+		 }  else {
+			 new Log("NOT LOGINED",-1L,message,"当前用户未登录,The Session id is "+request.getSession().getId()+"\n"+bf.toString(),Constants.SYSTEM_LOG).save();
+		 }
 	
 		return null;
 	}

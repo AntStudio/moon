@@ -15,6 +15,7 @@
   	<mvc:annotation-driven >
 	  	<mvc:argument-resolvers>
 	        <bean class="org.moon.support.spring.FormMethodArgumentResolver"/>
+	         <bean class="org.moon.support.spring.WebUserArgumentResolver"/>
 	    </mvc:argument-resolvers>
 	</mvc:annotation-driven>  
 	<!-- 

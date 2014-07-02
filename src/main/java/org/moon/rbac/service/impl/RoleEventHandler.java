@@ -56,20 +56,4 @@ public class RoleEventHandler extends BaseEventHandler<Role>{
             return roleRepository.accessMenu(rid, code);
         }
 	}
-
-    @Override
-    public Role save(Role role) {
-        roleRepository.save(role);
-        return role;
-    }
-
-    @Override
-    public void delete(Role role) {
-        
-    }
-
-    @Override
-    public void update(Role role) {
-        roleRepository.update(role);
-    }
 }

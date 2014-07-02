@@ -2,9 +2,9 @@
 var table;
 $(function(){
 	table = $("#userTable").table({
-		url:contextPath+"/user/getUsersData",
-		columns:[{name:"id"},{name:"user_name",display:"用户名"},{name:"role_name",display:"角色名"}],
-		formatData:function(data){return data.rows;},
+		url:contextPath+"/user/list",
+		columns:[{name:"id"},{name:"userName",display:"用户名"},{name:"roleName",display:"角色名"}],
+		formatData:function(data){return data.result;},
 		title:"用户列表",
 		rowId:"id",
 		buttons:[
@@ -58,15 +58,16 @@ function btnHandler(btnTest){
 			        	 click:function(){
 			        		 $("#userForm").validate("validate").done(function(result){
 			        			 if(result){
-			        				 $("#userForm").ajaxSubmitForm(contextPath+"/user/add","",
-					        				 function(){
-					 			        		 $("#userForm").dialog("close");
-					 			        		 $("#userTable").table("refresh");
-					 			        		 $("#userForm").reset();
-					 			        		 moon.success("用户添加成功");
-					 			        	 },
-					 			        	 function(){moon.error("失败");}
-					 			     );
+			        				 $("#userForm").ajaxSubmitForm(contextPath+"/user/add").done(function(data){
+			        					 if(data.success){
+			        						 $("#userForm").dialog("close");
+				 			        		 $("#userTable").table("refresh");
+				 			        		 $("#userForm").reset();
+				 			        		 moon.success("用户添加成功");
+			        					 }else{
+			        						 moon.error("失败");
+			        					 }
+			        				 });
 			        			 }
 			        		 });
 			        	 }
@@ -87,7 +88,7 @@ function btnHandler(btnTest){
 			return false;
 		}
 		var id = selectRows[0].id;
-		$("#userForm").autoCompleteForm(contextPath+"/user/get",{id:id});
+		$("#userForm").autoCompleteForm(contextPath+"/user/get/"+id);
 		$('#userForm').dialog({
 			title:"编辑用户",
 			afterShown:function(){
@@ -103,16 +104,16 @@ function btnHandler(btnTest){
 			        	 click:function(){
 			        		 $("#userForm").validate("validate").done(function(result){
 			        			 if(result){
-					        		 $("#userForm").ajaxSubmitForm(contextPath+"/user/update",
-						        			 {"user.id":id},
-					        				 function(){
-					 			        		 $("#userForm").dialog("close");
-					 			        		 table.refresh();
-					 			        		 $("#userForm").reset();
-					 			        		 moon.success("修改用户信息成功");
-					 			        	 },
-					 			        	 function(){moon.error("失败");}
-					 			     );
+					        		 $("#userForm").ajaxSubmitForm(contextPath+"/user/update",{"user.id":id}).done(function(data){
+					 			    	 if(data.success){
+					 			    		 $("#userForm").dialog("close");
+				 			        		 table.refresh();
+				 			        		 $("#userForm").reset();
+				 			        		 moon.success("修改用户信息成功");
+					 			    	 }else{
+					 			    		moon.error("失败");
+					 			    	 }
+					 			     });
 			        			 }
 			        		 });
 			        	 }
@@ -149,24 +150,22 @@ function btnHandler(btnTest){
 			return false;
 		}
 		var uid = selectRows[0].id;
-		 $.postData(contextPath+"/user/getRolePath",{uid:uid},function(result){
-			
+		 $.getJsonData(contextPath+"/user/getRolePath",{uid:uid}).done(function(data){
+			 var result = data.result;
 			 ztree.expandNode(ztree.getNodes()[0],true);
-			// alert(result.path);
-			 if(result.path)
-			 {
-			 temp = result.path.split(",");
-			 if(temp.length!=1)
-				 ztree.asyncOrExpandNode(ztree.getNodeByParam("uid",temp[0]),true);
-			 else{
-				 ztree.selectNode(ztree.getNodeByParam("uid",temp[0]));
-				 i = 1;
-			 }
-			 }
-			 else{
-				 temp=[];
-				 return false;
-			 }
+			 if (result.path) {
+				temp = result.path.split(",");
+				if (temp.length != 1)
+					ztree.asyncOrExpandNode(ztree.getNodeByParam("uid",temp[0]), true);
+				else {
+					ztree.selectNode(ztree.getNodeByParam("uid",temp[0]));
+					i = 1;
+				}
+			} else {
+				temp = [];
+				return false;
+			}
+		 
 		 });
 		   $("#roleTree").dialog({
 			   title:'分配角色',
@@ -178,17 +177,15 @@ function btnHandler(btnTest){
 						   moon.warn("请选择一个角色进行分配");
 						   return false;
 					   }
-					  $.post(contextPath+"/role/assignRoleToUser",
-							  {uid:uid,
-						       rid:ztree.getSelectedNodes()[0].id},
-						       function(result){
-						    	   moon.info("角色分配成功");
-						    	   table.refresh();
-						    	   $("#roleTree").dialog("close");
-						    	   ztree.cancelSelectedNode(ztree.getSelectedNodes[0]);
-								   ztree.expandAll(false);
-						       }
-					  );
+					  $.getJsonData(contextPath+"/role/assignRoleToUser", {uid:uid,rid:ztree.getSelectedNodes()[0].id}).done(function(data){
+						  if(data.success){
+							   moon.info("角色分配成功");
+					    	   table.refresh();
+					    	   $("#roleTree").dialog("close");
+					    	   ztree.cancelSelectedNode(ztree.getSelectedNodes[0]);
+							   ztree.expandAll(false);
+						  }
+					  });
 				   }
 			   },{
 				   text:'取消',

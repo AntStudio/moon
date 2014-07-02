@@ -6,8 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.moon.base.domain.BaseDomain;
+import org.moon.core.annotation.NoLogicDeleteSupport;
 import org.moon.support.session.SessionContext;
 import org.moon.utils.Constants;
 
@@ -22,6 +24,7 @@ import com.reeham.component.ddd.annotation.Model;
  */
 @Model
 @Table(name="tab_log")
+@NoLogicDeleteSupport
 public class Log extends BaseDomain{
 
 	private static final long serialVersionUID = 1L;
@@ -40,6 +43,7 @@ public class Log extends BaseDomain{
 	
 	private String ip;
 
+	@Transient
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 	
 	public Log(){}
@@ -53,7 +57,6 @@ public class Log extends BaseDomain{
 	}
 	
 	public Log(String userName,Long userId,String action,String detail,String type){
-		
 		this.userName = userName;
 		this.userId = userId;
 		this.action = action;
