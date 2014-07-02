@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.annotation.Resource;
 
+import org.moon.core.annotation.NoLogicDeleteSupport;
 import org.moon.core.spring.ApplicationContextHelper;
 import org.moon.utils.Strings;
 
@@ -15,8 +16,6 @@ import com.reeham.component.ddd.model.ModelUtils;
 /**
  * 域模型的基本对象,包含了一些公共基本属性,如:
  * <pre>id</pre>
- * <pre>deleteFlag(删除标志,用于逻辑删除)</pre>
- * <pre>domainNo(域编号,可用于处理多个域的数据)</pre>
  * 也包含了领域的公共方法，如：
  * <pre>save,update,delete</pre>
  * 一般的域模型都会继承于 {@link BaseDomain}
@@ -44,11 +43,6 @@ public class BaseDomain implements Serializable{
 	 * 如果 <code>deleteFlag 为 true;</code>,则表示删除
 	 */
 	protected boolean deleteFlag = false;
-	
-	/**
-	 * 域编号,主要用于多个用户或其他原因引起的数据分块，则此字段可用于标示每个不同数据块
-	 */
-	protected Long domainNo = 0L;
 
 	public BaseDomain(){}
 	
@@ -83,21 +77,11 @@ public class BaseDomain implements Serializable{
 	public void setDeleteFlag(boolean deleteFlag) {
 		this.deleteFlag = deleteFlag;
 	}
-
-	/**
-	 * @return 返回域编号
-	 */
-	public Long getDomainNo() {
-		return domainNo;
-	}
-
-	/**
-	 * @param 设置域编号
-	 */
-	public void setDomainNo(Long domainNo) {
-		this.domainNo = domainNo;
-	}
 	
+	
+	public boolean supportLogicDelete(){
+		return !this.getClass().isAnnotationPresent(NoLogicDeleteSupport.class);
+	}
 	/******************** 领域方法  ********************/
 	
 	/**
@@ -120,8 +104,6 @@ public class BaseDomain implements Serializable{
 	    DomainMessage dm = new DomainMessage(this);
         eventMessageFirer.fireDisruptorEvent(Strings.lowerFirst(this.getClass().getSimpleName())+"/update",dm);
         modelContainer.removeModel(ModelUtils.asModelKey(this.getClass(), this.getId()));
-        System.out.println("========="+ModelUtils.asModelKey(this.getClass(), this.getId()));
-        System.out.println("//////////"+modelContainer.getModel(ModelUtils.asModelKey(this.getClass(), getId())));
         return dm;
 	}
    

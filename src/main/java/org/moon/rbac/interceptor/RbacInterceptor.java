@@ -9,6 +9,7 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.log4j.Logger;
 import org.moon.log.domain.Log;
+import org.moon.message.WebResponse;
 import org.moon.rbac.domain.Role;
 import org.moon.rbac.domain.User;
 import org.moon.rbac.domain.annotation.LogRecord;
@@ -117,15 +118,14 @@ public class RbacInterceptor implements MethodInterceptor {
                                             + ")\n");
                 }
                 log.error(bf);
-                Log log;
                 message = Strings.subString(message, 0, 200); 
                 
                 if (currentUser == null) {
-                    log = new Log("Not Login", -1L, message, bf.toString(), Constants.SYSTEM_LOG);
+                   new Log("Not Login", -1L, message, bf.toString(), Constants.SYSTEM_LOG).save();
                 } else {
-                    log = new Log(currentUser.getUserName(), currentUserId, message, bf.toString(), Constants.SYSTEM_LOG);
+                    new Log(currentUser.getUserName(), currentUserId, message, bf.toString(), Constants.SYSTEM_LOG).save();
                 }
-                modelContainer.enhanceModel(log).save();
+                return WebResponse.build().setPermission(false).setSuccess(false).setThrowable(e);
             }
             return o;
 

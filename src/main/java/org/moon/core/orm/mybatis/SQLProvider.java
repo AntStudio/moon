@@ -57,7 +57,9 @@ public class SQLProvider {
 						|| field.isAnnotationPresent(Autowired.class)
 						|| field.isAnnotationPresent(Transient.class) 
 						|| Modifier.isStatic(field.getModifiers())
-						|| Modifier.isFinal(field.getModifiers()));
+						|| Modifier.isFinal(field.getModifiers())
+						||field.isAnnotationPresent(Transient.class)
+						||(!bd.supportLogicDelete()&&"deleteFlag".equals(field.getName())));
 			}
 		});
 		sqlString = sql.toString();
@@ -87,7 +89,9 @@ public class SQLProvider {
 						|| field.isAnnotationPresent(Autowired.class)
 						|| field.isAnnotationPresent(Transient.class) 
 						|| Modifier.isStatic(field.getModifiers())
-						|| Modifier.isFinal(field.getModifiers()));
+						|| Modifier.isFinal(field.getModifiers())
+						||field.isAnnotationPresent(Transient.class)
+						||(!bd.supportLogicDelete()&&"deleteFlag".equals(field.getName())));
 			}
 		});
 		
@@ -258,6 +262,8 @@ public class SQLProvider {
 		if(  value instanceof String
 		   ||value instanceof Date){
 			return "'"+value+"'";
+		}else if(value instanceof byte[]){
+			return new String("'"+(byte[])value+"'");
 		}
 		return value+"";
 	}

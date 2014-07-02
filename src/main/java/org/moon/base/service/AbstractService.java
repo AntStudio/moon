@@ -80,7 +80,6 @@ public abstract class AbstractService<T> implements BaseService<T>,ModelLoader{
     
 	@Override
 	public T load(Long id){
-		System.out.println(ModelUtils.asModelKey(getGeneric(), id));
 		Criteria criteria = new Criteria();
 		criteria.add(Restrictions.eq("id", id)).limit(1);
 		List<Map> list = repository.list(getGeneric(),criteria);
@@ -92,14 +91,16 @@ public abstract class AbstractService<T> implements BaseService<T>,ModelLoader{
 				instance = (T) c.newInstance();
 				Class<?> type;
 	    		Object value;
-	    		String fieldName ;
+	    		String fieldName;
 				for(Object key:m.keySet()){
-					fieldName = (String)key;
+					fieldName = Strings.changeUnderlineToCamelBak((String)key);
 					value = m.get(key);
 					try{
-						Field f = c.getDeclaredField(Strings.changeUnderlineToCamelBak(fieldName));
+						Field f = c.getDeclaredField(fieldName);
+						f.setAccessible(true);
 						if(f!=null){
 							f.set(instance, value);
+							logger.debug("Trying set value for field "+fieldName);
 						}
 					}catch (Exception e) {//当字段不存在，或者为父类私有字段时，寻找是否有相应的Setter方法
 						logger.debug("Trying use setter to set value for field "+fieldName);
@@ -133,13 +134,15 @@ public abstract class AbstractService<T> implements BaseService<T>,ModelLoader{
 									} catch (Exception exception) {
 										method.invoke(instance, 0.0);
 									}
-								} else if (type ==boolean.class&&type==Boolean.class){
+								} else if (type ==boolean.class||type==Boolean.class){
 									try {
 										method.invoke(instance, Boolean.parseBoolean(value.toString()));
 									} catch (Exception exception) {
 										method.invoke(instance, false);
 									}
-								} else method.invoke(instance, value);
+								} else {
+									method.invoke(instance, value);
+								}
 	    						continue;
 	    					}
 	    				}
