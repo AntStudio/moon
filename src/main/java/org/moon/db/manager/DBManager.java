@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.moon.db.manager.repository.DBManagerRepository;
+import org.moon.rbac.domain.Menu;
 import org.moon.rbac.domain.init.helper.MenuMappingHelper;
 import org.moon.rbac.domain.init.helper.PermissionMappingHelper;
 import org.moon.rbac.service.MenuService;
@@ -80,7 +81,9 @@ public class DBManager {
      */
     public void reLoadMenus() {
         cachingModelContainer.clearModelCache();
-        menuService.addMenus(MenuMappingHelper.getMappingMenus());
+        for(Menu m:MenuMappingHelper.getMappingMenus()){
+        	m.save();
+        }
     }
 
     public void batchExecute(String sqls) {

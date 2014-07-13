@@ -16,21 +16,12 @@ $(document).ready(function () {
 		 var $li = $(this);
 		 var id = $(this).attr("id").replace("menu_","");
 		 if($(".dropdown-menu",$li).find(".loading").length>0){
-			 $.ajax({
-				  url:contextPath+'/menu/getSubMenus',
-				  data:{ 
-					  pid:id
-				  },
-					type:'post',
-					dataType:'json',
-					success:function(response){
-						var subMenus="";
-						$(eval(response)).each(function(index,e){
-							//subMenus+="<li data-url='"+e.url+"'><a href='#'>"+e.menuName+"</a></li>";
-							subMenus+="<li ><a href='"+contextPath+e.url+"' target='main'>"+e.menuName+"</a></li>";
-						});
-						$(".dropdown-menu",$li).html(subMenus);
-					}
+			 $.getJsonData(contextPath+"/menu/getSubMenus",{pid:id}).done(function(data){
+				 var subMenus="";
+				 $.each(data.result,function(index,menu){
+					 subMenus+="<li ><a href='"+contextPath+menu.url+"' target='main'>"+menu.menuName+"</a></li>";
+				 });
+				 $(".dropdown-menu",$li).html(subMenus);
 			 });
 		 }
 	 });

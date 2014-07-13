@@ -3,6 +3,7 @@ package org.moon.rbac.repository;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.moon.base.repository.BaseRepository;
 import org.moon.rbac.domain.Menu;
 import org.springframework.stereotype.Repository;
 
@@ -14,15 +15,15 @@ import org.springframework.stereotype.Repository;
  * @date 2012-11-27
  */
 @Repository
-public interface MenuRepository{
+public interface MenuRepository extends BaseRepository<Menu>{
 
-    public Menu get(Long id);
+	public List<Long> getSubMenuByRole(@Param("pid")Long parentId,@Param("rid")Long rid);
+	
     
 	public Long getByCode(@Param("code")String code);
 	
 	public List<Long> getSubMenu(@Param("pid")Long parentId);
 
-	public List<Long> getSubMenuByRole(@Param("pid")Long parentId,@Param("rid")Long rid);
 	
 	public void addMenusToRole(@Param("menus")List<Menu> menus,@Param("rid")Long rid);
 	

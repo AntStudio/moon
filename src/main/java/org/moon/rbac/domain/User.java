@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.moon.base.domain.BaseDomain;
 import org.moon.rbac.domain.eventsender.UserEventSender;
@@ -80,7 +81,9 @@ public class User extends BaseDomain{
 	/**
 	 * 密码是否加密
 	 */
+	@Transient
 	private boolean isEncrypt = false;
+	
 	@Resource
 	private UserEventSender userEventSender;
 	

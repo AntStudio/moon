@@ -10,6 +10,7 @@ import javax.persistence.Transient;
 
 import org.moon.base.domain.BaseDomain;
 import org.moon.core.annotation.NoLogicDeleteSupport;
+import org.moon.core.orm.mybatis.annotation.IgnoreNull;
 import org.moon.support.session.SessionContext;
 import org.moon.utils.Constants;
 
@@ -35,7 +36,8 @@ public class Log extends BaseDomain{
 	
 	private String action;
 	
-	private Date time;
+	@IgnoreNull
+	private Date time ;
 	
 	private String type;
 	

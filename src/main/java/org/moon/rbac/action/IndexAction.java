@@ -1,13 +1,13 @@
 package org.moon.rbac.action;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.moon.core.Domain.DomainLoader;
+import org.moon.rbac.domain.Role;
 import org.moon.rbac.domain.User;
 import org.moon.rbac.domain.annotation.LoginRequired;
-import org.moon.rbac.service.MenuService;
-import org.moon.rbac.service.UserService;
+import org.moon.rbac.domain.annotation.WebUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -23,10 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 @LoginRequired
 public class IndexAction {
 	@Resource
-	MenuService menuService;
-	
-	@Resource
-	private UserService userService;
+	private DomainLoader domainLoader;
 	
 	/**
 	 * show the index page
@@ -35,11 +32,10 @@ public class IndexAction {
 	 * @throws Exception 
 	 */
 	@RequestMapping("/index")
-	public ModelAndView index(HttpServletRequest request) throws Exception{
-		User currentUser = userService.getCurrentUser(request);
+	public ModelAndView index(@WebUser User user) throws Exception{
 		return new ModelAndView("pages/index")
-		.addObject("currentUser",currentUser)
-		.addObject("menus",menuService.getTopMenusByRole(currentUser.getRoleId()));
+		.addObject("currentUser",user)
+		.addObject("menus",domainLoader.load(Role.class, user.getRoleId()).getTopMenus());
 	}
 	
 	@RequestMapping("/")

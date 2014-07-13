@@ -13,6 +13,7 @@ import javax.persistence.Transient;
 
 import org.apache.ibatis.jdbc.SQL;
 import org.moon.base.domain.BaseDomain;
+import org.moon.core.orm.mybatis.annotation.IgnoreNull;
 import org.moon.utils.Iterators;
 import org.moon.utils.Objects;
 import org.moon.utils.Strings;
@@ -48,7 +49,9 @@ public class SQLProvider {
 			public void doWith(Field field) throws IllegalArgumentException,
 					IllegalAccessException {
 				field.setAccessible(true);
-				sql.VALUES(getColumn(field), wrapColumnValue(field.get(bd)));
+				if(!(field.isAnnotationPresent(IgnoreNull.class)&&Objects.isNull(field.get(bd)))){//过滤掉@IgnoreNull的空值字段
+					sql.VALUES(getColumn(field), wrapColumnValue(field.get(bd)));
+				}
 			}
 		}, new FieldFilter() {//只提取没有对应注解的非静态字段
 			@Override

@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
- <m:require src="jquery,bootstrap,js/pages/index.js"></m:require>
+ <m:require src="jquery,bootstrap,common,js/pages/index.js"></m:require>
  <m:require src="css/base.css" type="css"></m:require>
 <title>主页</title>
 

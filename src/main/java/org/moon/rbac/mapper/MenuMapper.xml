@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.moon.rbac.repository.MenuRepository">
-	<select id="get" resultMap="menuDomain">select * from tab_menu where id =
-		#{0}</select>
 	<select id="getSubMenuByRole" resultType="Long" parameterType="Object">
 		select menu_id from tab_role_menu where role_id=#{rid}
 		<if test="pid==null">and parent_id is null</if>
@@ -55,12 +53,6 @@
 		<foreach collection="childrenIds" index="index" item="id">
 		update tab_menu  set menu_order=#{index},parent_id=#{parentId},parent_code=#{parentCode} where id = #{id};
 		</foreach>
-	</update>
-	
-	<update id="update" parameterType="org.moon.rbac.domain.Menu">
-		update tab_menu set menu_name
-		= #{menu.menuName},url=#{menu.url},parent_id=#{menu.parentId},
-		code = #{menu.code},parent_code=#{menu.parentCode} where id=#{menu.id}
 	</update>
 
 	<resultMap type="org.moon.rbac.domain.Menu" id="menuDomain">

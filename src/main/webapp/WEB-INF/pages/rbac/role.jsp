@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<m:require src="jquery,common,bootstrap,zt,js/ztree.extend.js,font,dialog,table,js/pages/rbac/role.js"></m:require>
+<m:require src="jquery,noty,common,bootstrap,zt,js/ztree.extend.js,font,dialog,table,js/pages/rbac/role.js"></m:require>
 <title>角色管理</title>
  <style type="text/css">
 .rmenu {

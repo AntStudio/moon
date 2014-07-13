@@ -15,10 +15,9 @@ import com.reeham.component.ddd.message.DomainMessage;
  */
 @Introduce("message")
 public class UserEventSender implements EventSender{
-
+	
 	@Send("role/get")
 	public DomainMessage getRole(User user){
-		System.out.println(user.getRoleId()+"......sssssss...................");
 		return new DomainMessage(user.getRoleId());
 	}
 }

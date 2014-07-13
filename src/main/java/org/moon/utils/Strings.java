@@ -109,7 +109,7 @@ public class Strings {
      */
     public static String wrapIfNecessary(Object o){
     	if(o==null){
-			return "";
+			return " null ";
 		}
 		if(o instanceof String||o instanceof Character){
 			return "'"+o+"'";

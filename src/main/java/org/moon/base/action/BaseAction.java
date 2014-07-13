@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import org.moon.base.domain.BaseDomain;
 
+import com.reeham.component.ddd.message.DomainMessage;
 import com.reeham.component.ddd.model.ModelContainer;
 import com.reeham.component.ddd.model.ModelUtils;
 
@@ -31,5 +32,9 @@ public class BaseAction{
             modelContainer.addModel(ModelUtils.asModelKey(domain.getClass(),domain.getId()), domain,false);
         }
         return domain;
+    }
+    
+    protected Object sync(DomainMessage domainMessage){
+    	return domainMessage.getEventResult();
     }
 }

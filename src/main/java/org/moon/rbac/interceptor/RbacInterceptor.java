@@ -81,7 +81,7 @@ public class RbacInterceptor implements MethodInterceptor {
             if (currentRole == null) {
                 SessionContext.getResponse().sendRedirect("user/login?from="+from);
             } else {
-                if (currentRole.accessMenu((method.getAnnotation(MenuMapping.class).code()))) {
+                if (currentRole.hasMenu((method.getAnnotation(MenuMapping.class).code()))) {
                     log.debug("当前角色可以访问 " + method.getAnnotation(MenuMapping.class).code() + "菜单");
                     accessMenu = true;
                 } else {

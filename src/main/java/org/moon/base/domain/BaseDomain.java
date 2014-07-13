@@ -141,7 +141,7 @@ public class BaseDomain implements Serializable{
     	return domainMessage.getResultEvent();
     }
     
-    private void enhanceIfNecessary(){
+    public void enhanceIfNecessary(){
     	if(this.eventMessageFirer==null){
     		ApplicationContextHelper.getBean(ModelContainer.class).enhanceModel(this);
     		if(this.getId()!=null){

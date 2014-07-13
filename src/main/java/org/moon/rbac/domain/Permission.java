@@ -4,24 +4,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.moon.base.domain.BaseDomain;
+import org.moon.core.annotation.NoLogicDeleteSupport;
 
 import com.reeham.component.ddd.annotation.Model;
 
 /**
- * the domain for permission
+ * 权限领域
  * 
  * @author Gavin
  * @version 1.0
  * @date 2012-12-14
  */
 @Model
+@NoLogicDeleteSupport
 public class Permission extends BaseDomain {
 
     private static final long serialVersionUID = -3163741468593949374L;
 
-    public Permission() {
-
-    }
+    public Permission() { }
 
     public Permission(String code, String name) {
         this.code = code;
@@ -32,55 +32,20 @@ public class Permission extends BaseDomain {
 
     private String code;
 
-    private Long   createBy;
-
-    public void saveOrUpdate() {
-
-    }
-
-    /**
-     * @return the name
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * @param name
-     *            the name to set
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * @return the code
-     */
     public String getCode() {
         return code;
     }
 
-    /**
-     * @param code
-     *            the code to set
-     */
     public void setCode(String code) {
         this.code = code;
-    }
-
-    /**
-     * @return the createBy
-     */
-    public Long getCreateBy() {
-        return createBy;
-    }
-
-    /**
-     * @param createBy
-     *            the createBy to set
-     */
-    public void setCreateBy(Long createBy) {
-        this.createBy = createBy;
     }
 
     public Map<String, Object> toMap() {

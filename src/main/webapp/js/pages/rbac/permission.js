@@ -11,9 +11,7 @@ $(function(){
 			{text: '分配权限',name:"assignBtn",click : btnHandler}
 			],
 		title: '权限列表',
-		formatData:function(data){
-			return data.rows;
-			}
+		formatData:function(data){return data.result;}
 	});   
 	
 });
@@ -38,6 +36,7 @@ function btnHandler(btn){
 			   title:'分配权限给角色',
 			   buttons:[{
 				   text:'确定',
+				   css:"btn btn-primary",
 				   click:function(){
 					   var ids="",checkStatus="" ;var dialog = this;
 						$.each(ztree.getChangeCheckedNodes(),function(index,e){
@@ -51,6 +50,7 @@ function btnHandler(btn){
 				   }
 			   },{
 				   text:'取消',
+				   css:"btn btn-default",
 				   click:function(){
 					   ztree.selectNode(ztree.getNodeByParam("uid",2));
 					   this.close();
@@ -77,6 +77,7 @@ var setting = {
 			url:contextPath+"/role/getRoleDataByPermission",
 			autoParam:["id=rid"],
 			dataType:'json',
+			type:"Get",
 			otherParam:{pid:pid},
 			dataFilter: filter
 		}
@@ -92,6 +93,7 @@ var znodes = [ {
 		if (!childNodes) {
 			return null;
 		}
+		childNodes = childNodes.result;
 		for ( var i = 0, l = childNodes.length; i < l; i++) {
 			childNodes[i].name = childNodes[i].roleName.replace(/\.n/g, '.');
 			childNodes[i].isParent = true;

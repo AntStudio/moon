@@ -4,31 +4,24 @@ import java.util.List;
 import java.util.Map;
 
 import org.moon.base.service.BaseService;
+import org.moon.rbac.domain.Permission;
 import org.moon.rbac.domain.Role;
+import org.moon.utils.Constants;
 
-import com.reeham.component.ddd.model.ModelLoader;
+public interface RoleService extends BaseService<Role>{
 
-public interface RoleService extends BaseService<Role>,ModelLoader{
-
-	public List<Role> getSubRoles(Long rid,boolean deleteFlag);
-	
-	public List<Map<String,Object>> getSubRolesForMap(Long rid,boolean deleteFlag); 
-	
-	public void delete(Long[] ids, boolean logicDel);
-	
+	public static Role systemRole = new Role(Constants.SYSTEM_ROLEID);
 	/**
-	 * 根据权限获取所有的角色信息,如果该权限分配给了角色，那么checked属性为true，否者为false
+	 * 根据权限获取父级为rid的角色信息,如果该权限分配给了角色，那么checked属性为true，否者为false
 	 * @param pid
 	 * @param rid
 	 * @return
 	 */
-	public List<Map<String,Object>> getAllRoleDataByPermission(Long pid,Long rid);
+	public List<Map<String,Object>> getAllRolesByPermission(Permission permission,Long rid);
 	
 	/**
-	 * 根据权限获取对应的角色信息，此处只获取分配了的角色
-	 * @param pid
+	 * 获取顶级角色
 	 * @return
 	 */
-	public List<Role> getRoleByPermission(Long pid);
-	
+	public List<Role> getTopRoles();
 }

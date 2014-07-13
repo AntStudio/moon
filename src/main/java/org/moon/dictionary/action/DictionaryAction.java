@@ -48,7 +48,7 @@ public class DictionaryAction extends BaseAction {
 
 	@Post("/delete")
 	public @ResponseBody WebResponse deleteDictionary(@RequestParam("ids") Long[] ids) {
-		dictionaryService.delete(ids);
+		dictionaryService.delete(ids,false);
 		return WebResponse.build();
 	}
 

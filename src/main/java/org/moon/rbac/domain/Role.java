@@ -7,84 +7,67 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.moon.base.domain.BaseDomain;
-import org.moon.rbac.domain.repository.MenuEvent;
-import org.moon.rbac.domain.repository.RoleEvent;
-import org.moon.rbac.domain.repository.UserEvent;
+import org.moon.rbac.domain.eventsender.RoleEventSender;
 import org.moon.utils.Constants;
 
 import com.reeham.component.ddd.annotation.Model;
+import com.reeham.component.ddd.message.DomainMessage;
 
 /**
- * the domain for role
+ * 角色
  * @author Gavin
  * @version 1.0
  * @date 2012-11-27
  */
 @Model
-public class Role extends BaseDomain{
+public class Role extends BaseDomain {
 
 	private static final long serialVersionUID = 2223770816508175289L;
-	
-	public Role(Long id){
+
+	public Role(Long id) {
 		this.id = id;
 	}
-	
-	public Role(){
-		
-	}
-	
-	/**
-	 * the name for every role
-	 */
+
+	public Role() {}
+
 	private String roleName;
-	
-	/**
-	 * if the role active or forbid
-	 */
-	private boolean active;
-	
-	/**
-	 * the id for user which created the role
-	 */
+
 	private Long createBy;
-	
+
 	private Long parentId;
-	
+
 	@Resource
-	private MenuEvent menuLoader;
-	
-	@Resource
-	private UserEvent userLoader;
-	
-	@Resource
-	private RoleEvent roleEvent;
-	
+	private RoleEventSender roleEventSender;
+
 	/**
 	 * @return 获取当前角色的顶级菜单
 	 */
-	@SuppressWarnings("unchecked")
+	@JsonIgnore
 	public List<Menu> getTopMenus() {
-		return (List<Menu>) menuLoader.getTopMenusByRole(this).getEventResult();
+		return (List<Menu>) roleEventSender.getTopMenusForRole(this).getEventResult();
 	}
 
-	public User getCreator(){
-		return (User) userLoader.getUser(getCreateBy()).getEventResult();
+	@JsonIgnore
+	public User getCreator() {
+		return (User) roleEventSender.getUser(getCreateBy()).getEventResult();
 	}
-	
-	public void assign(User user){
-		roleEvent.assign(this, user);
+
+	@JsonIgnore
+	public DomainMessage assign(User user) {
+		DomainMessage message = roleEventSender.assignRoleToUser(this, user);
 		user.setRole(this);
+		return message;
 	}
-	
-	@SuppressWarnings("unchecked")
-	public List<Role> getSubRoles(){
-		return (List<Role>) roleEvent.getSubRoles(this);
+
+	@JsonIgnore
+	public List<Role> getSubRoles() {
+		return (List<Role>) roleEventSender.getSubRoles(this).getEventResult();
 	}
-	
-	
-	public Map<String,Object> toMap(){
-		Map<String,Object> m = new HashMap<String,Object>();
+	@JsonIgnore
+	public Map<String, Object> toMap() {
+		Map<String, Object> m = new HashMap<String, Object>();
 		m.put("id", id);
 		m.put("roleName", roleName);
 		return m;
@@ -92,83 +75,84 @@ public class Role extends BaseDomain{
 
 	/**
 	 * 根据权限code判断是否具有某种权限
+	 * 
 	 * @param code
 	 * @return
 	 */
-    public boolean hasPermission(String code) {
-        if (Constants.SYSTEM_ROLEID.equals(this.getId())) {
-            return true;
-        }
-        return (Boolean) roleEvent.hasPermission(this, code).getEventResult();
-    }
-	
+	@JsonIgnore
+	public boolean hasPermission(String code) {
+		if (Constants.SYSTEM_ROLEID.equals(this.getId())) {
+			return true;
+		}
+		return (Boolean) roleEventSender.hasPermission(this, code).getEventResult();
+	}
+
 	/**
 	 * 根据菜单code判断是否具有某种菜单访问权限(主要处理系统级菜单)
+	 * 
 	 * @param code
 	 * @return
 	 */
-	public boolean accessMenu(String code){
-        if (Constants.SYSTEM_ROLEID.equals(this.getId())) {
-            return true;
-        }
-		return (Boolean) roleEvent.accessMenu(this,code).getEventResult();
+	@JsonIgnore
+	public boolean hasMenu(String code) {
+		if (Constants.SYSTEM_ROLEID.equals(this.getId())) {
+			return true;
+		}
+		return (Boolean) roleEventSender.hasMenu(this, code).getEventResult();
+	}
+
+	@JsonIgnore
+	public List<Permission> getPermission(){
+		return (List<Permission>)roleEventSender.getPermissionForRole(this).getEventResult();
 	}
 	
 	/**
 	 * 获取当前角色的路径，返回顶层节点到改节点的角色id集合，如1,2,3
+	 * 
 	 * @return
 	 */
-	public String getRolePath(){
-        if (Constants.SYSTEM_ROLEID.equals(this.getId())) {
-            return "";
-        }
+	public String getRolePath() {
+		if (Constants.SYSTEM_ROLEID.equals(this.getId())) {
+			return "";
+		}
 		StringBuilder path = new StringBuilder();
 		List<Long> pathList = new ArrayList<Long>();
 		Role temp = this;
 		pathList.add(getId());
-		while(temp.getParentId()!=null){
-			temp = (Role) roleEvent.get(temp.getParentId()).getEventResult(); 
+		while (temp.getParentId() != null) {
+			temp = (Role) roleEventSender.getParentRole(temp).getEventResult();
 			pathList.add(temp.getId());
 		}
-		for(int i = pathList.size()-1;i>=0;i--){
-			path.append(","+pathList.get(i));
+		for (int i = pathList.size() - 1; i >= 0; i--) {
+			path.append("," + pathList.get(i));
 		}
 		return path.substring(1);
 	}
-	
-	
-	/*******************  setter/getter *******************/
-	
-    public Long getParentId() {
-        return parentId;
-    }
 
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
-    
-    public String getRoleName() {
-        return roleName;
-    }
+	/******************* setter/getter *******************/
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
+	public Long getParentId() {
+		return parentId;
+	}
 
-    public boolean isActive() {
-        return active;
-    }
+	public void setParentId(Long parentId) {
+		this.parentId = parentId;
+	}
 
-    public void setActive(boolean active) {
-        this.active = active;
-    }
+	public String getRoleName() {
+		return roleName;
+	}
 
-    public Long getCreateBy() {
-        return createBy;
-    }
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
 
-    public void setCreateBy(Long createBy) {
-        this.createBy = createBy;
-    }
-    /******************* /setter/getter *******************/
+	public Long getCreateBy() {
+		return createBy;
+	}
+
+	public void setCreateBy(Long createBy) {
+		this.createBy = createBy;
+	}
+	/******************* /setter/getter *******************/
 }

@@ -7,10 +7,12 @@ var setting = {
         },  
 		async: {
 			enable: true,
-			url:contextPath+"/role/getRoleData",
+			url:contextPath+"/role/getSubRoles",
 			autoParam:["id"],
 			dataType:'json',
-			dataFilter: filter
+			type:"Get",
+			dataFilter: filter,
+			otherParam:{"_random":Math.random()}
 		},
 		callback: {
 			onRightClick: function(event, treeId, treeNode){
@@ -33,11 +35,12 @@ var setting = {
 var znodes = [{name:'角色管理',id:-1,isParent:true}];
 
 function filter(treeId, parentNode, childNodes) {
-	if (!childNodes) 
-		{
+
+	if (!childNodes) {
 		return null;
-		}
-	for (var i=0, l=childNodes.length; i<l; i++) {
+	}
+	childNodes = childNodes.result;
+	for (var i = 0, l = childNodes.length; i < l; i++) {
 		childNodes[i].name = childNodes[i].roleName.replace(/\.n/g, '.');
 		childNodes[i].isParent = true;
 	}
@@ -62,15 +65,19 @@ function addRole(){
 			text:'添加',
 			css:"btn btn-primary",
 			click:function(){
-				$("#roleForm").ajaxSubmitForm(contextPath+"/role/add",{"role.parentId":$.fn.zTree.getZTreeObj("roleTree").getSelectedNodes()[0].id},
-						function(){
-							$("#roleForm").dialog("close");
-							$("#roleForm").reset();
-							var nodes = ztree.getSelectedNodes();
-							ztree.reAsyncChildNodes(nodes[0],"",true);
-							ztree.expandNode(nodes[0],true);
-						},
-						function(){alert("服务器出错，请稍后再试...");});
+				$.getJsonData(contextPath+"/role/add",
+						$("#roleForm").formData({"role.parentId":$.fn.zTree.getZTreeObj("roleTree").getSelectedNodes()[0].id}),
+						{type:"Post"}
+				).done(function(data){
+					if(data.success){
+						moon.success("角色添加成功");
+						$("#roleForm").dialog("close");
+						$("#roleForm").reset();
+						var nodes = ztree.getSelectedNodes();
+						ztree.reAsyncChildNodes(nodes[0],"",true);
+						ztree.expandNode(nodes[0],true);
+					}
+				});
 			}
 		},{
 			text:'取消',
@@ -88,9 +95,10 @@ function addRole(){
 function deleteRole(){
 	if(ztree.getSelectedNodes().length>=1){
 		if(confirm("确认要删除该角色吗?")){
+			 var parentNode = ztree.getSelectedNodes()[0].getParentNode()
 			 $.post(contextPath+"/role/logicDelete",{ids:ztree.getSelectedNodes()[0].id},function(result){
-				 ztree.reAsyncChildNodes(ztree.getSelectedNodes()[0].getParentNode(),"refresh",true);
-			     ztree.expandNode(ztree.getSelectedNodes()[0].getParentNode(),true); 
+				 ztree.reAsyncChildNodes(parentNode,"refresh",true);
+			     ztree.expandNode(parentNode,true); 
 			 });
 		}
 	}
@@ -104,16 +112,20 @@ function editRole(){
 					text:'保存',
 					css:"btn btn-primary",
 					click:function(){
-						$("#roleForm").ajaxSubmitForm(contextPath+"/role/update",
-								{"role.id":$.fn.zTree.getZTreeObj("roleTree").getSelectedNodes()[0].id},
-								function(){
-									$("#roleForm").dialog("close");
-									var nodes = ztree.getSelectedNodes();
-									nodes[0].name = $(":input[name='role.roleName']","#roleForm").val();
-									ztree.updateNode(nodes[0]);
-									$("#roleForm").reset();
-								},
-								function(){alert("服务器出错，请稍后再试...");});
+						$.getJsonData(contextPath+"/role/update",
+									  $("#roleForm").formData({"role.id":$.fn.zTree.getZTreeObj("roleTree").getSelectedNodes()[0].id}),
+									  {type:"Post"}
+						).done(function(data){
+							if(data.success){
+								moon.success("角色编辑成功");
+								$("#roleForm").dialog("close");
+								var nodes = ztree.getSelectedNodes();
+								nodes[0].name = $(":input[name='role.roleName']","#roleForm").val();
+								ztree.updateNode(nodes[0]);
+								$("#roleForm").reset();
+							}
+						});
+						
 					}
 				},
 				{
@@ -145,6 +157,7 @@ function assignMenu(){
 				url:contextPath+"/menu/getAssignMenuData",
 				autoParam:["id=pid"],
 				dataType:'json',
+				type:"Get",
 				otherParam:{rid:ztree.getSelectedNodes()[0].id},
 				dataFilter: filter
 			}
@@ -154,6 +167,7 @@ function assignMenu(){
 		if (!childNodes) {
 			return null;
 		}
+		childNodes = childNodes.result;
 		for (var i=0, l=childNodes.length; i<l; i++) {
 			childNodes[i].name = childNodes[i].menuName.replace(/\.n/g, '.')+"   路径："+childNodes[i].url;
 			childNodes[i].url = "";
@@ -208,7 +222,7 @@ function assignPermission(){
 				   ],
 		title: '权限列表',
 		formatData:function(data){
-			 return data.rows;
+			 return data.result;
 		}
 	});   
 	$("#permissionTable").dialog({

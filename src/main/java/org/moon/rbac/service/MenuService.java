@@ -6,49 +6,37 @@ import java.util.Map;
 import org.moon.base.service.BaseService;
 import org.moon.rbac.domain.Menu;
 
-import com.reeham.component.ddd.model.ModelLoader;
-
 /**
- * the service interface for the menu
  * @author Gavin
  * @version 1.0
  * @date 2012-11-27 
  */
-public interface MenuService extends BaseService<Menu>,ModelLoader{
+public interface MenuService extends BaseService<Menu>{
 
-	public List<Menu> getSubMenus(Long parentId);
-	 
-	public List<Menu> getSubMenusByRole(Long parentId,Long rid);
-	
-	public List<Map<String,Object>> getSubMenusByRoleForMap(Long parentId,Long rid);
-	
-	public List<Map<String,Object>> getSubMenusForMap(Long parentId);
-
-	public List<Menu> getTopMenusByRole(Long rid);
-	
-	public List<Map<String,Object>> getAssignMenuData(Long pid,Long rid);
-	
-	public void assignMenuToRole(Long[] menuIds,Boolean[] checkStatus,Long rid);
-	
-	public void addMenusToRole(List<Menu> menus,Long rid);
-	
-	public void removeMenuToRole(List<Menu> menus,Long rid);
-	
 	/**
-	 * @param system    if <code>system is true</code>,get the system menus,which with @MenuMapping annotation,
-	 * 					if system is <code>false</code>,get the customer menus,which created in the menus management
-	 * 					if system is <code>null</code>,get all the menus 
+	 * 获取角色可访问的菜单
+	 * @param parentMenuId 为父菜单id,若为null,则表示获取角色对应的顶级菜单
+	 * @param rid
 	 * @return
 	 */
-	public List<Menu> getAllMenus(Boolean system);
+	public List<Menu> getSubMenusForRole(Long parentMenuId,Long rid);
 	
-	public Map<String,Menu> getSystemMenusByCode();
+	/**
+	 * 获取带有是否分配给对应角色状态的菜单，用于管理分配菜单时使用
+	 * @param pid
+	 * @param rid
+	 * @return
+	 */
+	public List<Map<String,Object>> getMenusWithStatus(Long pid,Long rid);
 	
-	public void addMenus(List<Menu> menus);
 	
-	public void deleteMenus(List<Menu> menus);
+	/**
+	 * 获取顶级菜单
+	 * @return
+	 */
+	public List<Menu> getTopMenus();
 	
-	public Menu getMenuByCode(String code);
+	public void assignMenuToRole(Long[] menuIds,Boolean[] checkStatus,Long rid);
 	
 	/**
 	 * 对菜单进行排序
@@ -57,4 +45,17 @@ public interface MenuService extends BaseService<Menu>,ModelLoader{
 	 */
 	public void sortMenus(Long parentId,Long[] childrenIds);
 	
+	public Menu getMenuByCode(String code);
+
+	/**
+	 * 获取系统数据库中已经有了的系统菜单返回形式：{code-->menu}
+	 * @return
+	 */
+	public Map<String,Menu> getSystemMenusByCode();
+	
+	/**
+	 * 批量添加菜单，用于系统启动时添加菜单
+	 * @param menus
+	 */
+	public void addMenus(List<Menu> menus);
 }

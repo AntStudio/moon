@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<m:require src="jquery,common,zt,js/ztree.extend.js,bootstrap,dialog,font,{rbac/menu}"></m:require>
+<m:require src="jquery,noty,common,zt,js/ztree.extend.js,bootstrap,dialog,font,{rbac/menu}"></m:require>
 <title>菜单</title>
  
 </head>
@@ -15,10 +15,10 @@
     <div id="menuTree" class="ztree">  </div>
     <%--右键菜单--%>
     <ul id="rmenu"  class="dropdown-menu rmenu">
-	    <li><a href="#" onclick="addMenu()">    <i class="fa fa-plus"></i>添加菜单</a></li>
-	    <li><a href="#" onclick="editMenu()">   <i class="fa fa-edit"></i>编辑菜单</a></li>
-	    <li><a href="#" onclick="deleteMenu()"> <i class="fa fa-minus-square-o"></i>删除菜单</a></li>
-	    <li class="preview hide"><a href="#" onclick="preview()"> <i class="fa fa-indent"></i>预览</a></li>
+	    <li><a href="#" class="add-menu">    <i class="fa fa-plus"></i>添加菜单</a></li>
+	    <li><a href="#" class="edit-menu">   <i class="fa fa-edit"></i>编辑菜单</a></li>
+	    <li><a href="#" class="delete-menu"> <i class="fa fa-minus-square-o"></i>删除菜单</a></li>
+	    <li class="preview hide"><a href="#" class="preview-menu"> <i class="fa fa-indent"></i>预览</a></li>
     </ul>
 
 		<%--菜单信息 --%>

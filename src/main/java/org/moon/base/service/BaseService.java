@@ -7,6 +7,8 @@ import org.moon.core.orm.mybatis.Criteria;
 import org.moon.core.orm.mybatis.DataConverter;
 import org.moon.pagination.Pager;
 
+import com.reeham.component.ddd.model.ModelLoader;
+
 
 
 /**
@@ -15,7 +17,7 @@ import org.moon.pagination.Pager;
  * @version 1.0
  * @Date 2012-11-27  
  */
-public interface BaseService<T> {
+public interface BaseService<T> extends ModelLoader{
 
 	/**
 	 * 根据id获取对应的领域对象，如果该领域对象不存在于缓存中，那么应该调用{@link #load(Long)}进行领域的加载
@@ -30,6 +32,14 @@ public interface BaseService<T> {
 	 * @return
 	 */
 	public T load(Long id);
+	
+	/**
+	 * 根据类型获取领域
+	 * @param c
+	 * @param id
+	 * @return
+	 */
+	public <K> K loadDomain(Class<K> c,Long id);
 	
 	/**
 	 * 获取数据列表
@@ -57,9 +67,18 @@ public interface BaseService<T> {
 	 * @return
 	 */
 	public Pager listForPage(Criteria criteria,DataConverter<T> dataConverter);
+	
 	/**
-	 * 根据id删除
-	 * @param ids
+	 * 将查询结果转换为域模型
+	 * @param criteria
+	 * @return
 	 */
-	public void delete(Long[] ids);
+	public List<T> listForDomain(Criteria criteria);
+	
+	/**
+	 * 根据id删除,logicFlag标示当前是否为逻辑删除
+	 * @param ids
+	 * @param logicFlag
+	 */
+	public void delete(Long[] ids,boolean logicFlag);
 }

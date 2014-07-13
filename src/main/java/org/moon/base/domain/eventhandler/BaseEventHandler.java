@@ -11,19 +11,23 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.moon.base.domain.BaseDomain;
 import org.moon.base.repository.CommonRepository;
+import org.moon.base.service.BaseService;
 import org.moon.utils.Strings;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import com.reeham.component.ddd.message.disruptor.consumer.ConsumerLoader;
 import com.reeham.component.ddd.message.disruptor.consumer.ConsumerMethodHolder;
 
 /**
- * 通用的事件处理,Domain的EventHandler可以直接继承此类，从而省去相关的save,update,delete事件的处理。
- * 默认注册主题为：类名(首字母小写)+"/"+[save,update,delete]
+ * 通用的事件处理,Domain的EventHandler可以直接继承此类，从而省去相关的save,update,delete,get事件的处理。
+ * 默认注册主题为：类名(首字母小写)+"/"+[save,update,delete,get]
  * @author Gavin
  * @Date 2013-12-30
  */
-public abstract class BaseEventHandler<T extends BaseDomain> implements BeanNameAware{
+public abstract class BaseEventHandler<T extends BaseDomain,K extends BaseService<T>> implements ApplicationContextAware,BeanNameAware{
 
     @Resource
     private ConsumerLoader consumerLoader;
@@ -31,17 +35,28 @@ public abstract class BaseEventHandler<T extends BaseDomain> implements BeanName
     @Resource
     private CommonRepository commonRepository;
     
+    protected K service;
+    
     private String beanName;
     protected Logger logger  = Logger.getLogger(getClass());
     
     protected BaseEventHandler(){}
     
     
-    @SuppressWarnings("unchecked")
 	private Class<T> getTClass(){
       return (Class<T>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
     
+	private Class<K> getKClass(){
+	      return (Class<K>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+	    }
+	
+	
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.service  = applicationContext.getBean(getKClass());
+	}
+	
     @Override
     public void setBeanName(String beanName) {
         this.beanName = beanName;
@@ -56,9 +71,10 @@ public abstract class BaseEventHandler<T extends BaseDomain> implements BeanName
         registerHandlerForEvent("save",c);
         registerHandlerForEvent("delete",c);
         registerHandlerForEvent("update",c);
+        registerHandlerForEvent("get",Long.class);
     }
     
-    private void registerHandlerForEvent(String methodName,Class<T> paramType){
+    private void registerHandlerForEvent(String methodName,Class<?> paramType){
         String topicName = Strings.lowerFirst(getTClass().getSimpleName())+"/"+methodName;
         
         if(logger.isDebugEnabled()){
@@ -84,6 +100,10 @@ public abstract class BaseEventHandler<T extends BaseDomain> implements BeanName
     public  T save(T domain){
     	domain.setId(commonRepository.save(domain));
     	return domain;
+    }
+    
+    public  T get(Long id){
+    	return service.get(id);
     }
     
     public void delete(T domain){

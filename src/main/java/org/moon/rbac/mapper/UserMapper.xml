@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>  
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.moon.rbac.repository.UserRepository">
-	<select id="get" resultMap="user">
-		select * from tab_user where id = #{id}
-	</select>
-
 	<select id="login" resultType="Long" parameterType="org.moon.rbac.domain.User">
 		select id 
 		from tab_user

@@ -1,13 +1,19 @@
 package org.moon.rbac.action;
 
-import java.util.Map;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.moon.core.Domain.DomainLoader;
+import org.moon.core.orm.mybatis.Criteria;
+import org.moon.core.orm.mybatis.DataConverter;
+import org.moon.message.WebResponse;
+import org.moon.rbac.domain.Permission;
+import org.moon.rbac.domain.Role;
 import org.moon.rbac.domain.annotation.MenuMapping;
 import org.moon.rbac.service.PermissionService;
-import org.moon.utils.MessageUtils;
+import org.moon.rest.annotation.Get;
+import org.moon.rest.annotation.Post;
+import org.moon.utils.Maps;
 import org.moon.utils.ParamUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +33,10 @@ public class PermissionAction {
 
 	@Resource
 	private PermissionService permissionService;
-	@RequestMapping("")
+	@Resource
+	private DomainLoader domainLoader;
+	
+	@Get("")
 	@MenuMapping(name="权限管理",url="/permission",code="platform_3",parentCode="platform")
 	public ModelAndView showPermissionManagePage(){
 		return new ModelAndView("pages/rbac/permission");
@@ -37,25 +46,32 @@ public class PermissionAction {
 	 * 获取所有的权限列表
 	 * @return
 	 */
-	@RequestMapping("/getPermissionData")
-	@ResponseBody
-	public  Map<String,Object> getPermissionData(HttpServletRequest request){
-		Map<String,Object> paramsMap = ParamUtils.getParamsMap(request);
-		
-		return permissionService.getPermissionsForPage(paramsMap).toMap();
+	@Get("/getPermissionData")
+	public @ResponseBody WebResponse list(HttpServletRequest request){
+		Criteria criteria = ParamUtils.getParamsAsCerteria(request);
+		return WebResponse.build().setResult(permissionService.listForPage(criteria));
 	}
+	
 	
 	/**
 	 * 根据角色获取相应的权限
 	 * @param rid
 	 * @return
 	 */
-	@RequestMapping("/getPermissionDataByRole")
-	@ResponseBody
-	public  Map<String,Object> getPermissionData(@RequestParam("rid")Long rid){
-		Map<String,Object> paramsMap = ParamUtils.getDefaultParamMap();
-		paramsMap.put("rid", rid);
-		return permissionService.getPermissionsByRoleForPage(paramsMap).toMap();
+	@Get("/getPermissionDataByRole")
+	public  @ResponseBody WebResponse getPermissionData(@RequestParam("rid")Long rid,HttpServletRequest request){
+		final Role role = domainLoader.load(Role.class, rid);
+		DataConverter<Permission> dto = new DataConverter<Permission>() {
+			@Override
+			public Object convert(Permission p) {
+				return Maps.mapIt("id"      , p.getId(),
+						  		  "name"    , p.getName(),
+						  		  "code"    , p.getCode(),
+						  		  "checked" , role.hasPermission(p.getCode()));
+			}
+		};
+		
+		return WebResponse.build().setResult(permissionService.listForPage(ParamUtils.getParamsAsCerteria(request), dto));
 	}
 	
 	/**
@@ -64,12 +80,11 @@ public class PermissionAction {
 	 * @param rid
 	 * @return
 	 */
-	@RequestMapping("/assignPermission")
-	@ResponseBody
-    public Map<String, Object> assignPermission(@RequestParam("pids") Long[] pids,
+	@Post("/assignPermission")
+    public @ResponseBody WebResponse assignPermission(@RequestParam("pids") Long[] pids,
                             @RequestParam("status") Boolean[] status, @RequestParam("rids") Long[] rids) {
         permissionService.assignPermission(pids, status, rids);
-        return MessageUtils.getMapMessage(true);
+        return WebResponse.build();
     }
 	
 }

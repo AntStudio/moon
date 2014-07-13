@@ -8,8 +8,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.moon.base.service.AbstractService;
-import org.moon.core.orm.mybatis.Criteria;
-import org.moon.pagination.Pager;
 import org.moon.rbac.domain.Permission;
 import org.moon.rbac.repository.PermissionRepository;
 import org.moon.rbac.service.PermissionService;
@@ -34,6 +32,8 @@ public class PermissionServiceImpl extends AbstractService<Permission> implement
 	@Resource
 	private ModelContainer modelContainer;
 	
+	
+	
 	@Override
 	public void batchSave(List<Permission> permissions) {
 		if(permissions.size()!=0)
@@ -41,51 +41,15 @@ public class PermissionServiceImpl extends AbstractService<Permission> implement
 	}
 
 	@Override
-	public void delete(List<Permission> permissions) {
-		permissionRepository.delete(permissions);
-		
-	}
-
-	@Override
 	public Object loadModel(Object identifier) {
 		return load((Long) identifier);
 	}
 
-	@Override
-	public Map<String, Permission> getPermissionsByCode(Map<String,Object> paramsMap) {
-		Map<String,Permission> m = new HashMap<String,Permission>();
-		for(Permission permission:getPermissions(paramsMap)){
-			m.put(permission.getCode(),permission);
-		}
-		return m;
-	}
 
 	@Override
 	@OnEvent("permission/get")
 	public Permission get(Long id) {
 		return (Permission) modelContainer.getModel(ModelUtils.asModelKey(Permission.class, id), this);
-	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-	public List<Permission> getPermissions(Map<String,Object> paramsMap) {
-		return modelContainer.identifiersToModels((List)permissionRepository.getPermissions(paramsMap), Permission.class, this);
-	}
-
-	@Override
-	public Pager getPermissionsForPage(Map<String, Object> paramsMap) {
-		
-	 return new Pager(permissionRepository.getPermission_count(paramsMap),(List)getPermissionsForMap(paramsMap),
-			 Integer.parseInt(paramsMap.get("ps").toString()),Integer.parseInt(paramsMap.get("cp").toString()));
-	}
-
-	@Override
-	public List<Map<String, Object>> getPermissionsForMap(Map<String,Object> paramsMap) {
-		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		for(Permission p:getPermissions(paramsMap)){
-			list.add(p.toMap());
-		}
-		return list;
 	}
 
 	@Override
@@ -130,51 +94,12 @@ public class PermissionServiceImpl extends AbstractService<Permission> implement
     }
 
 	@Override
-	public Pager getPermissionsByRoleForPage(Map<String,Object> paramsMap) {
-		
-		return new Pager(permissionRepository.getPermissionsByRole_count(paramsMap),(List)getPermissionsByRoleForMap(paramsMap),
-				 Integer.parseInt(paramsMap.get("ps").toString()),Integer.parseInt(paramsMap.get("cp").toString()));
+	public Map<String, Permission> getPermissionsByCode() {
+		Map<String,Permission> m = new HashMap<String,Permission>();
+		List<Permission> permissions = listForDomain(null);
+		for(Permission p:permissions){
+			m.put(p.getCode(), p);
+		}
+		return m;
 	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-	public List<Map<String,Object>> getPermissionsByRoleForMap(Map<String, Object> paramsMap) {
-		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		List<Permission> permissions  = new ArrayList<Permission>();
-		if(permissionRepository.getPermissionsByRole(paramsMap).size()!=0)
-	    permissions = modelContainer.identifiersToModels((List)permissionRepository.getPermissionsByRole(paramsMap), Permission.class, this);
-	    for(Permission p:getPermissions(paramsMap))
-	    {
-	    	if(permissions.contains(p))
-	    	list.add(addProperty(p.toMap(),"checked",true));
-	    	else
-	    		list.add(addProperty(p.toMap(),"checked",false));
-	    }
-		return list;
-	}
-
-	
-	private Map<String,Object> addProperty(Map<String,Object> m,String key,Object value){
-		m.put(key, value);
-		return  m;
-		
-	}
-
-	@Override
-	public Permission load(Long id) {
-		return permissionRepository.get(id);
-	}
-
-	@Override
-	public List<Map> list() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Map> list(Criteria criteria) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 }

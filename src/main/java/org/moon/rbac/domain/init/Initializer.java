@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
 import org.moon.rbac.domain.Menu;
 import org.moon.rbac.domain.Permission;
 import org.moon.rbac.domain.init.helper.MenuMappingHelper;
@@ -14,14 +13,15 @@ import org.moon.rbac.domain.init.helper.PermissionMappingHelper;
 import org.moon.rbac.service.MenuService;
 import org.moon.rbac.service.PermissionService;
 import org.moon.utils.Constants;
-import org.moon.utils.ParamUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
 
 public class Initializer implements ApplicationListener<ContextRefreshedEvent> {
 	
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 	@Resource
 	private MenuService menuService;
 
@@ -31,12 +31,13 @@ public class Initializer implements ApplicationListener<ContextRefreshedEvent> {
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		if (event instanceof ContextRefreshedEvent) {
-			log.info("[spring-rbac]Starting init menu");
+			log.info("[spring-rbac] Starting init menu");
 			Map<String, Menu> systemMenus = menuService.getSystemMenusByCode();
 			if (systemMenus.keySet().size() == 0) {
 				menuService.addMenus(MenuMappingHelper.getMappingMenus());
 			} else {
-				List<Menu> addMenus = new ArrayList<Menu>(), deleteMenus = new ArrayList<Menu>(), updateMenus = new ArrayList<Menu>();
+				List<Menu> addMenus = new ArrayList<Menu>(), updateMenus = new ArrayList<Menu>();
+				List<Long> deleteMenus = new ArrayList<Long>();
 				Map<String, Menu> mappingMenu = MenuMappingHelper
 						.getMenusMapByCode();
 				for (String code : mappingMenu.keySet()) {
@@ -49,29 +50,27 @@ public class Initializer implements ApplicationListener<ContextRefreshedEvent> {
 						addMenus.add(mappingMenu.get(code));
 				}
 				for (Menu m : systemMenus.values()) {
-					deleteMenus.add(m);
+					deleteMenus.add(m.getId());
 				}
 
 				if (addMenus.size() != 0)
 					menuService.addMenus(addMenus);
 				if (deleteMenus.size() != 0)
-					menuService.deleteMenus(deleteMenus);
+					menuService.delete((Long[])deleteMenus.toArray(), false);
 				for (Menu m : updateMenus) {
 					m.update();
 				}
 			}
-
+			log.info("[spring-rbac]Success init the permissions");
 			
 			log.info("[spring-rbac]Starting init the permissions");
-			Map<String,Object> paramsMap = ParamUtils.getDefaultParamMap();
-			paramsMap.put("ps", 10000);
-			Map<String, Permission> permissions = permissionService
-					.getPermissionsByCode(paramsMap);
+			Map<String, Permission> permissions = permissionService.getPermissionsByCode();
 			if (permissions.keySet().size() == 0) {
 				permissionService.batchSave(PermissionMappingHelper
 						.getMappedPermissions());
 			} else {
-				List<Permission> addPermissions = new ArrayList<Permission>(), deletePermissions = new ArrayList<Permission>(), updatePermissions = new ArrayList<Permission>();
+				List<Permission> addPermissions = new ArrayList<Permission>(),  updatePermissions = new ArrayList<Permission>();
+				List<Long> deletePermissions = new ArrayList<Long>();
 				Map<String, Permission> mappedPermissions = PermissionMappingHelper
 						.getPermissionsMapByCode();
 				for (String code : mappedPermissions.keySet()) {
@@ -85,14 +84,14 @@ public class Initializer implements ApplicationListener<ContextRefreshedEvent> {
 						addPermissions.add(mappedPermissions.get(code));
 				}
 				for (Permission p : permissions.values()) {
-					deletePermissions.add(p);
+					deletePermissions.add(p.getId());
 				}
 				if (addPermissions.size() != 0)
 					permissionService.batchSave(addPermissions);
 				if (deletePermissions.size() != 0)
-					permissionService.delete(deletePermissions);
+					permissionService.delete(deletePermissions.toArray(new Long[]{}),false);
 				for (Permission p : updatePermissions) {
-					p.saveOrUpdate();
+					p.update();
 				}
 			}
 			

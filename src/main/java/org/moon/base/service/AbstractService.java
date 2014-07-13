@@ -9,7 +9,9 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.moon.base.domain.BaseDomain;
 import org.moon.base.repository.CommonRepository;
+import org.moon.core.Domain.DomainLoader;
 import org.moon.core.orm.mybatis.Criteria;
 import org.moon.core.orm.mybatis.DataConverter;
 import org.moon.core.orm.mybatis.criterion.Restrictions;
@@ -18,10 +20,10 @@ import org.moon.utils.Dtos;
 import org.moon.utils.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.util.Assert;
 
 import com.reeham.component.ddd.model.ModelContainer;
-import com.reeham.component.ddd.model.ModelLoader;
 import com.reeham.component.ddd.model.ModelUtils;
 
 /**
@@ -30,7 +32,7 @@ import com.reeham.component.ddd.model.ModelUtils;
  * @date Jun 9, 2014
  */
 
-public abstract class AbstractService<T> implements BaseService<T>,ModelLoader{
+public abstract class AbstractService<T extends BaseDomain> implements BaseService<T>,BeanNameAware{
 
 	@Resource
 	private CommonRepository repository;
@@ -38,9 +40,13 @@ public abstract class AbstractService<T> implements BaseService<T>,ModelLoader{
 	@Resource
 	public ModelContainer  modelContainer;
 	
+	@Resource
+	private DomainLoader domainLoader;
+	
 	private Logger logger = LoggerFactory.getLogger(getGeneric());
 	
-	protected AbstractService(){}
+	protected AbstractService(){
+	}
 	
 	/**
 	 * 获取泛型类型
@@ -66,6 +72,12 @@ public abstract class AbstractService<T> implements BaseService<T>,ModelLoader{
 	@Override
 	public List<Map> list(Criteria criteria){
 		return repository.list(getGeneric(),criteria);
+	}
+	
+	@Override
+	public List<T> listForDomain(Criteria criteria) {
+		Class c = getGeneric();
+		return modelContainer.identifiersToModels((List)repository.listIds(c, criteria), getGeneric(), this);
 	}
 	
 	@Override
@@ -171,16 +183,35 @@ public abstract class AbstractService<T> implements BaseService<T>,ModelLoader{
 		return new Pager(count(criteria),Dtos.covert(results,dataConverter),criteria.getPageSize(), criteria.getPageIndex());
 	}
 	
+	@Override
+	public void delete(Long[] ids,boolean logicFlag) {
+		Assert.notEmpty(ids,"Can't delete for null ids");
+		if(logicFlag){//逻辑删除
+			for(Long id:ids){
+				T t = get(id);
+				t.setDeleteFlag(true);
+				if(t.supportLogicDelete()){
+					t.update();
+				}
+			}
+		}else{//物理删除
+			for(Long id:ids){
+				modelContainer.removeModel(ModelUtils.asModelKey(getGeneric(), id));
+			}
+			repository.delete(getGeneric(), ids);
+		}
+	}
+	
+	@Override
+	public <K> K loadDomain(Class<K> c, Long id) {
+		return domainLoader.load(c, id);
+	}
 	private int count(Criteria criteria){
 		return repository.count(getGeneric(), criteria);
 	}
 	
 	@Override
-	public void delete(Long[] ids) {
-		Assert.notEmpty(ids,"Can't delete for null ids");
-		for(Long id:ids){
-			modelContainer.removeModel(ModelUtils.asModelKey(getGeneric(), id));
-		}
-		repository.delete(getGeneric(), ids);
+	public void setBeanName(String name) {
+		domainLoader.registerDomainLoader(getGeneric(), this);
 	}
 }

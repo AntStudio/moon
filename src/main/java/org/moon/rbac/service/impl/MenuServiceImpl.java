@@ -9,113 +9,71 @@ import javax.annotation.Resource;
 
 import org.moon.base.service.AbstractService;
 import org.moon.core.orm.mybatis.Criteria;
+import org.moon.core.orm.mybatis.DataConverter;
+import org.moon.core.orm.mybatis.criterion.Restrictions;
 import org.moon.rbac.domain.Menu;
+import org.moon.rbac.domain.Role;
 import org.moon.rbac.repository.MenuRepository;
 import org.moon.rbac.service.MenuService;
 import org.moon.utils.Constants;
+import org.moon.utils.Dtos;
+import org.moon.utils.Maps;
 import org.springframework.stereotype.Service;
 
-import com.reeham.component.ddd.annotation.OnEvent;
 import com.reeham.component.ddd.model.ModelContainer;
-import com.reeham.component.ddd.model.ModelUtils;
 @Service
 public class MenuServiceImpl extends AbstractService<Menu> implements MenuService {
 	@Resource
-	MenuRepository menuRepository;
+	private MenuRepository menuRepository;
 	
 	@Resource
-	public ModelContainer modelContainer;
+	private ModelContainer modelContainer;
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public List<Menu> getSubMenusByRole(Long parentId, Long rid) {
-		if(rid==null||rid<=0)
+	public List<Menu> getSubMenusForRole(Long parentId, Long rid) {
+		if(Constants.SYSTEM_ROLEID.equals(rid)){
+			return modelContainer.identifiersToModels((List)menuRepository.getSubMenu(parentId), Menu.class, this);
+		}
+		if(rid==null||rid<=0){
 			return new ArrayList<Menu>();
+		}
 		return modelContainer.identifiersToModels((List)menuRepository.getSubMenuByRole(parentId, rid), Menu.class, this);
 	}
 
 	@Override
-	public Menu load(Long id) {
+	public List getMenusWithStatus(Long parentMenuId, Long rid) {
+		final Role role = loadDomain(Role.class, rid);
+		DataConverter<Menu> converter = new DataConverter<Menu>() {
+			@Override
+			public Object convert(Menu m) {
+				return Maps.mapIt("id"       , m.getId(),
+								  "menuName" , m.getMenuName(), 
+								  "code"     , m.getCode(), 
+								  "checked"  , role.hasMenu(m.getCode()),
+								  "url"      , m.getUrl());
+			}
+		};
 		
-		return menuRepository.get(id);
-	}
-
-	@Override
-	@OnEvent("menu/get")
-	public Menu get(Long id) {
-		return (Menu) modelContainer.getModel(ModelUtils.asModelKey(Menu.class, id),this);
-	}
-
-	@Override
-	public Object loadModel(Object identifier) {
-		return load((Long)identifier);
-	}
-
-	@Override
-    public List<Menu> getTopMenusByRole(Long rid) {
-        if (Constants.SYSTEM_ROLEID.equals(rid)) {
-            return getSubMenus(null);
-        }
-        if (rid == null || rid <= 0) {
-            return new ArrayList<Menu>();
-        }
-        return getSubMenusByRole(null, rid);
-    }
-
-	@Override
-	public List<Map<String,Object>> getSubMenusByRoleForMap(Long parentId, Long rid) {
-		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		if(Constants.SYSTEM_ROLEID.equals(rid))
-		for(Menu m:getSubMenus(parentId)){
-			list.add(addProperty(m.toMap(),"edit",true));
+		List<Menu> menus;
+		if(parentMenuId==null||parentMenuId<0){
+			menus = getTopMenus();
+		}else{
+			menus = get(parentMenuId).getSubMenus();
 		}
-        else {
-            for (Menu m : getSubMenusByRole(parentId, rid)) {
-                if (m.isSystemMenu()) {
-                    list.add(addProperty(m.toMap(), "edit", false));
-                } else {
-                    list.add(addProperty(m.toMap(), "edit", true));
-                }
-            }
-        }
-		return list;
+		return Dtos.covert(menus, converter);
 	}
 	
+	
 	@Override
-	public List<Map<String,Object>> getSubMenusForMap(Long parentId) {
-		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		for(Menu m:getSubMenus(parentId)){
-			list.add(m.toMap());
-		}
-		return list;
+	public List<Menu> getTopMenus() {
+		return getSubMenus(null);
 	}
+	
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-	public List<Menu> getSubMenus(Long parentId) {
+	private List<Menu> getSubMenus(Long parentId){
 		return modelContainer.identifiersToModels((List)menuRepository.getSubMenu(parentId), Menu.class, this);
 	}
-
-	@Override
-	public List<Map<String, Object>> getAssignMenuData(Long pid, Long rid) {
-		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		List<Menu> roleMenus = getSubMenusByRole(pid, rid);
-        for (Menu m : getSubMenus(pid)) {
-            if (roleMenus.contains(m)) {
-                list.add(addProperty(m.toMap(), "checked", true));
-            } else {
-                list.add(addProperty(m.toMap(), "checked", false));
-            }
-        }
-		return list;
-	}
- 
 	
-	private Map<String,Object> addProperty(Map<String,Object> m,String key,Object value){
-		m.put(key, value);
-		return  m;
-	}
-
 	@Override
 	public void assignMenuToRole(Long[] menuIds,Boolean[] checkStatus, Long rid) {
 		List<Menu> addMenus = new ArrayList<Menu>();
@@ -126,8 +84,8 @@ public class MenuServiceImpl extends AbstractService<Menu> implements MenuServic
             }
 			if(true==checkStatus[i]){
 				Menu menu = get(menuIds[i]);
-				if(menu.getParentId()==null&&menu.getParentCode()!=null){
-					menu.setParentId(menu.getParent().getId());
+				if(menu.getParentCode()!=null){
+					menu.setParentCode(menu.getParent().getCode());
 				}
 				addMenus.add(menu);
 			}
@@ -143,46 +101,15 @@ public class MenuServiceImpl extends AbstractService<Menu> implements MenuServic
         }
 	}
 
-	@Override
-	public void addMenusToRole(List<Menu> menus, Long rid) {
+
+	private void addMenusToRole(List<Menu> menus, Long rid) {
 		menuRepository.addMenusToRole(menus,rid);
 	}
 
-	@Override
-	public void removeMenuToRole(List<Menu> menus, Long rid) {
+	private void removeMenuToRole(List<Menu> menus, Long rid) {
 		menuRepository.removeMenusFromRole(menus,rid);
 	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-	public List<Menu> getAllMenus(Boolean system) {
-		return modelContainer.identifiersToModels((List)menuRepository.getAllMenus(system, false), Menu.class, this);
-	}
-
-	@Override
-	public void addMenus(List<Menu> menus) {
-		menuRepository.addMenus(menus);
 		
-	}
-
-	@Override
-	public void deleteMenus(List<Menu> menus) {
-		menuRepository.deleteMenus(menus);
-		
-	}
-
-	@Override
-	public Map<String, Menu> getSystemMenusByCode() {
-		Map<String,Menu> menusMap = new HashMap<String,Menu>();
-		Menu menu;
-		for(Long id:menuRepository.getAllMenus(true, false)){
-			menu = get(id);
-			menusMap.put(menu.getCode(), menu);
-		}
-		return menusMap;
-	}
-
-	
 	@Override
 	public Menu getMenuByCode(String code) {
 		if (code == null) {
@@ -206,16 +133,21 @@ public class MenuServiceImpl extends AbstractService<Menu> implements MenuServic
 		}
 		
 	}
-
+	
 	@Override
-	public List<Map> list() {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, Menu> getSystemMenusByCode() {
+		Criteria criteria = new Criteria();
+		criteria.add(Restrictions.isNull("parent_id")).add(Restrictions.notNull("code"));
+		Map<String,Menu> m = new HashMap<String, Menu>();
+		List<Menu> menus =listForDomain(criteria);
+		for(Menu menu:menus){
+			m.put(menu.getCode(), menu);
+		}
+		return m;
 	}
-
+	
 	@Override
-	public List<Map> list(Criteria criteria) {
-		// TODO Auto-generated method stub
-		return null;
+	public void addMenus(List<Menu> menus) {
+		menuRepository.addMenus(menus);
 	}
 }

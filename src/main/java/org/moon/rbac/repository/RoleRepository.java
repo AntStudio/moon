@@ -3,28 +3,19 @@ package org.moon.rbac.repository;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.moon.base.repository.BaseRepository;
 import org.moon.rbac.domain.Role;
 import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface RoleRepository {
+public interface RoleRepository extends BaseRepository<Role>{
 
-    public Role get(Long id);
-    
 	public List<Long> getSubRoles(@Param("rid") Long rid,@Param("deleteFlag")boolean deleteFlag);
 	
-	public Long save(@Param("role")Role role);
-	
-	public void delete(@Param("ids") Long[] ids);
-	
-	public void logicDelete(@Param("ids") Long[] ids);
-	
-	public void update(@Param("role")Role role);
-	
-	public List<Long> getRolesByPermission(@Param("pid") Long pid);
+	public void assign(@Param("rid")Long rid,@Param("uid")Long uid);
 	
 	public boolean hasPermission(@Param("rid")Long rid,@Param("code")String code);
 	
-	public boolean accessMenu(@Param("rid")Long rid,@Param("code")String code);
+	public boolean hasMenu(@Param("rid")Long rid,@Param("code")String code);
 }
