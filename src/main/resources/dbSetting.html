@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF8">
+<title>设置</title>
+<style type="text/css">
+	.container {
+		margin: 15% auto;
+		width: 500px;
+		padding: 20px;
+		box-shadow: 6px 5px 29px 1px #6D7780;
+	}
+	
+	.form-group {
+		margin: 5px auto;
+	}
+	
+	.form-group label {
+		width: 130px;
+		display: inline-block;
+		text-align: right;
+		padding-right: 20px;
+	}
+	
+	.form-group input {
+		width: 340px;
+		line-height: 20px;
+		height: 30px;
+	}
+	
+	.form-group select {
+		width: 344px;
+		line-height: 20px;
+		height: 36px;
+	}
+	
+	.submit-group {
+		text-align: right;
+		margin-top: 10px;
+		margin-right: 10px;
+	}
+	
+	.submit{
+		height: 30px;
+		width: 80px;
+		box-shadow: 1px 1px 12px 0px #535758;
+		border: none;
+		cursor: pointer;
+	}
+</style>
+</head>
+<body>
+	<div class="container" id="container">
+		<form action="DBSetting" method="Post">
+			<div class="form-group">
+				<label>数据库类型</label> 
+				<select name="driver">
+					<option value="com.mysql.jdbc.Driver">MySQL</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label>数据库地址</label> <input type="text" name="url" />
+			</div>
+			<div class="form-group">
+				<label>用户名</label> <input type="text" name="username" />
+			</div>
+			<div class="form-group">
+				<label>密码</label> <input type="password" name="password" />
+			</div>
+			<div class="submit-group"> 
+				<input type="submit" value="保存" class="submit"/>
+			</div>
+		</form>
+	</div>
+	
+	<script type="text/javascript">
+		var i = 81, j = 16, k = 250;
+		var ir = 250, jg= 253, kb = 5;
+		var r = i,g = j,b = k;
+		var times = 100;
+		var oi = parseInt((ir-i)/times),oj = parseInt((jg-j)/times),ok = parseInt((kb-k)/times);
+		var incres = true;
+		changeColor();
+		function changeColor(){
+			if(incres){
+				r+=oi;g+=oj;b+=ok;
+				if((oi>0&&r>ir)||(oi<0&&r<ir)){
+					incres = false;
+				}
+			}else{
+				r-=oi;g-=oj;b-=ok;
+				if((oi>0&&r<i)||(oi<0&&r>i)){
+					incres = true;
+				}
+			}
+			document.getElementById("container").style["box-shadow"] = "6px 5px 29px 1px rgb("+r+","+g+","+b+")";
+			setTimeout(function(){
+				changeColor();
+			},20);
+		}
+	</script>
+</body>
+</html>
