@@ -1,6 +1,6 @@
 package org.moon.core.orm.mybatis.criterion;
 
-import org.moon.core.orm.mybatis.dialect.Dialect;
+import org.moon.core.orm.mybatis.dialect.AbstractDialect;
 import org.moon.core.spring.ApplicationContextHelper;
 import org.moon.utils.Strings;
 import org.springframework.context.ApplicationContext;
@@ -17,7 +17,7 @@ public class LikeCriterion implements Criterion{
 	
 	private ApplicationContext applicationContext = ApplicationContextHelper.getApplicationContext();
 	
-	private Dialect dialect ;
+	private AbstractDialect dialect ;
 
 	public LikeCriterion(String name,Object value,MatchMode matchMode,boolean caseSensitive){
 		Assert.notNull(value);
@@ -26,7 +26,7 @@ public class LikeCriterion implements Criterion{
 	}
 	
 	private void init(){
-		dialect = applicationContext.getBean(Dialect.class);
+		dialect = applicationContext.getBean(AbstractDialect.class);
 	}
 	
 	private void like(String name,Object value,MatchMode matchMode,boolean caseSensitive){

@@ -65,16 +65,6 @@ public abstract class AbstractService<T extends BaseDomain> implements BaseServi
 	}
 	
 	@Override
-	public List<Map> list(){
-		return repository.list(getGeneric(),null);
-	}
-	
-	@Override
-	public List<Map> list(Criteria criteria){
-		return repository.list(getGeneric(),criteria);
-	}
-	
-	@Override
 	public List<T> listForDomain(Criteria criteria) {
 		Class c = getGeneric();
 		return modelContainer.identifiersToModels((List)repository.listIds(c, criteria), getGeneric(), this);
@@ -104,17 +94,22 @@ public abstract class AbstractService<T extends BaseDomain> implements BaseServi
 				Class<?> type;
 	    		Object value;
 	    		String fieldName;
+                Field f = null;
 				for(Object key:m.keySet()){
 					fieldName = Strings.changeUnderlineToCamelBak((String)key);
 					value = m.get(key);
 					try{
-						Field f = c.getDeclaredField(fieldName);
+						f = c.getDeclaredField(fieldName);
 						f.setAccessible(true);
 						if(f!=null){
 							f.set(instance, value);
 							logger.debug("Trying set value for field "+fieldName);
 						}
-					}catch (Exception e) {//当字段不存在，或者为父类私有字段时，寻找是否有相应的Setter方法
+					}catch (IllegalArgumentException ae){//当字段类型不匹配时
+                        if(f.getType().equals(String.class)&&value instanceof byte[]){
+                            f.set(instance, new String((byte[])value,"UTF-8"));
+                        }
+                    }catch (Exception e) {//当字段不存在，或者为父类私有字段时，寻找是否有相应的Setter方法
 						logger.debug("Trying use setter to set value for field "+fieldName);
 	    				for(Method method:c.getMethods()){
 	    					if(method.getName().equals("set"+fieldName.substring(0,1).toUpperCase()+fieldName.substring(1))
@@ -155,7 +150,7 @@ public abstract class AbstractService<T extends BaseDomain> implements BaseServi
 								} else {
 									method.invoke(instance, value);
 								}
-	    						continue;
+	    						break;
 	    					}
 	    				}
 					}
@@ -168,7 +163,17 @@ public abstract class AbstractService<T extends BaseDomain> implements BaseServi
 		}
 		return instance ;
 	}
-	
+
+    @Override
+    public List<Map> list(){
+        return repository.list(getGeneric(),null);
+    }
+
+    @Override
+    public List<Map> list(Criteria criteria){
+        return repository.list(getGeneric(),criteria);
+    }
+
 	@Override
 	public Pager listForPage(Criteria criteria) {
 		Class c = getGeneric();
@@ -181,6 +186,7 @@ public abstract class AbstractService<T extends BaseDomain> implements BaseServi
 		Class c = getGeneric();
 		List<T> results = modelContainer.identifiersToModels((List)repository.listIds(c, criteria), getGeneric(), this);
 		return new Pager(count(criteria),Dtos.covert(results,dataConverter),criteria.getPageSize(), criteria.getPageIndex());
+        //		return new Pager(count(criteria),(List)list(criteria),criteria.getPageSize(), criteria.getPageIndex());
 	}
 	
 	@Override

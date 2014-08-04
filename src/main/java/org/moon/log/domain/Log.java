@@ -41,7 +41,7 @@ public class Log extends BaseDomain{
 	
 	private String type;
 	
-	private byte[] detail;
+	private String detail;
 	
 	private String ip;
 
@@ -63,14 +63,14 @@ public class Log extends BaseDomain{
 		this.userId = userId;
 		this.action = action;
 		this.type = type;
-		this.detail = detail.getBytes();
+		this.detail = detail;
 		this.ip = SessionContext.getRequest().getRemoteAddr();
 	}
 	
 	public Map<String,Object> toMap(){
 		Map<String,Object> m = new HashMap<String,Object>();
-		m.put("user_name", userName);
-		m.put("user_id", userId);
+        m.put("userName", userName);
+		m.put("userId", userId);
 		m.put("time",sdf.format(time));
 		m.put("action",  action);
 		m.put("id", id);
@@ -132,19 +132,13 @@ public class Log extends BaseDomain{
 		this.type = type;
 	}
 
-	/**
-	 * @return the detail
-	 */
-	public byte[] getDetail() {
-		return detail;
-	}
+    public String getDetail() {
+        return detail;
+    }
 
-	/**
-	 * @param detail the detail to set
-	 */
-	public void setDetail(byte[] detail) {
-		this.detail = detail;
-	}
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
 
     public String getIp() {
         return ip;

@@ -3,6 +3,8 @@ package org.moon.log.action;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.reeham.component.ddd.model.ModelContainer;
+import com.reeham.component.ddd.model.ModelUtils;
 import org.moon.core.orm.mybatis.DataConverter;
 import org.moon.log.domain.Log;
 import org.moon.log.service.LogService;
@@ -27,7 +29,9 @@ public class LogAction {
 
 	@Resource
 	private LogService logService;
-	
+
+    @Resource
+    ModelContainer modelContainer;
 	/**
 	 * 查看日志
 	 * @return
@@ -37,7 +41,7 @@ public class LogAction {
 	public ModelAndView showPage(){
 		return new ModelAndView("pages/log/log");
 	}
-	
+
 	@Get("/list")
 	public @ResponseBody WebResponse list(HttpServletRequest request){
 		DataConverter<Log> converter = new DataConverter<Log>() {
@@ -48,7 +52,7 @@ public class LogAction {
 		};
 		return WebResponse.build().setResult(logService.listForPage(ParamUtils.getParamsAsCerteria(request),converter));
 	}
-	
+
 	/**
 	 * 根据日志id获取日志详情
 	 * @param id

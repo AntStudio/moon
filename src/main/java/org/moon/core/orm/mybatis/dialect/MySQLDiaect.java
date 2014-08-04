@@ -3,7 +3,7 @@ package org.moon.core.orm.mybatis.dialect;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MySQLDiaect extends  Dialect{
+public class MySQLDiaect extends AbstractDialect {
 
 	@Override
 	public String getCaseInsensitiveLike() {

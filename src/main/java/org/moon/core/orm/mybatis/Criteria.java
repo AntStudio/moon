@@ -6,7 +6,7 @@ import java.util.Collection;
 
 import org.moon.core.orm.mybatis.criterion.Criterion;
 import org.moon.core.orm.mybatis.criterion.Order;
-import org.moon.core.orm.mybatis.dialect.Dialect;
+import org.moon.core.orm.mybatis.dialect.AbstractDialect;
 import org.moon.core.spring.ApplicationContextHelper;
 import org.moon.utils.Strings;
 import org.slf4j.Logger;
@@ -143,7 +143,7 @@ public class Criteria implements Serializable {
 			if(offset<=0){
 				offset = (currentPage-1)*limit; 
 			}
-			limitSql = " "+applicationContext.getBean(Dialect.class).getLimitSql(offset, limit);
+			limitSql = " "+applicationContext.getBean(AbstractDialect.class).getLimitSql(offset, limit);
 		}
 		sqlString =  sql.toString();
 		logger.debug("SQL generated successfully.{criteria sql:{} ,order sql :{}, limit sql: {} }",sqlString,orderSql,limitSql);

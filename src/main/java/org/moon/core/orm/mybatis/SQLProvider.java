@@ -266,7 +266,7 @@ public class SQLProvider {
 		   ||value instanceof Date){
 			return "'"+value+"'";
 		}else if(value instanceof byte[]){
-			return new String("'"+(byte[])value+"'");
+			return new String("'"+new String((byte[])value)+"'");
 		}
 		return value+"";
 	}
