@@ -11,6 +11,15 @@
 	</properties>
 	<build>
 		<finalName>moon</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/java/org</directory>
+                <targetPath>org</targetPath>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+        </resources>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -27,7 +36,6 @@
 					<webXml>${basedir}/src/main/webapp/WEB-INF/web.xml</webXml>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
 

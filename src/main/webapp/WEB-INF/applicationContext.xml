@@ -54,7 +54,7 @@
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="configLocation" value="/WEB-INF/config/Mybatis-Configuration.xml"/>
 		<property name="dataSource" ref="proxoolDataSource" />
-		<property name="mapperLocations" value="classpath*:**/mapper/*.xml" /><!-- @see http://mybatis.github.io/spring/zh/factorybean.html -->
+		<property name="mapperLocations" value="classpath*:/org/**/mapper/*.xml" /><!-- @see http://mybatis.github.io/spring/zh/factorybean.html -->
 	</bean>
 
 	<!-- cacheManager 需要 -->
