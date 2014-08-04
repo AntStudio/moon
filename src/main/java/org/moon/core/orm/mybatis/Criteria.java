@@ -1,9 +1,5 @@
 package org.moon.core.orm.mybatis;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.moon.core.orm.mybatis.criterion.Criterion;
 import org.moon.core.orm.mybatis.criterion.Order;
 import org.moon.core.orm.mybatis.dialect.AbstractDialect;
@@ -14,6 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class Criteria implements Serializable {
 

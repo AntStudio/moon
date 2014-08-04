@@ -1,18 +1,16 @@
 package org.moon.rbac.domain;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.persistence.Transient;
-
+import com.reeham.component.ddd.annotation.Model;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.moon.base.domain.BaseDomain;
 import org.moon.rbac.domain.eventsender.MenuEventSender;
 import org.moon.utils.Objects;
 
-import com.reeham.component.ddd.annotation.Model;
+import javax.annotation.Resource;
+import javax.persistence.Transient;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 菜单领域

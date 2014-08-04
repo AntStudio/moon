@@ -1,5 +1,11 @@
 package org.moon.base.init;
 
+import org.moon.core.spring.MoonContextListener;
+import org.moon.core.spring.MoonServlet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -7,13 +13,6 @@ import java.io.IOException;
 import java.sql.DriverManager;
 import java.util.Map;
 import java.util.Properties;
-
-import javax.servlet.ServletContext;
-
-import org.moon.core.spring.MoonContextListener;
-import org.moon.core.spring.MoonServlet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 数据库连接检查，用于项目启动时检查数据库先决性，如果未通过检查则不会加载Spring

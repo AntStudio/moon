@@ -1,19 +1,17 @@
 package org.moon.rbac.domain;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
+import com.reeham.component.ddd.annotation.Model;
+import com.reeham.component.ddd.message.DomainMessage;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.moon.base.domain.BaseDomain;
 import org.moon.rbac.domain.eventsender.RoleEventSender;
 import org.moon.utils.Constants;
 
-import com.reeham.component.ddd.annotation.Model;
-import com.reeham.component.ddd.message.DomainMessage;
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 角色

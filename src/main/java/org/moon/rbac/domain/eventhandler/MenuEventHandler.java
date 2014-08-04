@@ -1,9 +1,7 @@
 package org.moon.rbac.domain.eventhandler;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
+import com.reeham.component.ddd.annotation.OnEvent;
+import com.reeham.component.ddd.model.ModelContainer;
 import org.moon.base.domain.eventhandler.BaseEventHandler;
 import org.moon.rbac.domain.Menu;
 import org.moon.rbac.repository.MenuRepository;
@@ -11,8 +9,8 @@ import org.moon.rbac.service.MenuService;
 import org.moon.utils.Constants;
 import org.springframework.stereotype.Component;
 
-import com.reeham.component.ddd.annotation.OnEvent;
-import com.reeham.component.ddd.model.ModelContainer;
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 菜单事件处理器

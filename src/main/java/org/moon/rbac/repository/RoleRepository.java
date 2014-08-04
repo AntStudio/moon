@@ -1,11 +1,11 @@
 package org.moon.rbac.repository;
 
-import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 import org.moon.base.repository.BaseRepository;
 import org.moon.rbac.domain.Role;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 
 @Repository

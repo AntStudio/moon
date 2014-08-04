@@ -1,13 +1,7 @@
 package org.moon.base.domain.eventhandler;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
+import com.reeham.component.ddd.message.disruptor.consumer.ConsumerLoader;
+import com.reeham.component.ddd.message.disruptor.consumer.ConsumerMethodHolder;
 import org.apache.log4j.Logger;
 import org.moon.base.domain.BaseDomain;
 import org.moon.base.repository.CommonRepository;
@@ -18,8 +12,12 @@ import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import com.reeham.component.ddd.message.disruptor.consumer.ConsumerLoader;
-import com.reeham.component.ddd.message.disruptor.consumer.ConsumerMethodHolder;
+import javax.annotation.Resource;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * 通用的事件处理,Domain的EventHandler可以直接继承此类，从而省去相关的save,update,delete,get事件的处理。

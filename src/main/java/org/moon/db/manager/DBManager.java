@@ -1,10 +1,6 @@
 package org.moon.db.manager;
 
-import java.util.Arrays;
-import java.util.List;
-
-import javax.annotation.Resource;
-
+import com.reeham.component.ddd.model.CachingModelContainer;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.moon.db.manager.repository.DBManagerRepository;
@@ -20,7 +16,9 @@ import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import com.reeham.component.ddd.model.CachingModelContainer;
+import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 数据库管理类

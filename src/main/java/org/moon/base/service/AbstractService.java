@@ -1,14 +1,7 @@
 package org.moon.base.service;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
+import com.reeham.component.ddd.model.ModelContainer;
+import com.reeham.component.ddd.model.ModelUtils;
 import org.moon.base.domain.BaseDomain;
 import org.moon.base.repository.CommonRepository;
 import org.moon.core.Domain.DomainLoader;
@@ -23,8 +16,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.util.Assert;
 
-import com.reeham.component.ddd.model.ModelContainer;
-import com.reeham.component.ddd.model.ModelUtils;
+import javax.annotation.Resource;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 抽象的服务类，封装了一些通用的仓储类调用
@@ -176,17 +174,13 @@ public abstract class AbstractService<T extends BaseDomain> implements BaseServi
 
 	@Override
 	public Pager listForPage(Criteria criteria) {
-		Class c = getGeneric();
-		List<T> results = modelContainer.identifiersToModels((List)repository.listIds(c, criteria), getGeneric(), this);
-		return new Pager(count(criteria),(List)results,criteria.getPageSize(), criteria.getPageIndex());
+        return new Pager(count(criteria),(List)list(criteria),criteria.getPageSize(), criteria.getPageIndex());
 	}
 	
 	@Override
-	public Pager listForPage(Criteria criteria, DataConverter<T> dataConverter) {
-		Class c = getGeneric();
-		List<T> results = modelContainer.identifiersToModels((List)repository.listIds(c, criteria), getGeneric(), this);
-		return new Pager(count(criteria),Dtos.covert(results,dataConverter),criteria.getPageSize(), criteria.getPageIndex());
-        //		return new Pager(count(criteria),(List)list(criteria),criteria.getPageSize(), criteria.getPageIndex());
+	public Pager listForPage(Criteria criteria, DataConverter<Map> dataConverter) {
+        List<Map> results = list(criteria);
+        return new Pager(count(criteria),Dtos.convert(results, dataConverter),criteria.getPageSize(), criteria.getPageIndex());
 	}
 	
 	@Override

@@ -1,12 +1,11 @@
 package org.moon.base.action;
 
-import javax.annotation.Resource;
-
-import org.moon.base.domain.BaseDomain;
-
 import com.reeham.component.ddd.message.DomainMessage;
 import com.reeham.component.ddd.model.ModelContainer;
 import com.reeham.component.ddd.model.ModelUtils;
+import org.moon.base.domain.BaseDomain;
+
+import javax.annotation.Resource;
 
 /**
  * @author Gavin

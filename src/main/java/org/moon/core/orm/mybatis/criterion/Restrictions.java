@@ -1,10 +1,10 @@
 package org.moon.core.orm.mybatis.criterion;
 
-import java.util.Arrays;
-import java.util.Collection;
-
 import org.moon.utils.Strings;
 import org.springframework.util.Assert;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * 限制条件

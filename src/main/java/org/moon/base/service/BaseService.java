@@ -1,13 +1,12 @@
 package org.moon.base.service;
 
-import java.util.List;
-import java.util.Map;
-
+import com.reeham.component.ddd.model.ModelLoader;
 import org.moon.core.orm.mybatis.Criteria;
 import org.moon.core.orm.mybatis.DataConverter;
 import org.moon.pagination.Pager;
 
-import com.reeham.component.ddd.model.ModelLoader;
+import java.util.List;
+import java.util.Map;
 
 
 
@@ -66,7 +65,7 @@ public interface BaseService<T> extends ModelLoader{
 	 * @param criteria
 	 * @return
 	 */
-	public Pager listForPage(Criteria criteria,DataConverter<T> dataConverter);
+	public Pager listForPage(Criteria criteria,DataConverter<Map> dataConverter);
 	
 	/**
 	 * 将查询结果转换为域模型

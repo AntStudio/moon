@@ -1,11 +1,10 @@
 package org.moon.rbac.domain.eventsender;
 
-import org.moon.base.domain.eventsender.EventSender;
-import org.moon.rbac.domain.User;
-
 import com.reeham.component.ddd.annotation.Introduce;
 import com.reeham.component.ddd.annotation.Send;
 import com.reeham.component.ddd.message.DomainMessage;
+import org.moon.base.domain.eventsender.EventSender;
+import org.moon.rbac.domain.User;
 
 
 /**

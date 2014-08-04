@@ -1,18 +1,16 @@
 package org.moon.rbac.domain.eventhandler;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
+import com.reeham.component.ddd.annotation.OnEvent;
+import com.reeham.component.ddd.model.ModelContainer;
 import org.moon.base.domain.eventhandler.BaseEventHandler;
 import org.moon.rbac.domain.Role;
 import org.moon.rbac.repository.RoleRepository;
 import org.moon.rbac.service.RoleService;
 import org.springframework.stereotype.Component;
 
-import com.reeham.component.ddd.annotation.OnEvent;
-import com.reeham.component.ddd.model.ModelContainer;
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 

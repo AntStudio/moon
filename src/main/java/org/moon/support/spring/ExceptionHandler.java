@@ -1,9 +1,5 @@
 package org.moon.support.spring;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.moon.log.domain.Log;
 import org.moon.rbac.domain.User;
 import org.moon.rbac.service.UserService;
@@ -12,6 +8,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 平台异常处理,主要用于日志的记录

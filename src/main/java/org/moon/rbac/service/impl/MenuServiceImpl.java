@@ -1,12 +1,6 @@
 package org.moon.rbac.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
+import com.reeham.component.ddd.model.ModelContainer;
 import org.moon.base.service.AbstractService;
 import org.moon.core.orm.mybatis.Criteria;
 import org.moon.core.orm.mybatis.DataConverter;
@@ -20,7 +14,11 @@ import org.moon.utils.Dtos;
 import org.moon.utils.Maps;
 import org.springframework.stereotype.Service;
 
-import com.reeham.component.ddd.model.ModelContainer;
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 @Service
 public class MenuServiceImpl extends AbstractService<Menu> implements MenuService {
 	@Resource
@@ -60,7 +58,7 @@ public class MenuServiceImpl extends AbstractService<Menu> implements MenuServic
 		}else{
 			menus = get(parentMenuId).getSubMenus();
 		}
-		return Dtos.covert(menus, converter);
+		return Dtos.convert(menus, converter);
 	}
 	
 	

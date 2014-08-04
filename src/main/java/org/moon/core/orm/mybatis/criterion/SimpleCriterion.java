@@ -1,8 +1,8 @@
 package org.moon.core.orm.mybatis.criterion;
 
-import java.io.Serializable;
-
 import org.moon.utils.Strings;
+
+import java.io.Serializable;
 
 /**
  * 简单的sql条件限制

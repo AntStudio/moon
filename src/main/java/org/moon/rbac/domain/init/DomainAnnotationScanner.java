@@ -1,7 +1,5 @@
 package org.moon.rbac.domain.init;
 
-import java.lang.reflect.Method;
-
 import org.moon.rbac.domain.Menu;
 import org.moon.rbac.domain.Permission;
 import org.moon.rbac.domain.annotation.MenuMapping;
@@ -10,6 +8,8 @@ import org.moon.rbac.domain.init.helper.MenuMappingHelper;
 import org.moon.rbac.domain.init.helper.PermissionMappingHelper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+
+import java.lang.reflect.Method;
 
 
 public class DomainAnnotationScanner implements BeanPostProcessor{

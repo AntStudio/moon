@@ -1,12 +1,12 @@
 package org.moon.base.init;
 
-import javax.annotation.Resource;
-
 import org.apache.log4j.Logger;
 import org.moon.db.manager.DBManager;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
+
+import javax.annotation.Resource;
 
 
 

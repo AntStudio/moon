@@ -1,13 +1,13 @@
 package org.moon.utils;
 
+import org.apache.log4j.Logger;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Properties;
-
-import org.apache.log4j.Logger;
 
 /**
  * 配置文件读取

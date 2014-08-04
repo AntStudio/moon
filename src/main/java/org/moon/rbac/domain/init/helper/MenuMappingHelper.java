@@ -1,11 +1,11 @@
 package org.moon.rbac.domain.init.helper;
 
+import org.moon.rbac.domain.Menu;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.moon.rbac.domain.Menu;
 
 
 /**

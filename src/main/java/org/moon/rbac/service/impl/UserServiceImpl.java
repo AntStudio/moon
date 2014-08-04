@@ -1,8 +1,7 @@
 package org.moon.rbac.service.impl;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
+import com.reeham.component.ddd.annotation.Introduce;
+import com.reeham.component.ddd.model.ModelUtils;
 import org.moon.base.service.AbstractService;
 import org.moon.rbac.domain.User;
 import org.moon.rbac.repository.UserRepository;
@@ -11,8 +10,8 @@ import org.moon.utils.Constants;
 import org.moon.utils.Objects;
 import org.springframework.stereotype.Service;
 
-import com.reeham.component.ddd.annotation.Introduce;
-import com.reeham.component.ddd.model.ModelUtils;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * the implement of user Service

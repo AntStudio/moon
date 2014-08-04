@@ -1,15 +1,14 @@
 package org.moon.support.spring.config;
 
-import java.lang.reflect.Field;
-
-import javax.annotation.Resource;
-
 import org.moon.support.spring.config.annotation.Config;
 import org.moon.support.spring.config.exception.ConfigAutowireException;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
+
+import javax.annotation.Resource;
+import java.lang.reflect.Field;
 
 /**
  * 配置注入

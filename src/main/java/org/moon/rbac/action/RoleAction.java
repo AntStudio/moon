@@ -1,8 +1,5 @@
 package org.moon.rbac.action;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
 import org.moon.base.action.BaseAction;
 import org.moon.message.WebResponse;
 import org.moon.rbac.domain.Permission;
@@ -21,6 +18,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Gavin

@@ -1,7 +1,5 @@
 package org.moon.rbac.action;
 
-import javax.annotation.Resource;
-
 import org.moon.base.action.BaseAction;
 import org.moon.message.WebResponse;
 import org.moon.rbac.domain.Menu;
@@ -21,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.annotation.Resource;
 
 /**
  * 菜单控制器

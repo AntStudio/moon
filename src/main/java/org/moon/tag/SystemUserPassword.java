@@ -1,12 +1,11 @@
 package org.moon.tag;
 
-import java.io.IOException;
+import org.moon.utils.Constants;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
-
-import org.moon.utils.Constants;
+import java.io.IOException;
 
 /**
  * 系统用户密码

@@ -1,9 +1,9 @@
 package org.moon.support.spring.config;
 
-import java.util.Properties;
-
 import org.moon.utils.PropertiesUtils;
 import org.springframework.stereotype.Component;
+
+import java.util.Properties;
 
 /**
  * 配置信息管理(moon.properties)

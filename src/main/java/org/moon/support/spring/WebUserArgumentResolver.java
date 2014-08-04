@@ -1,10 +1,6 @@
 package org.moon.support.spring;
 
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.moon.rbac.domain.User;
 import org.moon.rbac.domain.annotation.WebUser;
 import org.moon.rbac.service.UserService;
@@ -16,6 +12,10 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 public class WebUserArgumentResolver implements HandlerMethodArgumentResolver{
 

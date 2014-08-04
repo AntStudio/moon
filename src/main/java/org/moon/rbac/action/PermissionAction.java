@@ -1,8 +1,5 @@
 package org.moon.rbac.action;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
 import org.moon.core.Domain.DomainLoader;
 import org.moon.core.orm.mybatis.Criteria;
 import org.moon.core.orm.mybatis.DataConverter;
@@ -20,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * 权限控制类
@@ -61,13 +62,13 @@ public class PermissionAction {
 	@Get("/getPermissionDataByRole")
 	public  @ResponseBody WebResponse getPermissionData(@RequestParam("rid")Long rid,HttpServletRequest request){
 		final Role role = domainLoader.load(Role.class, rid);
-		DataConverter<Permission> dto = new DataConverter<Permission>() {
+		DataConverter<Map> dto = new DataConverter<Map>() {
 			@Override
-			public Object convert(Permission p) {
-				return Maps.mapIt("id"      , p.getId(),
-						  		  "name"    , p.getName(),
-						  		  "code"    , p.getCode(),
-						  		  "checked" , role.hasPermission(p.getCode()));
+			public Object convert(Map p) {
+				return Maps.mapIt("id"      , p.get("id"),
+						  		  "name"    , p.get("name"),
+						  		  "code"    , p.get("code"),
+						  		  "checked" , role.hasPermission((String)p.get("code")));
 			}
 		};
 		
@@ -77,7 +78,7 @@ public class PermissionAction {
 	/**
 	 * 分配权限
 	 * @param pids
-	 * @param rid
+	 * @param rids
 	 * @return
 	 */
 	@Post("/assignPermission")

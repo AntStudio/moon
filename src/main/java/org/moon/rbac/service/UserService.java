@@ -1,9 +1,9 @@
 package org.moon.rbac.service;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.moon.base.service.BaseService;
 import org.moon.rbac.domain.User;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * the service interface for the User

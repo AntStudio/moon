@@ -1,13 +1,9 @@
 package org.moon.utils;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.moon.base.domain.BaseDomain;
+
+import java.lang.reflect.Field;
+import java.util.*;
 
 
 /**

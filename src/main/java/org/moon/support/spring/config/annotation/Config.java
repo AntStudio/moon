@@ -1,10 +1,6 @@
 package org.moon.support.spring.config.annotation;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * 用于注入资源文件的配置值,value为配置的名称.目前只加载moon.properties配置文件

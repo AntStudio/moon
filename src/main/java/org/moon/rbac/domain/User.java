@@ -1,19 +1,17 @@
 package org.moon.rbac.domain;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
+import com.reeham.component.ddd.annotation.Model;
 import org.moon.base.domain.BaseDomain;
 import org.moon.rbac.domain.eventsender.UserEventSender;
 import org.moon.utils.Constants;
 import org.moon.utils.MD5;
 
-import com.reeham.component.ddd.annotation.Model;
+import javax.annotation.Resource;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * the domain for user

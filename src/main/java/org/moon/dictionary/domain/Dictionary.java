@@ -1,10 +1,9 @@
 package org.moon.dictionary.domain;
 
-import javax.persistence.Table;
-
+import com.reeham.component.ddd.annotation.Model;
 import org.moon.base.domain.BaseDomain;
 
-import com.reeham.component.ddd.annotation.Model;
+import javax.persistence.Table;
 
 /**
  * 

@@ -1,8 +1,5 @@
 package org.moon.rbac.action;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-
 import org.moon.core.Domain.DomainLoader;
 import org.moon.rbac.domain.Role;
 import org.moon.rbac.domain.User;
@@ -11,6 +8,9 @@ import org.moon.rbac.domain.annotation.WebUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**

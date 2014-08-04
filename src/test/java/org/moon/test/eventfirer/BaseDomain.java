@@ -1,8 +1,8 @@
 package org.moon.test.eventfirer;
 
-import javax.annotation.Resource;
-
 import com.reeham.component.ddd.message.EventMessageFirer;
+
+import javax.annotation.Resource;
 
 /**
  * @author Gavin

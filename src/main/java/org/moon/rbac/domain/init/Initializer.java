@@ -1,11 +1,5 @@
 package org.moon.rbac.domain.init;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
 import org.moon.rbac.domain.Menu;
 import org.moon.rbac.domain.Permission;
 import org.moon.rbac.domain.init.helper.MenuMappingHelper;
@@ -17,6 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 public class Initializer implements ApplicationListener<ContextRefreshedEvent> {

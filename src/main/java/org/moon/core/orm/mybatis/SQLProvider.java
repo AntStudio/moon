@@ -1,16 +1,5 @@
 package org.moon.core.orm.mybatis;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.persistence.Column;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
 import org.apache.ibatis.jdbc.SQL;
 import org.moon.base.domain.BaseDomain;
 import org.moon.core.orm.mybatis.annotation.IgnoreNull;
@@ -23,6 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.ReflectionUtils.FieldCallback;
 import org.springframework.util.ReflectionUtils.FieldFilter;
+
+import javax.annotation.Resource;
+import javax.persistence.Column;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * mybatis注解sql提供器. 包括单表增删查改的sql.

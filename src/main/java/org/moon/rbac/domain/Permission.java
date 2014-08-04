@@ -1,12 +1,11 @@
 package org.moon.rbac.domain;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.reeham.component.ddd.annotation.Model;
 import org.moon.base.domain.BaseDomain;
 import org.moon.core.annotation.NoLogicDeleteSupport;
 
-import com.reeham.component.ddd.annotation.Model;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 权限领域

@@ -1,20 +1,18 @@
 package org.moon.log.domain;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
+import com.reeham.component.ddd.annotation.Model;
 import org.moon.base.domain.BaseDomain;
 import org.moon.core.annotation.NoLogicDeleteSupport;
 import org.moon.core.orm.mybatis.annotation.IgnoreNull;
 import org.moon.support.session.SessionContext;
 import org.moon.utils.Constants;
 
-import com.reeham.component.ddd.annotation.Model;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**

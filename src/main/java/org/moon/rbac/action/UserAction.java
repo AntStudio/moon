@@ -1,8 +1,5 @@
 package org.moon.rbac.action;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
 import org.moon.base.action.BaseAction;
 import org.moon.core.orm.mybatis.Criteria;
 import org.moon.core.orm.mybatis.DataConverter;
@@ -20,6 +17,7 @@ import org.moon.rbac.service.UserService;
 import org.moon.rest.annotation.Get;
 import org.moon.rest.annotation.Post;
 import org.moon.support.spring.annotation.FormParam;
+import org.moon.utils.Dtos;
 import org.moon.utils.Objects;
 import org.moon.utils.ParamUtils;
 import org.springframework.stereotype.Controller;
@@ -28,6 +26,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Gavin
@@ -60,7 +61,6 @@ public class UserAction extends BaseAction{
 	/**
 	 * 登录验证
 	 * @param user
-	 * @param role
 	 * @return
 	 */
 	 @Post("/login/validate")
@@ -88,12 +88,7 @@ public class UserAction extends BaseAction{
 	 public @ResponseBody WebResponse getUsersList(HttpServletRequest request){
 		 Criteria criteria = ParamUtils.getParamsAsCerteria(request);
 		 criteria.add(new SimpleCriterion("delete_flag", "=", false));
-		 DataConverter<User> dto = new DataConverter<User>(){
-			public Object convert(User user){
-				return user.toMap();		 
-			};
-		 };
-		 Pager results =  userService.listForPage(criteria,dto);
+		 Pager results =  userService.listForPage(criteria, Dtos.newUnderlineToCamelBakConverter(false,"password"));
 		 return WebResponse.build().setResult(results);
 	 }
 	 

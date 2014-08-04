@@ -1,17 +1,15 @@
 package org.moon.base.domain;
 
-import java.io.Serializable;
-
-import javax.annotation.Resource;
-
-import org.moon.core.annotation.NoLogicDeleteSupport;
-import org.moon.core.spring.ApplicationContextHelper;
-import org.moon.utils.Strings;
-
 import com.reeham.component.ddd.message.DomainMessage;
 import com.reeham.component.ddd.message.EventMessageFirer;
 import com.reeham.component.ddd.model.ModelContainer;
 import com.reeham.component.ddd.model.ModelUtils;
+import org.moon.core.annotation.NoLogicDeleteSupport;
+import org.moon.core.spring.ApplicationContextHelper;
+import org.moon.utils.Strings;
+
+import javax.annotation.Resource;
+import java.io.Serializable;
 
 /**
  * 域模型的基本对象,包含了一些公共基本属性,如:

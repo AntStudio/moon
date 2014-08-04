@@ -1,11 +1,5 @@
 package org.moon.maintenance.action;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
 import org.moon.db.manager.DBManager;
 import org.moon.rbac.domain.annotation.LoginRequired;
 import org.moon.rbac.domain.annotation.MenuMapping;
@@ -17,6 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 数据库维护控制器

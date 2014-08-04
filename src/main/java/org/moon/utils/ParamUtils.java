@@ -1,12 +1,11 @@
 package org.moon.utils;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.moon.core.orm.mybatis.Criteria;
 import org.moon.core.orm.mybatis.criterion.Order;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * the util for parameter

@@ -1,8 +1,8 @@
 package org.moon.core.orm.mybatis.criterion;
 
-import java.io.Serializable;
-
 import org.springframework.util.Assert;
+
+import java.io.Serializable;
 
 /**
  * 排序

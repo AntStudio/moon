@@ -1,10 +1,6 @@
 package org.moon.rest.annotation;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 /**
  * The annotation for Post request
  * this equivalent to @RequstMapping with Delete request method

@@ -1,10 +1,6 @@
 package org.moon.rbac.interceptor;
 
-import java.lang.reflect.Method;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
+import com.reeham.component.ddd.model.ModelContainer;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.log4j.Logger;
@@ -24,7 +20,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.reeham.component.ddd.model.ModelContainer;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
 
 /**
  * 拦截器，主要拦截系统级菜单和权限注解
