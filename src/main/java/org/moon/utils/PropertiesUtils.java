@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Properties;
@@ -27,8 +28,9 @@ public class PropertiesUtils {
 		if(url == null){
 			throw new FileNotFoundException(url+" can not found.");
 		}
-		String path = URLDecoder.decode(url.getFile(),"UTF-8");
-		p.load(new FileInputStream(path));
+      
+		InputStream in = PropertiesUtils.class.getResourceAsStream(filePath);
+        p.load(in);
 		return p;
 	}
 	
