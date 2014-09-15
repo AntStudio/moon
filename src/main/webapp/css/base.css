@@ -24,3 +24,9 @@
 	width: 100%;
 	height: 100%;
 }
+
+.app-version{
+    color: #E26D6D;
+    float: right;
+    line-height: 40px;
+}

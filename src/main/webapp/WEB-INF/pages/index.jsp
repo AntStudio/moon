@@ -33,6 +33,9 @@
 							</li>
 						</c:forEach>
 					</ul>
+                    <span class="app-version">
+                        版本号: 1.0.0-SNAPSHOT
+                    </span>
 					<ul class="nav pull-right">
 						<li class="dropdown"><a href="#" class="dropdown-toggle"
 							data-toggle="dropdown"> ${currentUser.userName} <b class="caret"></b></a>
