@@ -59,7 +59,28 @@ public interface BaseService<T> extends ModelLoader{
 	 * @return
 	 */
 	public Pager listForPage(Criteria criteria);
-	
+
+    /**
+     * 不接收参数的查询,默认返回第一页
+     * @param clazz
+     * @param statementId
+     * @return
+     * @see {@link org.moon.base.service.BaseService#listForPage(Class, String, org.moon.core.orm.mybatis.Criteria)}
+     */
+    public Pager listForPage(Class clazz,String statementId);
+
+    /**
+     * 根据配置在mapper xml中的语句id获取分页结果,在改命名空间应至少有：
+     * <code>{statementId}</code>和<code>{statementId}_count</code>两个语句,
+     * <code>statementId</code>用于返回查询结果集,
+     * <code>{statementId}_count</code>用于返回查询总数
+     * @param clazz 命名空间类
+     * @param statementId
+     * @param params 查询条件(包含分页信息)
+     * @return
+     */
+    public Pager listForPage(Class clazz,String statementId,Map params);
+
 	/**
 	 * 获取分页结果
 	 * @param criteria
@@ -73,7 +94,7 @@ public interface BaseService<T> extends ModelLoader{
 	 * @return
 	 */
 	public List<T> listForDomain(Criteria criteria);
-	
+
 	/**
 	 * 根据id删除,logicFlag标示当前是否为逻辑删除
 	 * @param ids

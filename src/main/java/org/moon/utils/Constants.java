@@ -19,6 +19,8 @@ public class Constants {
 	public static Long DEFAULT_DOMAINNO = SYSTEM_ROLEID-2L;
 	
 	public static Integer DEFAULT_PAGESIZE = 15;
+
+    public static int DEFAULT_PAGEINDEX = 1;
 	
 	
 	/**
@@ -30,7 +32,5 @@ public class Constants {
 	 * 操作日志
 	 */
 	public static String OPERATE_LOG = "OPERATE_LOG";
-	
-	
-	
+
 }

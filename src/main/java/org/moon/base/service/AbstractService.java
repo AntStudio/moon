@@ -2,15 +2,19 @@ package org.moon.base.service;
 
 import com.reeham.component.ddd.model.ModelContainer;
 import com.reeham.component.ddd.model.ModelUtils;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
 import org.moon.base.domain.BaseDomain;
 import org.moon.base.repository.CommonRepository;
 import org.moon.core.Domain.DomainLoader;
 import org.moon.core.orm.mybatis.Criteria;
 import org.moon.core.orm.mybatis.DataConverter;
 import org.moon.core.orm.mybatis.criterion.Restrictions;
+import org.moon.exception.ApplicationRunTimeException;
 import org.moon.pagination.Pager;
-import org.moon.utils.Dtos;
-import org.moon.utils.Strings;
+import org.moon.support.spring.config.annotation.Config;
+import org.moon.utils.*;
+import org.mybatis.spring.SqlSessionFactoryBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
@@ -40,7 +44,16 @@ public abstract class AbstractService<T extends BaseDomain> implements BaseServi
 	
 	@Resource
 	private DomainLoader domainLoader;
-	
+
+    @Resource
+    private SqlSessionFactoryBean sqlSessionFactoryBean;
+
+    /**
+     * 是否使用驼峰命名规则转换字段名字
+     */
+    @Config(value = "CamelbakKeyMapWrapper.flag",defaultVal = "true")
+    private  String useCamelbakKeyMapWrapper;
+
 	private Logger logger = LoggerFactory.getLogger(getGeneric());
 	
 	protected AbstractService(){
@@ -176,8 +189,39 @@ public abstract class AbstractService<T extends BaseDomain> implements BaseServi
 	public Pager listForPage(Criteria criteria) {
         return new Pager(count(criteria),(List)list(criteria),criteria.getPageSize(), criteria.getPageIndex());
 	}
-	
-	@Override
+
+    @Override
+    public Pager listForPage(Class clazz, String statementId) {
+       return listForPage(clazz,statementId,ParamUtils.getDefaultParamMap());
+    }
+
+    @Override
+    public Pager listForPage(Class clazz, String statementId, Map params) {
+        Assert.notNull(clazz,"The namespace class must not be null.");
+        Assert.notNull(statementId,"Can't specify null statementId for execute");
+        SqlSession sqlSession = null;
+        statementId = statementId.trim();
+        try {
+            sqlSession = sqlSessionFactoryBean.getObject().openSession(ExecutorType.REUSE);
+            String queryStatementId = Strings.connect(clazz.getPackage().getName() , "." ,
+                    clazz.getSimpleName() , "." ,statementId) ;
+            String countStatementId = queryStatementId + "_count" ;
+            List resultList = sqlSession.selectList(queryStatementId,params);
+            if(!"true".equals(useCamelbakKeyMapWrapper)){
+                resultList = Dtos.convert(resultList,Dtos.newUnderlineToCamelBakConverter());
+            }
+            int count = sqlSession.selectOne(countStatementId);
+            return new Pager(count,resultList, ParamUtils.getPageSize(params),ParamUtils.getPageIndex(params));
+        } catch (Exception e) {
+            throw new ApplicationRunTimeException(e);
+        }finally {
+            if(Objects.nonNull(sqlSession)){
+                sqlSession.close();
+            }
+        }
+    }
+
+    @Override
 	public Pager listForPage(Criteria criteria, DataConverter<Map> dataConverter) {
         List<Map> results = list(criteria);
         return new Pager(count(criteria),Dtos.convert(results, dataConverter),criteria.getPageSize(), criteria.getPageIndex());

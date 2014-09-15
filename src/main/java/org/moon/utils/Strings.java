@@ -183,4 +183,12 @@ public class Strings {
 	public  static interface StringCustomerHandler<T>{
 		String handle(T t);
 	}
+
+    public static String connect(String ... strings){
+        StringBuilder sb = new StringBuilder();
+        for(String s:strings){
+            sb.append(s);
+        }
+        return sb.toString();
+    }
 }

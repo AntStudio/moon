@@ -4,6 +4,7 @@ import org.moon.core.orm.mybatis.criterion.Criterion;
 import org.moon.core.orm.mybatis.criterion.Order;
 import org.moon.core.orm.mybatis.dialect.AbstractDialect;
 import org.moon.core.spring.ApplicationContextHelper;
+import org.moon.utils.Constants;
 import org.moon.utils.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +16,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * 数据查询限制条件，主要用于支持单表查询，多表查询使用xml配置方式处理
+ */
 public class Criteria implements Serializable {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
+
 	/**
 	 * 目前支持一种数据库，多数据库暂时不支持
 	 */
@@ -29,7 +34,7 @@ public class Criteria implements Serializable {
 	
 	private Collection<Order> orders = new ArrayList<Order>();
 	
-	private int offset = 0 ,limit = 15,currentPage = 1;
+	private int offset = 0 ,limit = Constants.DEFAULT_PAGESIZE,currentPage = Constants.DEFAULT_PAGEINDEX;
 	
 	private boolean statusChanged = false;//标示Criteria中是否有状态发生变化，如果发生了变化，toSqlString()需要重新构建sql语句，否则直接返回已有的sql语句
 	
