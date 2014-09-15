@@ -140,6 +140,15 @@
   line-height: 29px;
 }
 
+.datagrid .drag-area{
+	position: absolute;
+	border: 1px dashed #91B4F1;
+	background:rgba(185, 213, 241, 0.7);
+}
+
+.datagrid .drag-area.hide{
+	display:none;
+}
 /**
  *   固定布局
  */

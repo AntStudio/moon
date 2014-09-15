@@ -9,6 +9,8 @@
  * @Date 2012-08-25
  */
 (function(){
+
+	var VERSION = "1.0.0";
 	var defaults = {
 		url:"",
 		columns:[],
@@ -43,16 +45,16 @@
 						$tr.addClass("selected");
 					}
 					
-					if(opts.showNumber){//处理序号列
-						var $seriesTd = methods.ce("td",{"class":"number"}).html(index+1);
-						$tr.append($seriesTd);
-					}
-
 					if(opts.showSelectBox){//处理单选框或复选框
 						var $selectTd = methods.ce("td");
 						var $selectBox = methods.ce("input",{"name":"selectBox","type":(opts.multiSelect?"checkbox":"radio")});
 						$selectTd.append($selectBox);
 						$tr.append($selectTd);
+					}
+
+					if(opts.showNumber){//处理序号列
+						var $seriesTd = methods.ce("td",{"class":"number"}).html(index+1);
+						$tr.append($seriesTd);
 					}
 
 					$.each(opts.columns,function(index,columnDefinition){//处理数据行
@@ -77,10 +79,7 @@
 			var $thead=methods.ce("thead");
 			var $tr = methods.ce("tr");
 			var opts = tableInstance.opts;
-			if(opts.showNumber){//渲染序列号表头
-				var $numberTh = methods.ce("th",{"class":"number"});
-				$tr.append($numberTh);
-			}
+
 			if(opts.showSelectBox){//渲染选择框表头
 				var $selectTh = methods.ce("th",{"class":"select-box"});
 				if(opts.multiSelect){
@@ -88,6 +87,12 @@
 				}
 				$tr.append($selectTh);
 			}
+
+			if(opts.showNumber){//渲染序列号表头
+				var $numberTh = methods.ce("th",{"class":"number"});
+				$tr.append($numberTh);
+			}
+
 			$.each(opts.columns,function(index,column){//渲染数据列表头
 				if(column.width){
 					if(typeof column.width=="number"){
@@ -255,6 +260,7 @@
 			return changedRows;
 		},
 		//获取数据，分两种方式: 1.直接传递数据 2.ajax异步获取数据
+		//totalItemsCount 获取顺序： totalItemsCount-->formatData.totalItemsCount-->data.length-->calcTotalCount. 越靠后优先级越高
 		getData:function(){
 			var tableInstance = this;
 			var opts = tableInstance.opts;
@@ -262,14 +268,24 @@
 			if(opts.data){ 
 				var data = opts.data;
 				opts.totalItemsCount = data.totalItemsCount;//默认从totalItemsCount中获取总条数
+				var tableData = data.items||[];
+				if($.isFunction(opts.formatData)){//自定义格式化数据{items:[],totalItemsCount:20}
+					var temp = opts.formatData.call(tableInstance,tableData);
+					if(temp.items){
+						tableData = temp.items;
+					}
+					if(temp.totalItemsCount){
+						opts.totalItemsCount = temp.totalItemsCount;
+					}
+				}
+				if(!opts.totalItemsCount){//从数据中获取条数
+					opts.totalItemsCount = tableData.length;
+				}
+
 				if($.isFunction(opts.calcTotalCount)){//自定义计算总共的条数
 					opts.totalItemsCount = opts.calcTotalCount.call(tableInstance,data);
 				}
-				if($.isFunction(opts.formatData)){//自定义格式化数据
-					data = opts.formatData.call(tableInstance,data);
-				}
-				methods.sortData.call(tableInstance,data,"id");
-				dfd.resolve(data);
+				dfd.resolve(tableData);
 			}else{
 				$.ajax({
 					url:opts.url,
@@ -279,9 +295,6 @@
 				}).done(function(result){
 					var data ;
 					opts.totalItemsCount = result.totalItemsCount;//默认从totalItemsCount中获取总条数
-					if($.isFunction(opts.calcTotalCount)){//自定义计算总共的条数
-						opts.totalItemsCount = opts.calcTotalCount.call(tableInstance,result);
-					}
 					data = result.items||[];
 					if($.isFunction(opts.formatData)){//自定义格式化数据{items:[],totalItemsCount:20}
 						var temp = opts.formatData.call(tableInstance,result);
@@ -291,6 +304,13 @@
 						if(temp.totalItemsCount){
 							opts.totalItemsCount = temp.totalItemsCount;
 						}
+					}
+					if(!opts.totalItemsCount){//从数据中获取条数
+						opts.totalItemsCount = data.length;
+					}
+
+					if($.isFunction(opts.calcTotalCount)){//自定义计算总共的条数
+						opts.totalItemsCount = opts.calcTotalCount.call(tableInstance,result);
 					}
 					dfd.resolve(data);
 				}).fail(function(jqXHR, textStatus, errorThrown){
