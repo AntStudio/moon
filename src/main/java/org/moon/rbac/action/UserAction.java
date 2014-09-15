@@ -13,6 +13,7 @@ import org.moon.rbac.domain.annotation.LoginRequired;
 import org.moon.rbac.domain.annotation.MenuMapping;
 import org.moon.rbac.domain.annotation.PermissionMapping;
 import org.moon.rbac.domain.annotation.WebUser;
+import org.moon.rbac.repository.UserRepository;
 import org.moon.rbac.service.UserService;
 import org.moon.rest.annotation.Get;
 import org.moon.rest.annotation.Post;
@@ -29,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @author Gavin
@@ -86,10 +88,9 @@ public class UserAction extends BaseAction{
 	 @PermissionMapping(code="000001",name="用户列表")
 	 @Get("/list")
 	 public @ResponseBody WebResponse getUsersList(HttpServletRequest request){
-		 Criteria criteria = ParamUtils.getParamsAsCerteria(request);
-		 criteria.add(new SimpleCriterion("delete_flag", "=", false));
-		 Pager results =  userService.listForPage(criteria, Dtos.newUnderlineToCamelBakConverter(false,"password"));
-		 return WebResponse.build().setResult(results);
+         Map params = ParamUtils.getParamsMap(request);
+         params.put("delete_flag",false);
+         return WebResponse.build().setResult(userService.listForPage(UserRepository.class,"listWithRole",params));
 	 }
 	 
 	 @Post("/add")
@@ -171,8 +172,8 @@ public class UserAction extends BaseAction{
 	 }
 	 /**
 	  * 修改密码
+	  * @param user
 	  * @param newPassword
-	  * @param request
 	  * @return
 	  */
 	 @LoginRequired

@@ -73,6 +73,32 @@
 		select count(*)>0 from tab_user where user_name=#{userName}
 	</select>
 
+    <select id="listWithRole" resultType="HashMap">
+        SELECT u.*,r.role_name
+        FROM tab_user u
+        LEFT JOIN tab_role r
+        ON u.role_id = r.id
+        where
+        <if test="delete_flag == null">
+            u.delete_flag = false
+        </if>
+        <if test="delete_flag != null">
+            u.delete_flag = #{delete_flag}
+        </if>
+        limit ${offset},${pageSize}
+    </select>
+
+    <select id="listWithRole_count" resultType="Integer">
+        select count(u.id) from tab_user u
+        where
+        <if test="delete_flag == null">
+            u.delete_flag = false
+        </if>
+        <if test="delete_flag != null">
+            u.delete_flag = #{delete_flag}
+        </if>
+    </select>
+
 	<resultMap type="org.moon.rbac.domain.User" id="user">
 		<result column="role_id" property="roleId" />
 		<result column="user_name" property="userName" />
