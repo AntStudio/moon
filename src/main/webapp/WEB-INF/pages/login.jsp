@@ -16,7 +16,7 @@
 <body class="body">
 
 <div class="system-info-container">
-	<div class="system-info">用户名:System_user</div>
+	<div class="system-info">用户名:system_user</div>
     <div class="system-info">密码：<m:systemUserPassword/></div>
 </div>
 
@@ -41,6 +41,12 @@
     <input  type="button" id="submit" class="btn btn-default  btn-info" value="登   录"/>
 </form>
   
+</div>
+
+
+<div class="footer">
+    推荐使用Chrome浏览器以获取更好的体验,GavinCook提供技术支持,最新代码
+    <a href="https://github.com/AntStudio/moon">地址</a>
 </div>
 </body>
 </html>

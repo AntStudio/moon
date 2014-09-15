@@ -86,3 +86,11 @@
 	display: inline-block;
 	margin-left: -10%;
   }
+
+.footer{
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    color: #ccc;
+    margin-left: -250px;
+}

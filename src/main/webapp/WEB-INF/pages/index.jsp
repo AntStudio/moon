@@ -11,7 +11,7 @@
 
  
 </head>
-<body>
+<body class="index">
 	<div class="navbar navbar-inverse" style="position: static;">
 		<div class="navbar-inner">
 			<div class="container">
@@ -61,5 +61,6 @@
 	<div class="main-container">
 		<iframe src="user" id="main" name="main"></iframe>
 	</div>
+
 </body>
 </html>
