@@ -177,7 +177,7 @@ function btnHandler(btnTest){
 						   moon.warn("请选择一个角色进行分配");
 						   return false;
 					   }
-					  $.getJsonData(contextPath+"/role/assignRoleToUser", {uid:uid,rid:ztree.getSelectedNodes()[0].id}).done(function(data){
+					  $.getJsonData(contextPath+"/role/assignRoleToUser", {uid:uid,rid:ztree.getSelectedNodes()[0].id},{type:"Post"}).done(function(data){
 						  if(data.success){
 							   moon.info("角色分配成功");
 					    	   table.refresh();
@@ -212,9 +212,10 @@ var setting = {
         },
 		async: {
 			enable: true,
-			url:contextPath+"/role/getRoleData",
+			url:contextPath+"/role/getSubRoles",
 			autoParam:["id"],
 			dataType:'json',
+            type:'Get',
 			dataFilter: filter
 		},
 		callback:{
@@ -228,10 +229,10 @@ var setting = {
 }; 
 
 function filter(treeId, parentNode, childNodes) {
-	if (!childNodes) 
-		{
-		return null;
-		}
+    if (!childNodes) {
+        return null;
+    }
+    childNodes = childNodes.result;
 	for (var i=0, l=childNodes.length; i<l; i++) {
 		childNodes[i].name = childNodes[i].roleName.replace(/\.n/g, '.');
 		childNodes[i].isParent = true;
