@@ -39,7 +39,8 @@
 		insert into
 		tab_menu(menu_name,url,parent_id,delete_flag,create_by,code,parent_code)
 		values
-		<foreach collection="menus" separator="," item="menu">(#{menu.menuName},#{menu.url},#{menu.parentId},#{menu.deleteFlag},#{menu.createBy},#{menu.code},#{menu.parentCode})
+		<foreach collection="menus" separator="," index="index" item="menu">
+            (#{menu.menuName},#{menu.url},#{menu.parentId},#{menu.deleteFlag},#{menu.createBy},#{menu.code},#{menu.parentCode})
 		</foreach>
 	</insert>
 	<delete id="deleteMenus" parameterType="org.moon.rbac.domain.Menu">

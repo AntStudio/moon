@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <meta charset="utf-8">
+  <title> Moon Dialog</title>
+  <meta name="Generator" content="Sublime">
+  <meta name="Author" content="Gavin Cook">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <script src="../plugin/jquery/jquery-1.8.3.js" type="text/javascript"></script>
+  <script src="../plugin/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+  <script src="../plugin/webComponent/dialog/dialog.js" type="text/javascript"></script>
+  <link href="../plugin/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="../plugin/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="../plugin/prism/prism.css" rel="stylesheet">
+  <script type="text/javascript">
+  $(function(){
+  	$(".base").click(function(){
+		$("#content").dialog({
+			title:"测试对话框"
+		});
+	});
+
+  	$(".btn-dialog").click(function(){
+  		$("#content").dialog({
+			title:"测试对话框",
+			buttons:[
+				{
+					text:"保存",
+					class:"btn btn-primary",
+					click:function(){
+						alert("保存");
+						$(this).modal("hide");
+					}
+				},
+				{
+					text:"取消",
+					class:"btn btn-danger",
+					click:function(){
+						$(this).modal("hide");
+					}
+				}
+			]
+		});
+  	});
+  });
+  </script>
+  <style type="text/css">
+  	.alert{
+  		margin: 10px 0; 
+  	}
+
+  	.margin_b_10{
+  		margin-bottom: 10px;
+  	}
+
+  	.api-container{
+  		padding: 20px;
+  	}
+  </style>
+ </head>
+
+ <body>
+	<div class="api-container">
+		<h2>对话框</h2> 
+		<div>
+			<span>
+			Moon对话框组件，采用bootstrap的modal对话框为基础，给开发者提供了一套全部基于js的接口，而无需编写对话框的Html代码。
+			</span>
+		</div>
+
+		<div>
+			<h3>基础对话框</h3>
+			<pre class="line-numbers"><code class="language-javascript">
+$("#content").dialog({
+  title:"测试对话框"
+});
+		</code></pre>
+			<button class="btn btn-primary base">打开基础对话框</button>
+			<div class="alert alert-info">注意：这里的<code>#content</code>是对应需要显示内容的选择器</div>
+		</div>
+	
+		
+		<div>
+			<h3>对话框按钮</h3>
+			<div class="margin_b_10">Moon Dialog提供了对话框按钮配置，可以使用buttons进行配置。</div>
+			<pre class="line-numbers"><code class="language-javascript">
+buttons:[
+		{
+			text:"按钮需要显示的文字",
+			class:"按钮的样式",
+			click:"点击时需要调用的方法，方法回调的上下文是当前dialog"
+		}
+]
+		</code></pre>
+			<h5>示例</h5>
+			<pre class="line-numbers"><code class="language-javascript">
+$("#content").dialog({
+	title:"测试对话框",
+	buttons:[
+		{
+			text:"保存",
+			class:"btn btn-primary",
+			click:function(opts){
+				alert("保存");
+				$(this).modal("hide");
+			}
+		},
+		{
+			text:"取消",
+			class:"btn btn-danger",
+			click:function(opts){
+				$(this).modal("hide");
+			}
+		}
+	]
+});
+			</code></pre>
+			<button class="btn btn-primary btn-dialog">打开带有按钮的对话框</button>
+			<div class="alert alert-info">这里在回调方法中可以直接使用上下文<code>this</code>进行对话框的操作，如这里可以直接调用对话框的<code>modal("hide")</code>进行对话框的关闭。
+			同时还将进行渲染dialog的配置进行传回。
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<div id="content" class="hide">
+		测试对话框的内容
+	</div>
+	<script src="../plugin/prism/prism.js" type="text/javascript"></script>
+ </body>
+</html>

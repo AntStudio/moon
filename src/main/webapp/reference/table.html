@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <title> Table Apis </title>
+  <meta charset="utf-8">
+  <meta name="Generator" content="EditPlus">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <script src="../plugin/jquery/jquery-1.8.3.js" type="text/javascript"></script>
+  <script src="../plugin/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+  <script src="../plugin/webComponent/table/table.js" type="text/javascript"></script>
+  <link href="../plugin/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="../plugin/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="../plugin/prism/prism.css" rel="stylesheet">
+  <link href="../plugin/webComponent/table/table.css" rel="stylesheet">
+  <script>
+  var data=[
+  			{"id":1,"name":"Gavin Cook","code":"000001"},
+	        {"id":2,"name":"Jeremy","code":"000002"},
+			{"id":3,"name":"John Smith","code":"000003"},
+			{"id":4,"name":"Tim Cook","code":"000004"}
+  			];
+	$(function(){
+		$("div.dynamic").table({
+		    columns:[
+			         {name:"id",render:function(rowData){return rowData.name;},width:200,display:'id(限宽200px)',sort:true},
+					 {name:"name",display:"权限名称(居中)",align:"center",sort:true,sortName:"name"},
+					 {name:"code"},
+					 {display:'附加列测试(居右)',align:"right",render:function(columnData){return "测试内容 for "+columnData.name;}}
+					 ],
+			data:data			
+		 });
+
+		 $(".get-select").click(function(){
+			alert("一共选择了 "+$("div.dynamic").table("getSelect").length+"行");
+		 });
+	});
+  </script>
+  <style>
+	body{
+		padding:10px;
+	}
+	.grey{
+		color:#ccc;
+	}
+  </style>
+ </head>
+
+ <body>
+ 	<div>
+		<h2>表格</h2>
+		<span>Moon Table提供了一系列表格操作的功能。支持单选/复选，拖动选择，异步数据填充，排序等功能</span>
+		<div>
+			<h3>配置</h3>
+			<pre class="line-numbers"><code class="language-javascript">
+$(selector).table({
+	   title:"表格标题",
+	   columns:[
+			    {
+					name:"id",//列名,应该整个table中唯一
+					render:function(rowData){},//具体数据渲染单元格，rowData为当前行的数据
+					width:200,//固定列宽，支持像素和百分比。百分比使用"20%"
+					display:"标示",//表头显示字符,可重复
+					sort:true,//是否排序,
+					align:"left",//单元格文字方向，可用值:left/right/center
+					sortName:"id"//排序名字,与sort一起使用。即传给服务器需要排序的字段名，如果不配置使用name属性
+			    }...
+	           ],
+	    data  : {
+			     totalItemsCount:10,//表格数据总数，用于分页使用
+			     items :[]//应该为一个对应表头的数据数组
+		    	}，
+	      url : "http://xxx/getData", //异步请求数据的接口，当data未定义时则会从url异步加载数据
+       params : {},//需要传入异步请求接口的参数
+    pageIndex : 1,//当前页码，默认为1
+     pageSize : 15,//每页展示的数据条数
+  multiSelect : true,//指定单选或者复选模式
+showSelectBox : true,//是否显示单选框或复选框,具体由multiSelect决定 
+   showNumber ：true,//是否显示行号，默认显示
+      buttons : [
+  			     {
+  			      text : "按钮",//按钮文字
+  			      click : function(btnOpts){}//点击回调，上下文为table,btnOpts代表当前button的配置
+  			     }...
+                ],
+   formatData : function(data){},//提取数据，用于在传入的数据格式和table接收的数据格式不一致时使用，data代表传入的数据对象,返回结果应该形为：{items:[],totalItemsCount:xxx}
+   calcTotalCount:function(data){}//计算总条数,默认使用data.total
+});
+			</code></pre>
+			<span>最终，Moon Table会返回一个表格对象，以提供相关的操作。</span>
+		</div>
+
+		<div>
+			<h3>方法</h3>
+			<span>对于返回的表格对象，Moon Table提供了一些很方便和常用的方法调用。</span>
+			<pre class="line-numbers"><code class="language-javascript">
+refresh() //刷新表格
+getSelect() //获取选中的表格数据，返回表格数据的json数组
+getChangedRows() //获取选中状态发生变化的数据,格式为json数组
+			</code></pre>
+		</div>
+	 <script src="../plugin/prism/prism.js" type="text/javascript"></script>
+ </body>
+</html>
