@@ -2,6 +2,7 @@ package org.moon.support.spring.config;
 
 import org.moon.support.spring.config.annotation.Config;
 import org.moon.support.spring.config.exception.ConfigAutowireException;
+import org.moon.utils.Objects;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
@@ -34,7 +35,8 @@ public class ConfigAutowireHandler implements BeanPostProcessor{
 						if(!field.isAccessible()){
 							field.setAccessible(true);
 						}
-						field.set(bean, configHolder.get(config.value()));
+                        Object value = configHolder.get(config.value(),config.defaultVal());
+                        field.set(bean, value);
 					}
 					
 	           }});

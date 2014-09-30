@@ -36,11 +36,7 @@ public class MenuAction extends BaseAction {
 	@Resource
 	private MenuService menuService;
 
-	@Resource
-	private UserService useruService;
-	
-	@Resource
-	private RoleService roleService;
+
 
 	/**
 	 * 获取子菜单(默认获取deleteFlag=false的菜单),用于前台菜单显示
@@ -60,7 +56,7 @@ public class MenuAction extends BaseAction {
 	/**
 	 * 根据角色获取菜单数据,返回一个map的 list,当该菜单分配给了这个角色，那么map.checked为true,否则为false,用于菜单管理
 	 * 
-	 * @param pid
+	 * @param parentMenuId
 	 *            父菜单id
 	 * @param rid
 	 *            角色id
@@ -76,7 +72,7 @@ public class MenuAction extends BaseAction {
 	 * 分配菜单给角色,将分配状态改变了的菜单id(即参数ids)传回,chechStatus记录每个菜单是否勾选(是否要分配).
 	 * 这里传回的id全部是需要修改的,这里是由前台ztree控件保证的.
 	 * 
-	 * @param ids
+	 * @param menuIds
 	 * @param rid
 	 * @param checkStatus
 	 * @return

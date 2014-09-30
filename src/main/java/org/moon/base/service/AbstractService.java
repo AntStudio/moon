@@ -51,7 +51,7 @@ public abstract class AbstractService<T extends BaseDomain> implements BaseServi
     /**
      * 是否使用驼峰命名规则转换字段名字
      */
-    @Config(value = "CamelbakKeyMapWrapper.flag",defaultVal = "true")
+    @Config(value = "useCamelbakKeyMapWrapper.flag",defaultVal = "true")
     private  String useCamelbakKeyMapWrapper;
 
 	private Logger logger = LoggerFactory.getLogger(getGeneric());

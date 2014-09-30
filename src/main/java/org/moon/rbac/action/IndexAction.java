@@ -27,7 +27,7 @@ public class IndexAction {
 	
 	/**
 	 * show the index page
-	 * @param request
+	 * @param user
 	 * @return
 	 * @throws Exception 
 	 */

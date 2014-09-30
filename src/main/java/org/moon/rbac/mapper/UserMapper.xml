@@ -73,7 +73,7 @@
 		select count(*)>0 from tab_user where user_name=#{userName}
 	</select>
 
-    <select id="listWithRole" resultType="HashMap">
+    <select id="listWithRole" resultType="CamelbakKeyResultMap">
         SELECT u.*,r.role_name
         FROM tab_user u
         LEFT JOIN tab_role r
