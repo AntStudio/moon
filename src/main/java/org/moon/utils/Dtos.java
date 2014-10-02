@@ -21,7 +21,7 @@ public class Dtos {
 	 * @param converter
 	 * @return
 	 */
-	public static <T> List<Object> convert(List<T> objs, DataConverter<T> converter){
+	public static <T> List convert(List<T> objs, DataConverter<T> converter){
 		Assert.notNull(objs,"The data used to convert should not be null");
 		Assert.notNull(converter,"The data converter should not be null");
 		List<Object> results = new ArrayList<Object>();

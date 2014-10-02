@@ -3,22 +3,16 @@ package org.moon.rbac.service.impl;
 import com.reeham.component.ddd.model.ModelContainer;
 import org.moon.base.service.AbstractService;
 import org.moon.core.orm.mybatis.Criteria;
-import org.moon.core.orm.mybatis.DataConverter;
 import org.moon.core.orm.mybatis.criterion.Restrictions;
 import org.moon.rbac.domain.Menu;
-import org.moon.rbac.domain.Role;
 import org.moon.rbac.repository.MenuRepository;
 import org.moon.rbac.service.MenuService;
 import org.moon.utils.Constants;
-import org.moon.utils.Dtos;
-import org.moon.utils.Maps;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 @Service
 public class MenuServiceImpl extends AbstractService<Menu> implements MenuService {
 	@Resource
@@ -28,48 +22,30 @@ public class MenuServiceImpl extends AbstractService<Menu> implements MenuServic
 	private ModelContainer modelContainer;
 
 	@Override
-	public List<Menu> getSubMenusForRole(Long parentId, Long rid) {
+	public List<Map> getSubMenusForRole(Long parentId, Long rid) {
 		if(Constants.SYSTEM_ROLEID.equals(rid)){
-			return modelContainer.identifiersToModels((List)menuRepository.getSubMenu(parentId), Menu.class, this);
+			return menuRepository.getSubMenus(parentId);
 		}
 		if(rid==null||rid<=0){
-			return new ArrayList<Menu>();
+			return Collections.emptyList();
 		}
-		return modelContainer.identifiersToModels((List)menuRepository.getSubMenuByRole(parentId, rid), Menu.class, this);
+		return menuRepository.getSubMenusByRole(parentId, rid);
 	}
 
 	@Override
 	public List getMenusWithStatus(Long parentMenuId, Long rid) {
-		final Role role = loadDomain(Role.class, rid);
-		DataConverter<Menu> converter = new DataConverter<Menu>() {
-			@Override
-			public Object convert(Menu m) {
-				return Maps.mapIt("id"       , m.getId(),
-								  "menuName" , m.getMenuName(), 
-								  "code"     , m.getCode(), 
-								  "checked"  , role.hasMenu(m.getCode()),
-								  "url"      , m.getUrl());
-			}
-		};
-		
-		List<Menu> menus;
-		if(parentMenuId==null||parentMenuId<0){
-			menus = getTopMenus();
-		}else{
-			menus = get(parentMenuId).getSubMenus();
-		}
-		return Dtos.convert(menus, converter);
+		return menuRepository.getMenusWithStatus(parentMenuId,rid);
 	}
 	
 	
 	@Override
-	public List<Menu> getTopMenus() {
+	public List<Map> getTopMenus() {
 		return getSubMenus(null);
 	}
 	
 
-	private List<Menu> getSubMenus(Long parentId){
-		return modelContainer.identifiersToModels((List)menuRepository.getSubMenu(parentId), Menu.class, this);
+	private List<Map> getSubMenus(Long parentId){
+		return menuRepository.getSubMenus(parentId);
 	}
 	
 	@Override
@@ -95,7 +71,7 @@ public class MenuServiceImpl extends AbstractService<Menu> implements MenuServic
             addMenusToRole(addMenus, rid);
         }
         if (removeMenus.size() > 0) {
-            removeMenuToRole(removeMenus, rid);
+            removeMenuFromRole(removeMenus, rid);
         }
 	}
 
@@ -104,7 +80,7 @@ public class MenuServiceImpl extends AbstractService<Menu> implements MenuServic
 		menuRepository.addMenusToRole(menus,rid);
 	}
 
-	private void removeMenuToRole(List<Menu> menus, Long rid) {
+	private void removeMenuFromRole(List<Menu> menus, Long rid) {
 		menuRepository.removeMenusFromRole(menus,rid);
 	}
 		

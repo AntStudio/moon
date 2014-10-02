@@ -14,6 +14,7 @@ import org.moon.rest.annotation.Get;
 import org.moon.rest.annotation.Post;
 import org.moon.support.spring.annotation.FormParam;
 import org.moon.utils.ClassPropertiesUtil;
+import org.moon.utils.Objects;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,7 +37,15 @@ public class MenuAction extends BaseAction {
 	@Resource
 	private MenuService menuService;
 
-
+    /**
+     * 跳转菜单管理界面
+     * @return
+     */
+    @MenuMapping(url = "/menu", name = "菜单管理", code = "platform_2", parentCode = "platform")
+    @Get("")
+    public ModelAndView showMenuPage() {
+        return new ModelAndView("/pages/rbac/menu");
+    }
 
 	/**
 	 * 获取子菜单(默认获取deleteFlag=false的菜单),用于前台菜单显示
@@ -47,7 +56,7 @@ public class MenuAction extends BaseAction {
 	 */
 	@Get("/getSubMenus")
 	public @ResponseBody WebResponse getSubMenus(@WebUser User user, @RequestParam("pid") Long pid) {
-		if (pid == -1L) {
+        if (Objects.isNull(pid) || -1L == pid) {
 			pid = null;
 		}
 		return WebResponse.build().setResult(menuService.getSubMenusForRole(pid, user.getRoleId()));
@@ -86,16 +95,6 @@ public class MenuAction extends BaseAction {
 		return WebResponse.build();
 	}
 
-	/**
-	 * 跳转菜单管理界面
-	 * @return
-	 */
-	@MenuMapping(url = "/menu", name = "菜单管理", code = "platform_2", parentCode = "platform")
-	@Get("")
-	public ModelAndView showMenuPage() {
-		return new ModelAndView("/pages/rbac/menu");
-	}
-
 	@Post("/add")
 	@ResponseBody
 	@PermissionMapping(code = "000001", name = "添加菜单信息")
@@ -113,7 +112,7 @@ public class MenuAction extends BaseAction {
 		if (menu.getId() != null) {
 			Menu oldMenu = menuService.get(menu.getId());
 			menu = (Menu) ClassPropertiesUtil.copyProperties(menu, oldMenu, true, "menuName", "url");
-			enhance(menu).update();
+            sync(menu.update());
 		}
 		return WebResponse.build();
 	}
@@ -127,9 +126,15 @@ public class MenuAction extends BaseAction {
 		return WebResponse.build();
 	}
 
+    /**
+     * 菜单排序
+     * @param parentId
+     * @param childrenIds
+     * @return
+     */
 	@Post("/sort")
 	@ResponseBody
-	public WebResponse sortMen(@RequestParam("parentMenuId") Long parentId,
+	public WebResponse sortMenu(@RequestParam("parentMenuId") Long parentId,
 			@RequestParam("childrenMenuIds[]") Long[] childrenIds) {
 		menuService.sortMenus(parentId, childrenIds);
 		return WebResponse.build();

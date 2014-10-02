@@ -50,10 +50,12 @@ public class ClassPropertiesUtil {
 	}
 	
 	public static Object copyProperties(Object src,Object dest,boolean isInclude,String...include){
-		if(isInclude)
-		return copyProperties(src, dest,include,new String[0], true);
-		else
-			return copyProperties(src, dest,new String[0],include, true);
+		if(isInclude) {
+            return copyProperties(src, dest, include, new String[0], true);
+        }
+		else {
+            return copyProperties(src, dest, new String[0], include, true);
+        }
 	}
 	
 	

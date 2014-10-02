@@ -1,14 +1,42 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.moon.rbac.repository.MenuRepository">
-	<select id="getSubMenuByRole" resultType="Long" parameterType="Object">
-		select menu_id from tab_role_menu where role_id=#{rid}
+	<select id="getSubMenusByRole" resultType="CamelbakKeyResultMap" parameterType="Object">
+		select tm.*
+        from tab_role_menu trm
+        join tab_menu tm
+        on trm.menu_id = tm.id
+        where role_id=#{rid}
 		<if test="pid==null">and parent_id is null</if>
 		<if test="pid!=null">and parent_id=#{pid}</if>
-
 	</select>
-	<select id="getByCode" resultType="Long">select id from tab_menu where
-		code = #{code} limit 1</select>
+
+    <select id="getSubMenus" resultType="CamelbakKeyResultMap">
+        select *
+        from tab_menu
+        where
+        <if test="pid==null">parent_id is null and parent_code is null</if>
+        <if test="pid!=null">parent_id=#{pid} or parent_code =(select code from tab_menu where id=#{pid})</if>
+        order by menu_order,code asc
+    </select>
+
+    <select id="getMenusWithStatus" resultType="CamelbakKeyResultMap">
+        SELECT  tm.*,
+        CASE WHEN trm.role_id IS NULL THEN FALSE ELSE TRUE END AS checked
+        FROM tab_menu tm
+        LEFT JOIN tab_role_menu trm
+        ON tm.id = trm.menu_id AND trm.role_id = #{rid}
+        WHERE
+        <if test="pid==null">tm.parent_id is null and tm.parent_code is null</if>
+        <if test="pid!=null">tm.parent_id=#{pid} or tm.parent_code =(select code from tab_menu where id=#{pid})</if>
+    </select>
+
+	<select id="getByCode" resultType="Long">
+        select id
+        from tab_menu
+        where code = #{code} limit 1
+    </select>
+
 	<insert id="addMenusToRole">
 		insert tab_role_menu values
 		<foreach collection="menus" item="menu" separator=",">(#{rid},#{
@@ -21,13 +49,7 @@
 		) and role_id=#{rid}
 
 	</delete>
-	<select id="getSubMenu" resultType="Long">
-		select id from tab_menu where
-		<if test="pid==null">parent_id is null and parent_code is null</if>
-		<if test="pid!=null">parent_id=#{pid} or parent_code =(select code from
-			tab_menu where id=#{pid})</if>
-		order by menu_order,code
-	</select>
+
 	<select id="getAllMenus" resultType="Long">
 		select id from tab_menu
 		<if test="system==null"></if>

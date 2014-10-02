@@ -22,7 +22,19 @@ public class Strings {
         }
         return src.substring(0, 1).toLowerCase()+src.substring(1);
     }
-    
+
+    /**
+     * 首字母大写
+     * @param src
+     * @return
+     */
+    public static String upperFirst(String src){
+        if(src==null||src.length()==0){
+            return "";
+        }
+        return src.substring(0, 1).toUpperCase()+src.substring(1);
+    }
+
     /**
      * 从输入流捕获内容
      * @param in

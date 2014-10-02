@@ -6,6 +6,7 @@ import org.moon.rbac.domain.Menu;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -17,14 +18,25 @@ import java.util.List;
 @Repository
 public interface MenuRepository extends BaseRepository<Menu>{
 
-	public List<Long> getSubMenuByRole(@Param("pid")Long parentId,@Param("rid")Long rid);
-	
-    
-	public Long getByCode(@Param("code")String code);
-	
-	public List<Long> getSubMenu(@Param("pid")Long parentId);
+    /**
+     * 获取角色对应的菜单的子菜单（即分配给该角色的菜单）
+     * @param parentId
+     * @param rid
+     * @return
+     */
+	public List<Map> getSubMenusByRole(@Param("pid") Long parentId, @Param("rid") Long rid);
 
-	
+    /**
+     * 获取子菜单
+     * @param parentId
+     * @return
+     */
+    public List<Map> getSubMenus(@Param("pid")Long parentId);
+
+	public Long getByCode(@Param("code")String code);
+
+    public List<Map> getMenusWithStatus(@Param("pid")Long parentMenuId, @Param("rid")Long rid);
+
 	public void addMenusToRole(@Param("menus")List<Menu> menus,@Param("rid")Long rid);
 	
 	public void removeMenusFromRole(@Param("menus")List<Menu> menus,@Param("rid")Long rid);

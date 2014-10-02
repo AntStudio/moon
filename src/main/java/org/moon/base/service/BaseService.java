@@ -65,7 +65,7 @@ public interface BaseService<T> extends ModelLoader{
      * @param clazz
      * @param statementId
      * @return
-     * @see {@link org.moon.base.service.BaseService#listForPage(Class, String, org.moon.core.orm.mybatis.Criteria)}
+     * @see {@link org.moon.base.service.BaseService#listForPage(Class, String, Map)}
      */
     public Pager listForPage(Class clazz,String statementId);
 
