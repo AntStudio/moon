@@ -35,31 +35,14 @@ public class RoleServiceImpl extends AbstractService<Role> implements RoleServic
 	}
 	
 	@Override
-	public List<Map<String, Object>> getAllRolesByPermission(
-			Permission permission, Long rid) {
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-		List<Role> roles;
-		if (Objects.isNull(rid)) {
-			roles = getTopRoles();
-		} else {
-			roles = get(rid).getSubRoles();
-		}
-
-		for (Role role : roles) {
-			list.add(Maps.mapIt("id", role.getId(), 
-								"roleName",role.getRoleName(),
-								"checked",role.hasPermission(permission.getCode()))
-				     );
-		}
-
-		return list;
+	public List<Map<String, Object>> getRolesWithStatusForPermission(
+            Permission permission, Long rid) {
+		return roleRepository.getRolesWithStatusForPermission(rid,permission.getId());
 	}
 
 	@Override
-	public List<Role> getTopRoles() {
-		return modelContainer.identifiersToModels(
-				(List) roleRepository.getSubRoles(null, false), Role.class,
-				this);
+	public List<Map> getTopRoles() {
+        return roleRepository.getSubRoles(null, false);
 	}
 
 }

@@ -17,9 +17,6 @@ import java.util.*;
 public class MenuServiceImpl extends AbstractService<Menu> implements MenuService {
 	@Resource
 	private MenuRepository menuRepository;
-	
-	@Resource
-	private ModelContainer modelContainer;
 
 	@Override
 	public List<Map> getSubMenusForRole(Long parentId, Long rid) {
@@ -34,7 +31,7 @@ public class MenuServiceImpl extends AbstractService<Menu> implements MenuServic
 
 	@Override
 	public List getMenusWithStatus(Long parentMenuId, Long rid) {
-		return menuRepository.getMenusWithStatus(parentMenuId,rid);
+        return menuRepository.getMenusWithStatus(parentMenuId,rid);
 	}
 	
 	

@@ -98,6 +98,6 @@ public class RoleAction extends BaseAction {
 			rid = null;
 		}
 		Permission permission = permissionService.get(pid);
-		return WebResponse.build().setResult(roleService.getAllRolesByPermission(permission, rid));
+		return WebResponse.build().setResult(roleService.getRolesWithStatusForPermission(permission, rid));
 	}
 }

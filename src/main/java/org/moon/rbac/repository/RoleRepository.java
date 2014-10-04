@@ -6,13 +6,16 @@ import org.moon.rbac.domain.Role;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 
 @Repository
 public interface RoleRepository extends BaseRepository<Role>{
 
-	public List<Long> getSubRoles(@Param("rid") Long rid,@Param("deleteFlag")boolean deleteFlag);
-	
+	public List<Map> getSubRoles(@Param("rid") Long rid,@Param("deleteFlag")boolean deleteFlag);
+
+    public List<Map<String,Object>> getRolesWithStatusForPermission(@Param("rid") Long rid,@Param("pid")Long pid);
+
 	public void assign(@Param("rid")Long rid,@Param("uid")Long uid);
 	
 	public boolean hasPermission(@Param("rid")Long rid,@Param("code")String code);

@@ -32,9 +32,7 @@ public class MenuEventHandler extends BaseEventHandler<Menu, MenuService>{
     };
 	@Resource
 	private MenuRepository menuRepository;
-	
-	@Resource
-	private ModelContainer modelContainer;
+
 
 	@OnEvent("menu/getTopMenusForRole")
 	public List<Menu> getTopMenusForRole(Long roleId){

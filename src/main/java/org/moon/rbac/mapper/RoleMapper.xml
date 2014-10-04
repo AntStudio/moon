@@ -8,8 +8,8 @@
 		WHERE id = #{uid}
 	</update>
 
-	<select id="getSubRoles" resultType="Long">
-		SELECT id 
+	<select id="getSubRoles" resultType="CamelbakKeyResultMap">
+		SELECT *
 		FROM tab_role 
 		WHERE parent_id
 		<if test="rid==null">is null</if>
@@ -30,4 +30,16 @@
 		JOIN tab_menu tm 
 		ON trm.menu_id = tm.id	AND	tm.code=#{code} AND trm.role_id=#{rid}
 	</select>
+
+    <select id="getRolesWithStatusForPermission" resultType="CamelbakKeyResultMap">
+        SELECT tr.*,
+         CASE WHEN trp.role_id IS NULL THEN FALSE ELSE TRUE END AS checked
+        FROM tab_role tr
+        LEFT JOIN tab_role_permission trp
+        ON tr.id = trp.role_id
+        WHERE
+            <if test="rid==null">tr.parent_id is null</if>
+            <if test="rid!=null">tr.parent_id=#{rid} </if>
+        AND trp.permission = #{piid}
+    </select>
 </mapper>

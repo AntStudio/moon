@@ -74,6 +74,9 @@ public class MenuAction extends BaseAction {
 	@Get("/getAssignMenuData")
 	@ResponseBody
 	public WebResponse getAssignMenuData(@RequestParam("pid") Long parentMenuId, @RequestParam("rid") Long rid) {
+        if(Objects.isNull(parentMenuId)||parentMenuId<1){
+            parentMenuId = null;
+        }
 		return WebResponse.build().setResult(menuService.getMenusWithStatus(parentMenuId, rid));
 	}
 
