@@ -37,9 +37,9 @@
         FROM tab_role tr
         LEFT JOIN tab_role_permission trp
         ON tr.id = trp.role_id
+        AND trp.permission_id = #{pid}
         WHERE
             <if test="rid==null">tr.parent_id is null</if>
             <if test="rid!=null">tr.parent_id=#{rid} </if>
-        AND trp.permission = #{piid}
     </select>
 </mapper>

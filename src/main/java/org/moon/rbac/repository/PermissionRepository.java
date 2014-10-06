@@ -18,16 +18,12 @@ import java.util.Map;
 @Repository
 public interface PermissionRepository extends BaseRepository<Permission>{
 
-	
-	
 	public void batchSave(@Param("permissions")List<Permission> permissions);
 	
 	public void assignAddPermission(@Param("pids")Long[] pids,@Param("rids")Long[] rids);
-	
+
 	public void assignDeletePermission(@Param("pids")Long[]  pids,@Param("rids")Long[] rids);
-	
-	public List<Long> getPermissionsByRole(@Param("rid")Long rid);
-	
-	public Integer getPermissionsByRole_count(Map<String,Object> paramsMap);
-	
+
+	public List<Map> getPermissionsByRole(@Param("rid")Long rid);
+
 }

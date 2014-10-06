@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.moon.rbac.repository.PermissionRepository">
+
   <insert id="batchSave">
     insert tab_permission (code,name) values
     <foreach collection="permissions" separator="," item="permission">( #{permission.code},#{permission.name})</foreach>
   </insert>
-  <select id="getPermissions" resultType="Long">
-    select id from tab_permission
-    <if test="orderBy">order by ${orderBy}</if>
-    limit ${curcount},${ps}
-  </select>
-  <select id="getPermission_count" resultType="Integer">select count(*) from tab_permission</select>
-  
+
   <insert id="assignAddPermission">
     insert tab_role_permission values
     <foreach collection="rids" item="rid" separator=",">
@@ -28,8 +23,13 @@
     <foreach collection="pids" item="pid" open="," separator=",">#{pid}</foreach>
     )
   </delete>
-  <select id="getPermissionsByRole" resultType="Long">
-    select permission_id from tab_role_permission where role_id = #{rid}
+
+  <select id="getPermissionsByRole" resultType="CamelbakKeyResultMap">
+    SELECT tp.*
+    FROM tab_permission tp
+    JOIN tab_role_permission trp
+    ON tp.id = trp.permission_id
+    AND trp.role_id = #{rid}
   </select>
-  <select id="getPermissionsByRole_count" resultType="Integer">select count(*) from tab_permission</select>
+
 </mapper>
