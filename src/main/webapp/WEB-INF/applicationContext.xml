@@ -54,7 +54,8 @@
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="configLocation" value="/WEB-INF/config/Mybatis-Configuration.xml"/>
 		<property name="dataSource" ref="proxoolDataSource" />
-		<property name="mapperLocations" value="classpath*:/org/**/mapper/*.xml" /><!-- @see http://mybatis.github.io/spring/zh/factorybean.html -->
+		<property name="mapperLocations" value="classpath*:/org/moon/**/mapper/*Mapper.xml" /><!-- @see http://mybatis.github.io/spring/zh/factorybean.html -->
+        <!-- 如果扫描classpath*:/org/**/mapper/*.xml,则会扫描tomcat的catalina.jar下的xml文件，会报错（tomcat 8版本之前无匹配的xml，因此不会报错） -->
 	</bean>
 
 	<!-- cacheManager 需要 -->

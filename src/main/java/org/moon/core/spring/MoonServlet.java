@@ -91,7 +91,7 @@ public class MoonServlet extends DispatcherServlet{
 	private void saveDBSettings(HttpServletRequest request){
 		try {
 			Map<String,String> params = new HashMap<String, String>();
-			Map<String,Object> originMap = request.getParameterMap();
+			Map<String,String[]> originMap = request.getParameterMap();
 			for(String key:originMap.keySet()){
 				params.put(key, request.getParameter(key));
 			}
