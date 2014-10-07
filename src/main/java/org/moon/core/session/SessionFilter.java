@@ -1,4 +1,4 @@
-package org.moon.support.session;
+package org.moon.core.session;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;

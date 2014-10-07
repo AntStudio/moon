@@ -1,4 +1,4 @@
-package org.moon.support.spring;
+package org.moon.core.spring;
 
 
 import org.moon.rbac.domain.User;

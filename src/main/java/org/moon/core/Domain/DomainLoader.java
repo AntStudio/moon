@@ -7,7 +7,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 领域加载器
+ * 领域加载器,使用时需要先注册领域的加载器,为<code>BaseService</code>的实现类,
+ * 然后再调用{@link #load(Class, Long)}方法加载领域。
  * @author Gavin
  * @date 2014年7月5日 下午12:43:53
  */

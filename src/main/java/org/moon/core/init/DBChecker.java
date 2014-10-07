@@ -1,4 +1,4 @@
-package org.moon.base.init;
+package org.moon.core.init;
 
 import org.moon.core.spring.MoonContextListener;
 import org.moon.core.spring.MoonServlet;

@@ -13,8 +13,8 @@
 	<!-- 启动注解驱动的Spring MVC功能，注册请求url和注解POJO类方法的映射 -->
   	<mvc:annotation-driven >
 	  	<mvc:argument-resolvers>
-	        <bean class="org.moon.support.spring.FormMethodArgumentResolver"/>
-	         <bean class="org.moon.support.spring.WebUserArgumentResolver"/>
+	        <bean class="org.moon.core.spring.FormMethodArgumentResolver"/>
+	         <bean class="org.moon.core.spring.WebUserArgumentResolver"/>
 	    </mvc:argument-resolvers>
 	</mvc:annotation-driven>  
 	<!-- 
@@ -26,7 +26,7 @@
 	<!-- 开启rest 注解 -->
 	<bean class="org.moon.rest.handler.RestAnnotationHandler"/>	
 	
-	<bean class="org.moon.base.init.TableCreator"/>
+	<bean class="org.moon.core.init.TableCreator"/>
 	<bean class="org.moon.rbac.domain.init.Initializer"/> 
 	<bean class="org.moon.rbac.domain.init.DomainAnnotationScanner"/>
 	
@@ -47,12 +47,12 @@
 	  <property name="optimize" value="true"></property>
 	  <property name="frozen" value="true"></property>
 	</bean>
- 	<bean id="autoProxyCreator" class="org.moon.support.spring.AutoProxyCreator">
+ 	<bean id="autoProxyCreator" class="org.moon.core.spring.AutoProxyCreator">
 	   <property name="optimize" value="true"></property>
 	   <property name="frozen" value="true"></property>
 	</bean> 
 <context:component-scan base-package="com.reeham" />
 <context:component-scan base-package="org.moon" use-default-filters="true" >
-<context:include-filter type="custom" expression="org.moon.support.spring.DomainTypeFilter"/>
+<context:include-filter type="custom" expression="org.moon.core.spring.DomainTypeFilter"/>
 </context:component-scan>
 </beans>

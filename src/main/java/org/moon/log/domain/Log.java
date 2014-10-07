@@ -4,7 +4,7 @@ import com.reeham.component.ddd.annotation.Model;
 import org.moon.base.domain.BaseDomain;
 import org.moon.core.annotation.NoLogicDeleteSupport;
 import org.moon.core.orm.mybatis.annotation.IgnoreNull;
-import org.moon.support.session.SessionContext;
+import org.moon.core.session.SessionContext;
 import org.moon.utils.Constants;
 
 import javax.persistence.Table;

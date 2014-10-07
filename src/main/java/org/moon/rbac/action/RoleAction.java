@@ -12,7 +12,7 @@ import org.moon.rbac.service.RoleService;
 import org.moon.rbac.service.UserService;
 import org.moon.rest.annotation.Get;
 import org.moon.rest.annotation.Post;
-import org.moon.support.spring.annotation.FormParam;
+import org.moon.core.spring.annotation.FormParam;
 import org.moon.utils.Objects;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

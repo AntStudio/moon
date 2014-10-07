@@ -1,4 +1,4 @@
-package org.moon.base.init;
+package org.moon.core.init;
 
 import org.apache.log4j.Logger;
 import org.moon.db.manager.DBManager;

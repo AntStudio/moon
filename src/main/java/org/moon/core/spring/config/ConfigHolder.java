@@ -1,4 +1,4 @@
-package org.moon.support.spring.config;
+package org.moon.core.spring.config;
 
 import org.moon.utils.PropertiesUtils;
 import org.springframework.stereotype.Component;

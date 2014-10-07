@@ -1,4 +1,4 @@
-package org.moon.support.spring;
+package org.moon.core.spring;
 
 import org.springframework.aop.TargetSource;
 import org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator;

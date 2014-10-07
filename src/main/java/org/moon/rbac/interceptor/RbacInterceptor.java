@@ -13,7 +13,7 @@ import org.moon.rbac.domain.annotation.LoginRequired;
 import org.moon.rbac.domain.annotation.MenuMapping;
 import org.moon.rbac.domain.annotation.PermissionMapping;
 import org.moon.rbac.service.UserService;
-import org.moon.support.session.SessionContext;
+import org.moon.core.session.SessionContext;
 import org.moon.utils.Constants;
 import org.moon.utils.Strings;
 import org.springframework.stereotype.Component;

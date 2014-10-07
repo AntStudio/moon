@@ -1,4 +1,4 @@
-package org.moon.base.init.repository;
+package org.moon.core.init.repository;
 
 import org.springframework.stereotype.Repository;
 

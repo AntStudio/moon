@@ -1,4 +1,4 @@
-package org.moon.support.spring.annotation;
+package org.moon.core.spring.annotation;
 
 import java.lang.annotation.*;
 

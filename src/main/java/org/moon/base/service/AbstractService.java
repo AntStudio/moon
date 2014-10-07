@@ -12,7 +12,7 @@ import org.moon.core.orm.mybatis.DataConverter;
 import org.moon.core.orm.mybatis.criterion.Restrictions;
 import org.moon.exception.ApplicationRunTimeException;
 import org.moon.pagination.Pager;
-import org.moon.support.spring.config.annotation.Config;
+import org.moon.core.spring.config.annotation.Config;
 import org.moon.utils.*;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.slf4j.Logger;

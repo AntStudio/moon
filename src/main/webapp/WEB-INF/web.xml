@@ -51,7 +51,7 @@
 	<!-- Session上下文设置 -->
 	<filter>
 		<filter-name>sessionFilter</filter-name>
-		<filter-class>org.moon.support.session.SessionFilter</filter-class>
+		<filter-class>org.moon.core.session.SessionFilter</filter-class>
 	</filter>
 	
 	<filter-mapping>

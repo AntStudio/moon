@@ -7,7 +7,7 @@ import org.moon.message.WebResponse;
 import org.moon.rbac.domain.annotation.MenuMapping;
 import org.moon.rest.annotation.Get;
 import org.moon.rest.annotation.Post;
-import org.moon.support.spring.annotation.FormParam;
+import org.moon.core.spring.annotation.FormParam;
 import org.moon.utils.ParamUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

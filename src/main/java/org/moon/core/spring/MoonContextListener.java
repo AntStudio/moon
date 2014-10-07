@@ -1,6 +1,6 @@
 package org.moon.core.spring;
 
-import org.moon.base.init.DBChecker;
+import org.moon.core.init.DBChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.ContextLoaderListener;

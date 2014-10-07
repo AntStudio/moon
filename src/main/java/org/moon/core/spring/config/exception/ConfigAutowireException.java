@@ -1,4 +1,4 @@
-package org.moon.support.spring.config.exception;
+package org.moon.core.spring.config.exception;
 
 import org.springframework.beans.BeansException;
 
