@@ -1,0 +1,62 @@
+
+.DBMaintence{
+    padding: 5px;
+}
+
+.DBMaintence .db-info{
+    margin: 5px 0px;
+}
+.DBMaintence .item{
+    display: inline-block;
+    font-size: 20px;
+    margin-left: 20px;
+}
+
+.DBMaintence .table-content{
+    float: left;
+    position: absolute;
+    top: 50px;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    overflow: auto;
+    border-top: solid 1px #BBD3B0;
+}
+
+.DBMaintence .table-name-title{
+    width: 100%;
+    display: inline-block;
+    color: #4AA0E4;
+    font-size: 20px;
+    text-align: center;
+    padding: 9px 0px;
+}
+.DBMaintence .table-name-list{
+    display: inline-block;
+    width: 220px;
+    height: 100%;
+    float: left;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    overflow: auto;
+}
+
+.DBMaintence .columns{
+    width: auto;
+    margin-left: 221px;
+    position: absolute;
+    right: 5px;
+    left: 1px;
+    bottom: 0;
+    overflow: auto;
+    top: 0;
+}
+
+.DBMaintence .loading{
+    text-align: center;
+}
+
+.DBMaintence .clicked{
+    background-color: #eee;
+}

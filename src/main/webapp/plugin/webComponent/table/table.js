@@ -604,7 +604,7 @@
 			tableInstance = _table.newInstance();
 			tableInstance.opts=$.extend({},defaults,opts);
 			tableInstance.$container = $(this);
-
+            $(this).empty();
 			return methods.renderTable.call(tableInstance);
 		}
 	};

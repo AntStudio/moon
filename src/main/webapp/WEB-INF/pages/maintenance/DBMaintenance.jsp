@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<m:require src="jquery,noty,common,bootstrap,font"></m:require>
+<m:require src="jquery,noty,common,bootstrap,font,table,{maintenance/DBMaintenance}"></m:require>
 <title>Moon数据库维护</title>
 <script type="text/javascript">
 	$(function(){
@@ -30,12 +30,35 @@
 </style>
 </head>
 <body>
-	 <div class="container">
-	 	<div class="db-init">
-	 		<input type="button" class="btn btn-danger init-db" value="初始化数据库">
-	 		<i class="loading hide"></i>
-	 		<span class="alert">注意:此操作会清空已有数据</span>
-	 	</div>
+	 <div class="DBMaintence">
+        <div class="db-info">
+            <div class="item">
+                数据库类型：
+                <span class="db-type">${dbInfo.name}</span>
+            </div>
+            <div class="item">
+                版本：
+                <span class="db-version">${dbInfo.version}</span>
+            </div>
+            <div class="item db-init">
+                <input type="button" class="btn btn-danger init-db" value="初始化数据库">
+                <i class="loading hide"></i>
+                <span class="alert">注意:此操作会清空已有数据</span>
+            </div>
+        </div>
+        <div class="table-content">
+            <div class="table-name-list">
+                <span class="table-name-title">数据表</span>
+                <ul class="nav nav-tabs nav-stacked">
+                    <li class="loading"><i class="fa fa-spinner fa-spin"></i></li>
+                </ul>
+            </div>
+            <div class="columns">
+
+            </div>
+        </div>
+
+
 	 </div>
 </body>
 </html>

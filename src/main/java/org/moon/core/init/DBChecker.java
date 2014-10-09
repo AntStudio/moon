@@ -54,6 +54,7 @@ public class DBChecker {
 			status = NORMAL;
 		}catch (Exception e){
 			logger.error("The DataBase can't connected. "+e.getMessage());
+            e.printStackTrace();
 			status = EXCEPTION;
 			return;
 		}

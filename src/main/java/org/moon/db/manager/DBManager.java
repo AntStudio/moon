@@ -4,6 +4,7 @@ import com.reeham.component.ddd.model.CachingModelContainer;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.moon.db.manager.repository.DBManagerRepository;
+import org.moon.exception.ApplicationRunTimeException;
 import org.moon.rbac.domain.Menu;
 import org.moon.rbac.domain.init.helper.MenuMappingHelper;
 import org.moon.rbac.domain.init.helper.PermissionMappingHelper;
@@ -17,8 +18,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.List;
+import java.net.URL;
+import java.sql.*;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 数据库管理类
@@ -121,14 +125,126 @@ public class DBManager {
             }
             session.commit();
         } catch (Exception e) {
-            e.printStackTrace();
             if (session != null) {
                 session.rollback();
             }
+            throw new ApplicationRunTimeException(e);
         } finally {
             if (session != null) {
                 session.close();
             }
         }
     }
+
+    /**
+     * 获取数据表
+     * @return
+     */
+    public List<Map> listTables(){
+        Connection connection = null;
+        try {
+            List<Map> tables = new ArrayList<Map>();
+            connection = sqlSessionFactoryBean.getObject().openSession().getConnection();
+            DatabaseMetaData metaData = connection.getMetaData();
+            String databaseName = getDatabaseName(metaData);
+            ResultSet tableResultSet = metaData.getTables(databaseName, null, null, null);
+            while(tableResultSet.next()) {
+                if("TABLE".equals(tableResultSet.getString("TABLE_TYPE"))) {
+                    tables.add(Maps.mapIt("tableName",tableResultSet.getString("TABLE_NAME"),
+                                          "catalogName",tableResultSet.getString("TABLE_CAT"),
+                                          "schemaName",tableResultSet.getString("TABLE_SCHEM")));
+                }
+            }
+            return tables;
+        } catch (Exception e) {
+           throw new ApplicationRunTimeException(e);
+        }finally {
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    throw new ApplicationRunTimeException(e);
+                }
+            }
+        }
+    }
+
+    /**
+     * 获取数据库信息，数据库类型和版本号
+     * @return
+     */
+    public  Map<String,String> getDbInfo(){
+        Map<String,String> dbInfo = new HashMap<String, String>();
+        Connection connection = null;
+        try {
+            connection = sqlSessionFactoryBean.getObject().openSession().getConnection();
+            DatabaseMetaData metaData = connection.getMetaData();
+            dbInfo.put("name",metaData.getDatabaseProductName());
+            dbInfo.put("version",metaData.getDatabaseProductVersion());
+        } catch (Exception e) {
+            throw new ApplicationRunTimeException(e);
+        }finally {
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    throw new ApplicationRunTimeException(e);
+                }
+            }
+        }
+        return dbInfo;
+    }
+
+
+    public List<Map> getTableDetails(String tableName){
+        List<Map> columns = new ArrayList<Map>();
+        Connection connection = null;
+        try {
+            connection = sqlSessionFactoryBean.getObject().openSession().getConnection();
+            DatabaseMetaData metaData = connection.getMetaData();
+            String databaseName = getDatabaseName(metaData);
+            ResultSet columnResultSet = metaData.getColumns(databaseName,null,tableName,null);
+            while(columnResultSet.next()) {
+                columns.add(Maps.mapIt(     "name" , columnResultSet.getString("COLUMN_NAME"),
+                                            "type" , columnResultSet.getString("TYPE_NAME"),
+                                            "size" , columnResultSet.getString("COLUMN_SIZE"),
+                                        "nullable" , columnResultSet.getString("IS_NULLABLE"),
+                                   "autoIncrement" , columnResultSet.getString("IS_AUTOINCREMENT"),
+                                         "remarks" , columnResultSet.getString("REMARKS"),
+                                "columnDefinition" , columnResultSet.getString("COLUMN_DEF")));
+            }
+            return columns;
+        } catch (Exception e) {
+            throw new ApplicationRunTimeException(e);
+        }finally {
+            if(connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    throw new ApplicationRunTimeException(e);
+                }
+            }
+        }
+    }
+
+    /**
+     * 获取数据库名称
+     * @param metaData
+     * @return
+     */
+    public String getDatabaseName(DatabaseMetaData metaData){
+        try {
+            String databaseName = "";
+            String url = metaData.getURL();
+            Pattern pattern = Pattern.compile("^.*/([\\w_\\d^\\.]+)(\\\\?.*)?$");
+            Matcher matcher = pattern.matcher(url);
+            if (matcher.find()) {
+                databaseName = matcher.group(1);
+            }
+            return databaseName;
+        }catch (Exception e){
+            throw new ApplicationRunTimeException(e);
+        }
+    }
+
 }
