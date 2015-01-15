@@ -30,5 +30,8 @@ public class MD5 {
         }
         return "";
     }
-    
+
+    public static String getCryptographicPassword(String password){
+        return getMD5(password+"Moon");
+    }
 }

@@ -1,6 +1,6 @@
 package org.moon.rbac.service;
 
-import org.moon.base.service.BaseService;
+import org.moon.base.service.BaseDomainService;
 import org.moon.rbac.domain.Permission;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.Map;
  * @version 1.0
  * @date 2012-12-14
  */
-public interface PermissionService extends BaseService<Permission>{
+public interface PermissionService extends BaseDomainService<Permission> {
 
 	/**
 	 * 批量添加权限信息
@@ -26,7 +26,7 @@ public interface PermissionService extends BaseService<Permission>{
 	 * @param pids
 	 * @param rid
 	 */
-	public void assignPermission(Long[] pids,Boolean[] status,Long[] rids);
+	public void assignPermission(Long[] pids, Boolean[] status, Long[] rids);
 	
 	/**
 	 * 获取权限信息，用于系统启动时添加处理权限信息，返回形式：{code-->permission}

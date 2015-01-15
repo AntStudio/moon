@@ -16,9 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * {@link MoonServlet} 将Spring的{@link DispatcherServlet}进行了
+ * {@link org.moon.core.spring.MoonServlet} 将Spring的{@link org.springframework.web.servlet.DispatcherServlet}进行了
  * <p>简单的包装，增添了一层数据库的检测.
- * <p>使用时，需要用{@link MoonServlet}代替{@link DispatcherServlet}在web.xml中的配置,如：
+ * <p>使用时，需要用{@link org.moon.core.spring.MoonServlet}代替{@link org.springframework.web.servlet.DispatcherServlet}在web.xml中的配置,如：
  * <code>
  * <pre>
  * &lt;servlet&gt;
@@ -77,7 +77,7 @@ public class MoonServlet extends DispatcherServlet{
 	
 	/**
 	 * 初始化Spring Servlet
-	 * @throws ServletException
+	 * @throws javax.servlet.ServletException
 	 */
 	private void initSpring() throws ServletException{
 		new MoonContextListener().initWebApplicationContext(config.getServletContext());

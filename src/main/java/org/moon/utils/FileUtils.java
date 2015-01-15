@@ -1,9 +1,9 @@
 package org.moon.utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import org.moon.exception.ApplicationRunTimeException;
+
+import java.io.*;
+import java.net.URL;
 
 /**
  * 文件工具类
@@ -17,7 +17,7 @@ public class FileUtils {
 	 * 保存文件
 	 * @param in
 	 * @param path
-	 * @throws IOException 
+	 * @throws java.io.IOException
 	 */
 	public static void save(InputStream in,File file) throws IOException{
 		if(!file.exists()){
@@ -33,7 +33,7 @@ public class FileUtils {
 		out.close();
 		in.close();
 	}
-	
+
 	/**
 	 * 获取文件后缀名
 	 * @param file
@@ -47,7 +47,7 @@ public class FileUtils {
 		}
 		return "";
 	}
-	
+
 	/**
 	 * 获取文件前缀名
 	 * @param file
@@ -61,7 +61,7 @@ public class FileUtils {
 		}
 		return "";
 	}
-	
+
 	/**
 	 * 获取不存在的文件名，以文件所在路径为父目录。如果存在则累加数字。
 	 * <p>如：文件名为mypic.png,如果此时文件夹里已经存在同名文件，那么去获取mypic(1).png是否存在，如果存在则继续累加判断，否则返回</p>
@@ -84,13 +84,13 @@ public class FileUtils {
 		}
 		return file;
 	}
-	
+
 	/**
 	 * 创建文件,如果有依赖的父目录不存在，也会自动创建.
 	 * @param path
 	 * @param dir
 	 * @return
-	 * @throws IOException
+	 * @throws java.io.IOException
 	 */
 	public static File createIfNotExists(String path,boolean dir) throws IOException{
 		File file = new File(path);
@@ -104,5 +104,40 @@ public class FileUtils {
 		}
 		return file;
 	}
-	
+
+    /**
+     * 将输入流数据写入输出流
+     * @param in
+     * @param out
+     * @throws java.io.IOException
+     */
+    public static void write(InputStream in,OutputStream out) throws IOException {
+        try {
+            byte[] data = new byte[10240];
+            int length = 0;
+            while ((length = in.read(data)) > -1) {
+                out.write(data, 0, length);
+            }
+        }finally {
+            in.close();
+            out.close();
+        }
+
+    }
+
+    /**
+     * 加载资源文件
+     * @param filePath
+     * @return
+     */
+    public static InputStream loadFile(String filePath){
+        if(!filePath.startsWith("/")){
+            filePath="/"+filePath;
+        }
+        URL url = FileUtils.class.getResource(filePath);
+        if(url == null){
+            throw new ApplicationRunTimeException(url+" can not found.");
+        }
+        return FileUtils.class.getResourceAsStream(filePath);
+    }
 }

@@ -6,19 +6,20 @@ import org.apache.ibatis.session.SqlSession;
 import org.moon.db.manager.repository.DBManagerRepository;
 import org.moon.exception.ApplicationRunTimeException;
 import org.moon.rbac.domain.Menu;
-import org.moon.rbac.domain.init.helper.MenuMappingHelper;
-import org.moon.rbac.domain.init.helper.PermissionMappingHelper;
+import org.moon.core.init.helper.MenuMappingHelper;
+import org.moon.core.init.helper.PermissionMappingHelper;
 import org.moon.rbac.service.MenuService;
 import org.moon.rbac.service.PermissionService;
 import org.moon.utils.Maps;
 import org.moon.utils.Resources;
 import org.moon.utils.Strings;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.net.URL;
 import java.sql.*;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -46,6 +47,7 @@ public class DBManager {
     @Resource
     private SqlSessionFactoryBean sqlSessionFactoryBean;
 
+    private Logger log = LoggerFactory.getLogger(DBManager.class);
     /**
      * 删除数据表,目前只适用于mysql
      * @param tables
@@ -114,6 +116,7 @@ public class DBManager {
             	if(StringUtils.isEmpty(StringUtils.trimWhitespace(sql))){
             		continue;
             	}
+                log.debug("prepare to execute {}",sql);
                 session.update(
                         "org.moon.db.manager.repository.DBManagerRepository.excuteUpdate",
                         Maps.mapIt("sql", sql));
@@ -125,6 +128,7 @@ public class DBManager {
             }
             session.commit();
         } catch (Exception e) {
+            e.printStackTrace();
             if (session != null) {
                 session.rollback();
             }

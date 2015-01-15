@@ -14,7 +14,7 @@ $(function(){
 	var template =  '<div class="imgContainer" data-id="{0}"><div class="content">'
 					+'<i class="fa fa-minus-circle"></i><img src="{1}">'
 					+'<div class="progress">'
-					+'<div class="bar bar-success"></div>'
+					+'<div class="progress-bar progress-bar-info"></div>'
 					+'</div></div>'
 					+'</div>' ;
 	var uploader = moon.webuploader({
@@ -31,22 +31,25 @@ $(function(){
 		 uploadButton:"#upload",
 		 pick:"#picker",
 		 uploadProgress:function(file,percentage){
-			 $("[data-id='"+file.id+"'] .bar").css({
+			 var $bar = $("[data-id='"+file.id+"'] .progress-bar").css({
 				 width:percentage*100+"%"
 			 });
+             if(percentage == 1){
+                 $bar.removeClass("progress-bar-info").addClass("progress-bar-success");
+             }
 		 },
 		 uploadAccept:function(o,ret){
 			 var id = o.file.id;
 			 if(ret.failure.length==1){//上传失败
-				 $("[data-id='"+id+"'] .bar").removeClass("bar-success")
-				                             .addClass("bar-danger")
+				 $("[data-id='"+id+"'] .progress-bar").removeClass("progress-bar-success")
+				                             .addClass("progress-bar-danger")
 				                             .html(ret.failure[0].errorMsg);
 			 }
 		 }
 	});
 	
-	$(".imgContainer i").live("click",function(){
-		var $div = $(this).closest(".imgContainer");
+	$(document).on("click","i",function(e){
+		var $div = $(e.target).closest(".imgContainer");
 		uploader.removeFile($div.attr("data-id"));
 		$div.remove();
 	});

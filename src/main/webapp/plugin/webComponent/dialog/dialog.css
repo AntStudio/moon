@@ -1,0 +1,99 @@
+.modal .modal-full{
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+}
+
+.modal .modal-full .modal-content{
+    height: 100%;
+}
+
+.modal .modal-full .modal-footer{
+    position: absolute;
+    right: 0;
+    width: 100%;
+    bottom: 10px;
+}
+
+.modal .iframe-content{
+    width: 100%;
+    height: 100%;
+}
+
+/*弹出框右侧弹出样式*/
+.modal-right .modal-dialog{
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: 0;
+}
+
+.modal-right .modal-dialog .modal-content{
+    height: 100%;
+    border-radius: 0;
+    overflow: auto;
+}
+
+.modal.fade.modal-right .modal-dialog {
+    -webkit-transition: -webkit-transform .3s ease-out;
+    -o-transition: -o-transform .3s ease-out;
+    transition: transform .3s ease-out;
+    -webkit-transform: translate(100%,0);
+    -ms-transform: translate(100%,0);
+    -o-transform: translate(100%,0);
+    transform: translate(100%,0);
+}
+
+
+/*动画效果*/
+.modal.in.modal-right .modal-dialog{
+    -webkit-transform: translate(0,0);
+    -ms-transform: translate(0,0);
+    -o-transform: translate(0,0);
+    transform: translate(0,0);
+}
+
+.modal-right .modal-backdrop.in {
+    filter: alpha(opacity=10);
+    opacity: 0.1;
+}
+
+
+/*弹出框左侧弹出样式*/
+.modal-left .modal-dialog{
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    margin: 0;
+}
+
+.modal-left .modal-dialog .modal-content{
+    height: 100%;
+    border-radius: 0;
+    overflow: auto;
+}
+
+.modal.fade.modal-left .modal-dialog {
+    -webkit-transition: -webkit-transform .3s ease-out;
+    -o-transition: -o-transform .3s ease-out;
+    transition: transform .3s ease-out;
+    -webkit-transform: translate(-100%,0);
+    -ms-transform: translate(-100%,0);
+    -o-transform: translate(-100%,0);
+    transform: translate(-100%,0);
+}
+
+/*动画效果*/
+.modal.in.modal-left .modal-dialog{
+    -webkit-transform: translate(0,0);
+    -ms-transform: translate(0,0);
+    -o-transform: translate(0,0);
+    transform: translate(0,0);
+}
+
+.modal-left .modal-backdrop.in {
+    filter: alpha(opacity=10);
+    opacity: 0.1;
+}

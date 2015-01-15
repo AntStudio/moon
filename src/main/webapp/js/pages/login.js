@@ -1,6 +1,6 @@
 $(function(){
 	//登录页面欢迎信息
-	moon.info("Welcome to Moon!","top");
+	moon.info("欢迎来到Moon!","top");
 	
 	//登录动作
 	$("#submit").click(function(){
@@ -22,7 +22,13 @@ $(function(){
 			}
 		});
 	});
-	
+
+    //回车登录事件
+    $("#loginForm :input").on("keyup",function(e){
+        if(e.keyCode == 13){
+            $("#submit").trigger("click");
+        }
+    });
 	//页面动画
 	$(".form-container").animate({
 		"margin-top":"-120px"

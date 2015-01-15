@@ -20,7 +20,9 @@ public class Dictionary extends BaseDomain{
 	
 	private String name;
 	
-	private int parentId;
+	private Long parentId;
+
+    private boolean isFinal;//是否是不允许修改的
 
 	/******************** getter/setter ********************/
 	public String getCode() {
@@ -39,13 +41,22 @@ public class Dictionary extends BaseDomain{
 		this.name = name;
 	}
 
-	public int getParentId() {
+	public Long getParentId() {
 		return parentId;
 	}
 
-	public void setParentId(int parentId) {
+	public void setParentId(Long parentId) {
 		this.parentId = parentId;
 	}
-	/******************** /getter/setter ********************/
+
+    public boolean isIfFinal() {
+        return isFinal;
+    }
+
+    public void setIfFinal(boolean isFinal) {
+        this.isFinal = isFinal;
+    }
+
+    /******************** /getter/setter ********************/
 	
 }

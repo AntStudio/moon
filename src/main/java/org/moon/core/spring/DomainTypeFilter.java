@@ -1,8 +1,8 @@
 package org.moon.core.spring;
 
 import org.moon.rbac.domain.Menu;
-import org.moon.rbac.domain.init.helper.MenuMappingHelper;
-import org.moon.rbac.domain.init.loader.MenuLoader;
+import org.moon.core.init.helper.MenuMappingHelper;
+import org.moon.core.init.loader.MenuLoader;
 import org.springframework.core.type.ClassMetadata;
 import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;

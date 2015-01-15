@@ -5,30 +5,30 @@
 		select tm.*
         from tab_role_menu trm
         join tab_menu tm
-        on trm.menu_id = tm.id
-        where role_id=#{rid}
-		<if test="pid==null">and parent_id is null</if>
-		<if test="pid!=null">and parent_id=#{pid}</if>
+        on trm.menuId = tm.id
+        where roleId=#{rid}
+		<if test="pid==null">and tm.parentId is null and tm.parentCode is null</if>
+		<if test="pid!=null">and tm.parentId=#{pid}</if>
 	</select>
 
     <select id="getSubMenus" resultType="CamelbakKeyResultMap">
         select *
         from tab_menu
         where
-        <if test="pid==null">parent_id is null and parent_code is null</if>
-        <if test="pid!=null">parent_id=#{pid} or parent_code =(select code from tab_menu where id=#{pid})</if>
-        order by menu_order,code asc
+        <if test="pid==null">parentId is null and parentCode is null</if>
+        <if test="pid!=null">parentId=#{pid} or parentCode =(select code from tab_menu where id=#{pid})</if>
+        order by menuOrder,code asc
     </select>
 
     <select id="getMenusWithStatus" resultType="CamelbakKeyResultMap">
         SELECT  tm.*,
-        CASE WHEN trm.role_id IS NULL THEN FALSE ELSE TRUE END AS checked
+        CASE WHEN trm.roleId IS NULL THEN FALSE ELSE TRUE END AS checked
         FROM tab_menu tm
         LEFT JOIN tab_role_menu trm
-        ON tm.id = trm.menu_id AND trm.role_id = #{rid}
+        ON tm.id = trm.menuId AND trm.roleId = #{rid}
         WHERE
-        <if test="pid==null">tm.parent_id is null and tm.parent_code is null</if>
-        <if test="pid!=null">tm.parent_id=#{pid} or tm.parent_code =(select code from tab_menu where id=#{pid})</if>
+        <if test="pid==null">tm.parentId is null and tm.parentCode is null</if>
+        <if test="pid!=null">tm.parentId=#{pid} or tm.parentCode =(select code from tab_menu where id=#{pid})</if>
     </select>
 
 	<select id="getByCode" resultType="Long">
@@ -42,29 +42,31 @@
 		<foreach collection="menus" item="menu" separator=",">(#{rid},#{
 			menu.id},#{menu.parentId})</foreach>
 	</insert>
+
 	<delete id="removeMenusFromRole">
 		delete from tab_role_menu where menu_id in (-1
 		<foreach collection="menus" item="menu" open="," separator=",">#{menu.id}
 		</foreach>
-		) and role_id=#{rid}
-
+		) and roleId=#{rid}
 	</delete>
 
 	<select id="getAllMenus" resultType="Long">
 		select id from tab_menu
 		<if test="system==null"></if>
 		<if test="system==true">where code is not null</if>
-		<if test="system==false">where code is null and delete_flag = #{deleteFlag}</if>
-		order by menu_order asc;
+		<if test="system==false">where code is null and deleteFlag = #{deleteFlag}</if>
+		order by menuOrder asc;
 	</select>
+
 	<insert id="addMenus">
 		insert into
-		tab_menu(menu_name,url,parent_id,delete_flag,create_by,code,parent_code)
+		tab_menu(menuName,url,parentId,deleteFlag,createBy,code,parentCode)
 		values
 		<foreach collection="menus" separator="," index="index" item="menu">
             (#{menu.menuName},#{menu.url},#{menu.parentId},#{menu.deleteFlag},#{menu.createBy},#{menu.code},#{menu.parentCode})
 		</foreach>
 	</insert>
+
 	<delete id="deleteMenus" parameterType="org.moon.rbac.domain.Menu">
 		delete from tab_menu where id in(-1
 		<foreach collection="menus" open="," separator="," item="menu">
@@ -72,15 +74,24 @@
 		</foreach>
 		)
 	</delete>
+
 	<update id="sortMenu">
 		<foreach collection="childrenIds" index="index" item="id">
-		update tab_menu  set menu_order=#{index},parent_id=#{parentId},parent_code=#{parentCode} where id = #{id};
+		update tab_menu  set menuOrder=#{index},parentId=#{parentId},parentCode=#{parentCode} where id = #{id};
 		</foreach>
 	</update>
 
+    <insert id="add">
+        <selectKey resultType="Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        insert into
+        tab_menu(menuName,url,parentId,deleteFlag,createBy,code,parentCode,isFinal)
+        values
+        (#{menuName},#{url},#{parentId},false,#{createBy},#{code},#{parentCode},true)
+    </insert>
+
 	<resultMap type="org.moon.rbac.domain.Menu" id="menuDomain">
-		<result column="menu_name" property="menuName" />
-		<result column="parent_id" property="parentId" />
-		<result column="parent_code" property="parentCode" />
+
 	</resultMap>
 </mapper>

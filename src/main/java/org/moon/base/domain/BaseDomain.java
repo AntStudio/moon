@@ -16,7 +16,7 @@ import java.io.Serializable;
  * <pre>id</pre>
  * 也包含了领域的公共方法，如：
  * <pre>save,update,delete</pre>
- * 一般的域模型都会继承于 {@link BaseDomain}
+ * 一般的域模型都会继承于 {@link org.moon.base.domain.BaseDomain}
  * @author Gavin
  * @version 1.0
  * @date 2012-11-27 
@@ -83,7 +83,7 @@ public class BaseDomain implements Serializable{
 	/******************** 领域方法  ********************/
 	
 	/**
-	 * 持久化领域,如果需要等待结果可使用 {@link DomainMessage#getResultEvent()}
+	 * 持久化领域,如果需要等待结果可使用 {@link com.reeham.component.ddd.message.DomainMessage#getResultEvent()}
 	 * @return
 	 */
 	public DomainMessage save(){
@@ -94,7 +94,7 @@ public class BaseDomain implements Serializable{
 	}
 	
 	/**
-     * 更新领域持久化数据,如果需要等待结果可使用 {@link DomainMessage#getResultEvent()}
+     * 更新领域持久化数据,如果需要等待结果可使用 {@link com.reeham.component.ddd.message.DomainMessage#getResultEvent()}
      * @return
      */
 	public DomainMessage update(){

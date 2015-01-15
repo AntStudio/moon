@@ -2,7 +2,7 @@ package org.moon.rbac.service.impl;
 
 import com.reeham.component.ddd.annotation.Introduce;
 import com.reeham.component.ddd.model.ModelUtils;
-import org.moon.base.service.AbstractService;
+import org.moon.base.service.AbstractDomainService;
 import org.moon.rbac.domain.User;
 import org.moon.rbac.repository.UserRepository;
 import org.moon.rbac.service.UserService;
@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Introduce("message")
 @Service
-public class UserServiceImpl extends AbstractService<User> implements UserService {
+public class UserServiceImpl extends AbstractDomainService<User> implements UserService {
 
     @Resource
     private UserRepository userRepository;

@@ -2,20 +2,37 @@
 	$(function() {
 		var table = $("#dictionaryTable").table({
 			url : contextPath + "/dictionary/list",
-			columns : [ {
-				name : "id"
-			}, {
-				name : "code",
-				display : "字典代码"
-			}, {
-				name : "name",
-				display : "字典名称"
-			} ],
+			columns : [{
+                            name : "name",
+                            display : "字典名称",
+                            render:function(rowData){
+                                if(rowData.isFinal){
+                                    return "<span class=\"final-dic\">"+rowData.name+"</span>";
+                                }else{
+                                    return rowData.name;
+                                }
+                            }
+                        },
+                        {
+                            name : "code",
+                            display : "字典代码"
+                        }
+            ],
 			formatData : function(data) {
 				return data.result;
 			},
+            childrenData:function($tr,columnData){
+                var $dfd = $.Deferred();
+                $.getJsonData(contextPath+"/dictionary/list",{parentId:columnData.id}).done(function(data){
+                    $dfd.resolve(data.result.items);
+                }).fail(function(){
+                    $dfd.reject();
+                });
+                return $dfd.promise();
+            },
 			title : "字典",
 			rowId : "id",
+            treeColumn:"name",
 			buttons : [ {
 				text : "增加字典项",
 				name : 'addBtn',
@@ -136,9 +153,17 @@
 			return;
 		}
 		var ids = new Array();
+        var containsFinal = false;//是否包含系统字典
 		$.each(selectRows, function(index, dic) {
 			ids.push(dic.id);
+            if(dic.isFinal){
+                containsFinal = true;
+            }
 		});
+        if(containsFinal){
+            moon.error("不能完成操作,删除记录中包含了系统字典");
+            return;
+        }
 		jQuery.ajaxSettings.traditional = true;
 		$.getJsonData(contextPath + "/dictionary/delete", {
 			ids : ids
@@ -157,6 +182,10 @@
 			return;
 		}
 		var editRow = selectRows[0];
+        if(editRow.isFinal){
+            moon.error("系统字典不能编辑");
+            return;
+        }
 		$("#dictionaryForm").dialog(
 				{
 					title : '编辑',

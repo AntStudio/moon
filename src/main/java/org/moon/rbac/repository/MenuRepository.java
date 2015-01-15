@@ -31,24 +31,26 @@ public interface MenuRepository extends BaseRepository<Menu>{
      * @param parentId
      * @return
      */
-    public List<Map> getSubMenus(@Param("pid")Long parentId);
+    public List<Map> getSubMenus(@Param("pid") Long parentId);
 
-	public Long getByCode(@Param("code")String code);
+	public Long getByCode(@Param("code") String code);
 
-    public List<Map> getMenusWithStatus(@Param("pid")Long parentMenuId, @Param("rid")Long rid);
+    public List<Map> getMenusWithStatus(@Param("pid") Long parentMenuId, @Param("rid") Long rid);
 
-	public void addMenusToRole(@Param("menus")List<Menu> menus,@Param("rid")Long rid);
+	public void addMenusToRole(@Param("menus") List<Menu> menus, @Param("rid") Long rid);
 	
-	public void removeMenusFromRole(@Param("menus")List<Menu> menus,@Param("rid")Long rid);
+	public void removeMenusFromRole(@Param("menus") List<Menu> menus, @Param("rid") Long rid);
 	
-	public List<Long> getAllMenus(@Param("system")Boolean system,@Param("deleteFlag")boolean deleteFlag);
+	public List<Long> getAllMenus(@Param("system") Boolean system, @Param("deleteFlag") boolean deleteFlag);
 	
-	public void addMenus(@Param("menus")List<Menu> menus);
+	public void addMenus(@Param("menus") List<Menu> menus);
 	
-	public void deleteMenus(@Param("menus")List<Menu> menus);
+	public void deleteMenus(@Param("menus") List<Menu> menus);
 	
-	public void update(@Param("menu")Menu menu);
+	public void update(@Param("menu") Menu menu);
 	
-	public void sortMenu(@Param("parentId")Long parentId,
-						 @Param("childrenIds")Long[] childrenIds,@Param("parentCode")String parentCode);
+	public void sortMenu(@Param("parentId") Long parentId,
+                         @Param("childrenIds") Long[] childrenIds, @Param("parentCode") String parentCode);
+
+    public void add(Map<String, Object> params);
 }

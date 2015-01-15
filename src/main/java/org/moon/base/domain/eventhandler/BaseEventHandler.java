@@ -5,7 +5,7 @@ import com.reeham.component.ddd.message.disruptor.consumer.ConsumerMethodHolder;
 import org.apache.log4j.Logger;
 import org.moon.base.domain.BaseDomain;
 import org.moon.base.repository.CommonRepository;
-import org.moon.base.service.BaseService;
+import org.moon.base.service.BaseDomainService;
 import org.moon.utils.Strings;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanNameAware;
@@ -25,7 +25,7 @@ import java.util.Map;
  * @author Gavin
  * @Date 2013-12-30
  */
-public abstract class BaseEventHandler<T extends BaseDomain,K extends BaseService<T>> implements ApplicationContextAware,BeanNameAware{
+public abstract class BaseEventHandler<T extends BaseDomain,K extends BaseDomainService<T>> implements ApplicationContextAware,BeanNameAware{
 
     @Resource
     private ConsumerLoader consumerLoader;

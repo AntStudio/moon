@@ -75,8 +75,12 @@ public class User extends BaseDomain{
 	 * the way of contact user,such as:email,mobile,telephone,or address
 	 */
 	private String contact;
-	
-	/**
+
+    private String phoneNumber;
+
+    private String avatar;
+
+    /**
 	 * 密码是否加密
 	 */
 	@Transient
@@ -117,8 +121,10 @@ public class User extends BaseDomain{
 		}else{
 			m.put("roleName", getRole().getRoleName());
 		}
-		m.put("password", password);
 		m.put("realName", realName);
+        m.put("phoneNumber",phoneNumber);
+        m.put("avatar",avatar);
+        m.put("sex",sex);
 		return m;
 	}
 	
@@ -282,5 +288,21 @@ public class User extends BaseDomain{
 	public void setCreateBy(Long createBy) {
 		this.createBy = createBy;
 	}
-	/******************** /setter/getter  ********************/
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+    /******************** /setter/getter  ********************/
 }

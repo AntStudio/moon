@@ -41,9 +41,8 @@
                 <span class="db-version">${dbInfo.version}</span>
             </div>
             <div class="item db-init">
-                <input type="button" class="btn btn-danger init-db" value="初始化数据库">
+                <input type="button" class="btn btn-danger init-db" value="初始化数据库" title="注意:此操作会清空已有数据">
                 <i class="loading hide"></i>
-                <span class="alert">注意:此操作会清空已有数据</span>
             </div>
         </div>
         <div class="table-content">

@@ -57,20 +57,19 @@ public class UserAction extends BaseAction{
 	 
 	/**
 	 * 登录验证
-	 * @param user
 	 * @return
 	 */
 	 @Post("/login/validate")
-	 public @ResponseBody WebResponse userValidate(@FormParam("user")User user,HttpServletRequest request){
-		 if(Objects.isNull(user)){
-			 return WebResponse.build().setSuccess(false);
-		 }
-		 String loginName = user.getUserName();
-		 String password = user.getPassword();
+	 public @ResponseBody WebResponse userValidate(@RequestParam("userName")String userName,
+                                                   @RequestParam("password")String password,
+                                                   HttpServletRequest request){
+		 User user = new User();
+         user.setUserName(userName);
+         user.setPassword(password);
 		 user.setId(null);//设置id为null，此后用id是否为空判断是否成功登录
 		 user = userService.login(user);
 		 if(Objects.isNull(user)||Objects.isNull(user.getId())){
-			new Log(loginName,-1L,"登录失败","{userName:"+loginName+",password:"+password+"}").save();
+			new Log(userName,-1L,"登录失败","{userName:"+userName+",password:"+password+"}").save();
 			return WebResponse.build().setSuccess(false);
 		 }else{
 			 request.getSession().setAttribute(User.CURRENT_USER_ID, user.getId());
@@ -81,26 +80,26 @@ public class UserAction extends BaseAction{
 	 
 
 	 @PermissionMapping(code="000001",name="用户列表")
-	 @Get("/list")
+	 @Get("/~/list")
 	 public @ResponseBody WebResponse getUsersList(HttpServletRequest request){
-         Map params = ParamUtils.getParamsMap(request);
+         Map params = ParamUtils.getParamsMapForPager(request);
          params.put("delete_flag",false);
          return WebResponse.build().setResult(userService.listForPage(UserRepository.class,"listWithRole",params));
 	 }
 	 
-	 @Post("/add")
+	 @Post("/~/add")
 	 public @ResponseBody  WebResponse add(@WebUser User creator,@FormParam(value="user")User user){
 		 user.setCreateBy(creator.getId());
 		 user.sync(user.encryptPassword().save());
 		 return WebResponse.build().setSuccess(true);
 	 }
 	 
-	 @Get("/get/{id}")
+	 @Get("/~/get/{id}")
 	 public @ResponseBody WebResponse getUser(@PathVariable("id")Long id){
 		 return WebResponse.build().setResult(userService.get(id).toAllMap());
 	 }
 	 
-	 @Post("/update")
+	 @Post("/~/update")
 	 public @ResponseBody WebResponse updateUser(@FormParam("user") User user){
 		 User oldUser = userService.get(user.getId());
 		 oldUser.setUserName(user.getUserName());
@@ -110,7 +109,7 @@ public class UserAction extends BaseAction{
 		 return WebResponse.build();
 	 }
 	 
-	 @Post("/logicDelete")
+	 @Post("/~/logicDelete")
 	 public @ResponseBody WebResponse logicDeleteUser(@RequestParam("ids")Long[] ids){
 		 userService.delete(ids, true);
 		 return WebResponse.build();
@@ -120,7 +119,7 @@ public class UserAction extends BaseAction{
 	  * 获取用户所在的角色路径
 	  * @return
 	  */
-	 @Get("/getRolePath")
+	 @Get("/~/getRolePath")
 	 public @ResponseBody WebResponse getRolePath(@RequestParam("uid")Long uid){
 		String rolePath = "";
 		Role role = userService.get(uid).getRole();
@@ -141,8 +140,8 @@ public class UserAction extends BaseAction{
 	 }
 	 
 	 @LoginRequired
-	 @Get("/changePassword")
-	 @MenuMapping(code="platform_5",name="修改密码",url="/user/changePassword",parentCode="platform")
+	 @Get("/~/changePassword")
+	 @MenuMapping(code="platform_5",name="修改密码",url="/user/~/changePassword",parentCode="platform")
 	 public ModelAndView showChangePasswordPage(@WebUser User user){
 		 String info = null ;
 		 if(user.isSysUser()){
@@ -157,7 +156,7 @@ public class UserAction extends BaseAction{
 	  * @return
 	  */
 	 @LoginRequired
-	 @Get("/matchOldPassword")
+	 @Get("/~/matchOldPassword")
 	 public @ResponseBody WebResponse matchOldPassword(@WebUser User user,@RequestParam("password")String newPassword){
 		if (user.getPassword().equals(newPassword)) {
 			return WebResponse.build().setSuccess(true);
@@ -172,7 +171,7 @@ public class UserAction extends BaseAction{
 	  * @return
 	  */
 	 @LoginRequired
-	 @Post("/doChangePassword")
+	 @Post("/~/doChangePassword")
 	 public @ResponseBody WebResponse changePassword(@WebUser User user,@RequestParam("password")String newPassword){
 		 if(user.isSysUser()){
 			 return WebResponse.build().setSuccess(false);
@@ -188,7 +187,7 @@ public class UserAction extends BaseAction{
 	  * @return
 	  */
 	 @LoginRequired
-	 @Post("/checkUserName")
+	 @Post("/~/checkUserName")
 	 public @ResponseBody WebResponse checkUserName(@RequestParam("userName")String userName){
 		 return WebResponse.build().setResult(userService.isUserNameExists(userName));
 	 }

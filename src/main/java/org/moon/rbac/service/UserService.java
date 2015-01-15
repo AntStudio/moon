@@ -1,6 +1,6 @@
 package org.moon.rbac.service;
 
-import org.moon.base.service.BaseService;
+import org.moon.base.service.BaseDomainService;
 import org.moon.rbac.domain.User;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
  * @version 1.0
  * @date 2012-11-29
  */
-public interface UserService extends BaseService<User>{
+public interface UserService extends BaseDomainService<User> {
 
 	public User login(User user);
 	
@@ -19,7 +19,7 @@ public interface UserService extends BaseService<User>{
 	
 	public Long getCurrentUserId(HttpServletRequest request);
 	
-	public void delete(Long ids[],boolean logicDel);
+	public void delete(Long ids[], boolean logicDel);
 	
 	public boolean isUserNameExists(String userName);
 	

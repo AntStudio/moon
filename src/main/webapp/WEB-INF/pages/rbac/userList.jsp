@@ -13,23 +13,31 @@
      <div id="userTable"></div> 
      
      <!-- Modal -->
-<form id="userForm" class="hide">
-  <div>
-  	<span class="label-text">用户名:</span>
-  	<input type="text" name="user.userName" validate="validate[required,call(isUserNameExists)]"/>
-  	<i class="fa fa-check"></i>
+<form id="userForm" class="hide form-horizontal">
+  <div class="form-group">
+  	<label class="col-sm-2 control-label">用户名:</label>
+     <div class="col-sm-10">
+         <input type="text" class="form-control" name="user.userName" validate="validate[required,call(isUserNameExists)]"/>
+     </div>
   </div>
-  <div>
-  	<span class="label-text">密&nbsp;&nbsp;码:</span>
-  	<input type="password" name="user.password" id="password" validate="validate[minsize(6)]" errMsg="密码须6位以上">
+
+  <div class="form-group">
+  	  <label class="col-sm-2 control-label">密&nbsp;&nbsp;码:</label>
+      <div class="col-sm-10">
+  	      <input type="password"  class="form-control"  name="user.password" id="password" validate="validate[minsize(6)]" errMsg="密码须6位以上">
+      </div>
   </div>
-  <div> 
-  	<span class="label-text">重复密码:</span>
-  	<input type="password" name="repassword" validate="validate[minsize(6),eq(#password)]">
+  <div class="form-group">
+  	 <label class="col-sm-2 control-label">重复密码:</label>
+     <div class="col-sm-10">
+         <input type="password"  class="form-control"  name="repassword" validate="validate[minsize(6),eq(#password)]">
+     </div>
   </div>
-  <div>
-  	<span class="label-text">真实姓名:</span>
-  	<input type="text" name="user.realName" validate="validate[required]"/>
+  <div class="form-group">
+  	 <label class="col-sm-2 control-label">真实姓名:</label>
+     <div class="col-sm-10">
+   	    <input type="text"  class="form-control"  name="user.realName" validate="validate[required]"/>
+     </div>
   </div>
 </form>
 

@@ -1,12 +1,13 @@
 .datagrid{
 	position:relative;
 	height: 100%;
+    clear: both;
 }
 .datagrid>.table-title{
   background: #F1F1F1;
-  height: 37px;
+  height: 43px;
   font-weight: bold;
-  line-height: 37px;
+  line-height: 43px;
   font-size: 20px;
   padding-left: 10px;
 }
@@ -14,8 +15,8 @@
 	margin-bottom: 0px;
 }
 
-.datagrid>table>thead th.number{
-	width:25px;
+.datagrid th.number{
+	width:45px;
 }
 
 .datagrid>table>thead th [class^="icon-"]{
@@ -149,6 +150,19 @@
 .datagrid .drag-area.hide{
 	display:none;
 }
+
+.datagrid .space{
+	width:18px;
+	height:2px;
+	float:left;
+}
+
+.datagrid .tree-icon{
+	color: #3B7DE4;
+	font-size: 12px;
+	margin:0 3px;
+    cursor: pointer;
+}
 /**
  *   固定布局
  */
@@ -163,6 +177,6 @@
   position: absolute;
   width: 100%;
   bottom: 41px;
-  top: 37px;
+  top: 43px;
   overflow-y: auto;
 }

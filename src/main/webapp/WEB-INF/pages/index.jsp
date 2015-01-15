@@ -5,48 +5,52 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
- <m:require src="jquery,bootstrap,common,js/pages/index.js"></m:require>
+ <m:require src="jquery,noty,huanxin,font,bootstrap,common,kt,{{index}}"></m:require>
  <m:require src="css/base.css" type="css"></m:require>
 <title>主页</title>
 
  
 </head>
 <body class="index">
-	<div class="navbar navbar-inverse" style="position: static;">
-		<div class="navbar-inner">
-			<div class="container">
-				<a class="btn btn-navbar" data-toggle="collapse"
-					data-target=".navbar-inverse-collapse"> <span class="icon-bar"></span>
-					<span class="icon-bar"></span> <span class="icon-bar"></span>
-				</a> <a class="brand" href="#">Moon</a>
-				<div class="nav-collapse collapse navbar-inverse-collapse">
-					<ul class="nav">
-						<c:forEach items="${menus}" var="s">
-							<li class="dropdown nav-menu" id="menu_${s.id}">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-									${s.menuName}
-									<b class="caret"></b>
-								</a>
-								<ul class="dropdown-menu">
-									<li class="h-center"><i class="loading"></i></li>
-								</ul>
-							</li>
-						</c:forEach>
-					</ul>
-                    <span class="app-version">
-                        版本号: 1.0.0-SNAPSHOT
-                    </span>
-					<ul class="nav pull-right">
-						<li class="dropdown"><a href="#" class="dropdown-toggle"
-							data-toggle="dropdown"> ${currentUser.userName} <b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								<li><a href="${pageContext.request.contextPath}/user/loginOut">logout</a></li>
-							</ul>
-						</li>
-					</ul>
-				</div>
+	<div class="navbar navbar-inverse nav-header">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-toggle collapsed" data-toggle="collapse"
+					data-target=".navbar-inverse-collapse">
+                    <span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+				</a> <a class="navbar-brand" href="#">Moon</a>
+            </div>
+
+            <div class="collapse navbar-collapse navbar-inverse-collapse">
+                <ul class="nav navbar-nav">
+                    <c:forEach items="${menus}" var="s">
+                        <li class="dropdown nav-menu" id="menu_${s.id}">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                ${s.menuName}
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="h-center"><i class="loading fa fa-spinner fa-spin"></i></li>
+                            </ul>
+                        </li>
+                    </c:forEach>
+                </ul>
+
+                <span class="app-version">
+                    版本号: 1.0.0
+                </span>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown"><a href="#" class="dropdown-toggle"
+                        data-toggle="dropdown"> ${currentUser.userName} <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a class="no-tab" href="${pageContext.request.contextPath}/user/loginOut">logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
 				<!-- /.nav-collapse -->
-			</div>
 		</div>
 		<!-- /navbar-inner -->
 	</div>
@@ -59,7 +63,11 @@
 		</div> 
 	</div> --%>
 	<div class="main-container">
-		<iframe src="user" id="main" name="main"></iframe>
+		<%--<iframe src="user" id="main" name="main" allowfullscreen="true"></iframe>--%>
+        <div class="tab">
+            <h1>携心医疗</h1>
+            <div>欢迎使用携心医疗，请选择顶部菜单进行操作.</div>
+        </div>
 	</div>
 
 </body>

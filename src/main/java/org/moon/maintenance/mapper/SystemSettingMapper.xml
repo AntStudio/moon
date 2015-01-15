@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.moon.maintenance.repository.SystemSettingRepository">
+    <select id="listSettings" resultType="HashMap">
+        select * from tab_setting
+        <if test="prefix!=null">
+            where name like concat(#{prefix},'%')
+        </if>
+    </select>
+
+    <update id="updateSetting" >
+        update tab_setting set value = #{value} where name = #{name}
+    </update>
+
+    <insert id="addSetting">
+        insert into tab_setting(name,value) values (#{name},#{value});
+    </insert>
+
+    <select id="getSetting" resultType="HashMap">
+        select * from tab_setting
+        where name = #{name} limit 0,1
+    </select>
+</mapper>

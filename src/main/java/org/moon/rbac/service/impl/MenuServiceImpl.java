@@ -1,7 +1,6 @@
 package org.moon.rbac.service.impl;
 
-import com.reeham.component.ddd.model.ModelContainer;
-import org.moon.base.service.AbstractService;
+import org.moon.base.service.AbstractDomainService;
 import org.moon.core.orm.mybatis.Criteria;
 import org.moon.core.orm.mybatis.criterion.Restrictions;
 import org.moon.rbac.domain.Menu;
@@ -14,7 +13,7 @@ import javax.annotation.Resource;
 import java.util.*;
 
 @Service
-public class MenuServiceImpl extends AbstractService<Menu> implements MenuService {
+public class MenuServiceImpl extends AbstractDomainService<Menu> implements MenuService {
 	@Resource
 	private MenuRepository menuRepository;
 
@@ -106,19 +105,19 @@ public class MenuServiceImpl extends AbstractService<Menu> implements MenuServic
 	}
 	
 	@Override
-	public Map<String, Menu> getSystemMenusByCode() {
+	public List<Map> getSystemMenus() {
 		Criteria criteria = new Criteria();
-		criteria.add(Restrictions.isNull("parent_id")).add(Restrictions.notNull("code"));
-		Map<String,Menu> m = new HashMap<String, Menu>();
-		List<Menu> menus =listForDomain(criteria);
-		for(Menu menu:menus){
-			m.put(menu.getCode(), menu);
-		}
-		return m;
+		criteria.add(Restrictions.eq("isFinal", true));
+		return list(criteria);
 	}
 	
 	@Override
 	public void addMenus(List<Menu> menus) {
 		menuRepository.addMenus(menus);
 	}
+
+    @Override
+    public void add(Map<String, Object> params) {
+        menuRepository.add(params);
+    }
 }

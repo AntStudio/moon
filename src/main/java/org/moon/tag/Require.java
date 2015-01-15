@@ -61,7 +61,7 @@ public class Require extends TagSupport{
 					if(p.containsKey("js."+s)){
 						sb.append(importJs(contextPath,p.getProperty("js."+s)));
 					}
-				}else{
+				}else if(s.endsWith(".js")){
 					sb.append(importJs(contextPath,s));
 				}
 				if(type==null&&p.containsKey("css."+s)){

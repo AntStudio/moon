@@ -185,7 +185,64 @@ public class Strings {
     	}
     	return sb.toString();
     }
-    
+
+    /**
+     * 将数组中的所有值连接为以 delimiter分割的字符串，分隔符默认是逗号
+     * @param values
+     * @param delimiter
+     * @return
+     */
+    public static String join(Object[] values,String delimiter){
+        if(Objects.isNull(values)||values.length==0){
+            return "";
+        }
+
+        if(Objects.isNull(delimiter)){
+            delimiter = ",";
+        }
+
+        boolean begin = true;
+        StringBuffer sb = new StringBuffer();
+
+        for(Object o:values){
+            if(begin){
+                begin = false;
+            }else{
+                sb.append(delimiter);
+            }
+            sb.append(o);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 将数组中的所有值,通过StringCustomerHandler处理后,连接为以 delimiter分割的字符串，分隔符默认是逗号
+     * @param values
+     * @param delimiter
+     * @param handler
+     * @return
+     */
+    public static  <T> String  join(T[] values,String delimiter,StringCustomerHandler<T> handler){
+        if(Objects.isNull(values)||values.length==0){
+            return "";
+        }
+
+        boolean begin = true;
+        if(Objects.isNull(delimiter)){
+            delimiter = ",";
+        }
+        StringBuffer sb = new StringBuffer();
+        for(T o:values){
+            if(begin){
+                begin = false;
+            }else{
+                sb.append(delimiter);
+            }
+            sb.append(handler.handle(o));
+        }
+        return sb.toString();
+    }
+
     /**
      * 自定义解析值的方法
      */
@@ -193,11 +250,25 @@ public class Strings {
 		String handle(T t);
 	}
 
+    /**
+     * 将字符数组链接为字符串,用于多个字符串链接使用
+     * @param strings
+     * @return
+     */
     public static String connect(String ... strings){
         StringBuilder sb = new StringBuilder();
         for(String s:strings){
             sb.append(s);
         }
         return sb.toString();
+    }
+
+    /**
+     * 判断字符串是否为空或者为空字符串
+     * @param src
+     * @return
+     */
+    public static boolean isNullOrEmpty(String src){
+        return src == null || src.isEmpty() || src.trim().isEmpty();
     }
 }

@@ -2,7 +2,7 @@
 var table;
 $(function(){
 	table = $("#userTable").table({
-		url:contextPath+"/user/list",
+		url:contextPath+"/user/~/list",
 		columns:[{name:"id"},{name:"userName",display:"用户名"},{name:"roleName",display:"角色名"}],
 		formatData:function(data){return data.result;},
 		title:"用户列表",
@@ -58,7 +58,7 @@ function btnHandler(btnTest){
 			        	 click:function(){
 			        		 $("#userForm").validate("validate").done(function(result){
 			        			 if(result){
-			        				 $("#userForm").ajaxSubmitForm(contextPath+"/user/add").done(function(data){
+			        				 $("#userForm").ajaxSubmitForm(contextPath+"/user/~/add").done(function(data){
 			        					 if(data.success){
 			        						 $("#userForm").dialog("close");
 				 			        		 $("#userTable").table("refresh");
@@ -88,7 +88,7 @@ function btnHandler(btnTest){
 			return false;
 		}
 		var id = selectRows[0].id;
-		$("#userForm").autoCompleteForm(contextPath+"/user/get/"+id);
+		$("#userForm").autoCompleteForm(contextPath+"/user/~/get/"+id);
 		$('#userForm').dialog({
 			title:"编辑用户",
 			afterShown:function(){
@@ -104,7 +104,7 @@ function btnHandler(btnTest){
 			        	 click:function(){
 			        		 $("#userForm").validate("validate").done(function(result){
 			        			 if(result){
-					        		 $("#userForm").ajaxSubmitForm(contextPath+"/user/update",{"user.id":id}).done(function(data){
+					        		 $("#userForm").ajaxSubmitForm(contextPath+"/user/~/update",{"user.id":id}).done(function(data){
 					 			    	 if(data.success){
 					 			    		 $("#userForm").dialog("close");
 				 			        		 table.refresh();
@@ -139,7 +139,7 @@ function btnHandler(btnTest){
 			   ids+="&ids="+e.id;
 		   });
 		   ids = ids.substring(1);
-		   $.post(contextPath+"/user/logicDelete",ids,function(result){
+		   $.post(contextPath+"/user/~/logicDelete",ids,function(result){
 			   table.refresh();
 		  });
 		}
@@ -150,7 +150,7 @@ function btnHandler(btnTest){
 			return false;
 		}
 		var uid = selectRows[0].id;
-		 $.getJsonData(contextPath+"/user/getRolePath",{uid:uid}).done(function(data){
+		 $.getJsonData(contextPath+"/user/~/getRolePath",{uid:uid}).done(function(data){
 			 var result = data.result;
 			 ztree.expandNode(ztree.getNodes()[0],true);
 			 if (result.path) {
@@ -247,7 +247,7 @@ function isUserNameExists(field,type,opts){
 		return "";
 	}else{
 		var dfd = $.Deferred();
-		$.getJsonData(contextPath+"/user/checkUserName",{userName:field.val()},{type:"Post"}).done(function(result){
+		$.getJsonData(contextPath+"/user/~/checkUserName",{userName:field.val()},{type:"Post"}).done(function(result){
 			if(result.userNameExists){
 				dfd.resolve("用户名已经存在.<br/>");
 			}else{

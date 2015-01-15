@@ -5,6 +5,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import org.springframework.web.context.WebApplicationContext;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 /**
  * 设置应用上下文,供如标签库使用
@@ -31,4 +35,20 @@ public class ApplicationContextHelper implements ApplicationContextAware{
 	public static <T> T getBean(Class<T> c){
 		return getApplicationContext().getBean(c);
 	}
+
+    /**
+     * 获取web真实路径，此方法在applicationcontext初始化完后即可调用.
+     * @param applicationContext
+     * @return
+     * @see {@link org.moon.core.session.SessionContext#getWebAppPath()}
+     */
+    public static String getWebAppPath(ApplicationContext applicationContext){
+        try{
+            WebApplicationContext context = (WebApplicationContext) applicationContext;
+            return URLDecoder.decode(context.getServletContext().getRealPath("/"), "UTF-8");
+        }catch(UnsupportedEncodingException e){
+            e.printStackTrace();
+            return "";
+        }
+    }
 }

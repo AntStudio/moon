@@ -1,23 +1,20 @@
 package org.moon.rbac.service.impl;
 
 import com.reeham.component.ddd.model.ModelContainer;
-import org.moon.base.service.AbstractService;
+import org.moon.base.service.AbstractDomainService;
 import org.moon.rbac.domain.Permission;
 import org.moon.rbac.domain.Role;
 import org.moon.rbac.repository.RoleRepository;
 import org.moon.rbac.service.RoleService;
 import org.moon.utils.Constants;
-import org.moon.utils.Maps;
-import org.moon.utils.Objects;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Service
-public class RoleServiceImpl extends AbstractService<Role> implements RoleService {
+public class RoleServiceImpl extends AbstractDomainService<Role> implements RoleService {
 
 	@Resource
 	private ModelContainer modelContainer;

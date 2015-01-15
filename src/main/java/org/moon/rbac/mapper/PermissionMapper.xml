@@ -28,8 +28,8 @@
     SELECT tp.*
     FROM tab_permission tp
     JOIN tab_role_permission trp
-    ON tp.id = trp.permission_id
-    AND trp.role_id = #{rid}
+    ON tp.id = trp.permissionId
+    AND trp.roleId = #{rid}
   </select>
 
 </mapper>

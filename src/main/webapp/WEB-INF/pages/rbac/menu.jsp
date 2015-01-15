@@ -22,9 +22,19 @@
     </ul>
 
 		<%--菜单信息 --%>
-		<form action="" id="menuForm" style="display: none;">
-		 <div><span class="label-text">菜单名:</span><input type="text" name="menu.menuName"/></div>
-		 <div><span class="label-text">菜单url:</span><input type="text" name="menu.url"/></div>
+		<form action="" id="menuForm" class="form-horizontal" style="display: none;">
+		 <div class="form-group">
+             <label class="col-sm-2 control-label">菜单名:</label>
+             <div class="col-sm-10">
+                 <input type="text" class="form-control" name="menu.menuName" validate="validate[required,call(isUserNameExists)]">
+             </div>
+         </div>
+         <div class="form-group">
+             <label class="col-sm-2 control-label">菜单url:</label>
+             <div class="col-sm-10">
+                 <input type="text" class="form-control" name="menu.url" validate="validate[required,call(isUserNameExists)]">
+             </div>
+         </div>
 		</form>
 
     <!-- 角色树 -->

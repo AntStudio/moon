@@ -4,7 +4,7 @@ import com.reeham.component.ddd.annotation.OnEvent;
 import com.reeham.component.ddd.model.ModelContainer;
 import com.reeham.component.ddd.model.ModelLoader;
 import com.reeham.component.ddd.model.ModelUtils;
-import org.moon.base.service.AbstractService;
+import org.moon.base.service.AbstractDomainService;
 import org.moon.rbac.domain.Permission;
 import org.moon.rbac.repository.PermissionRepository;
 import org.moon.rbac.service.PermissionService;
@@ -23,7 +23,7 @@ import java.util.Map;
  * @date 2012-12-14
  */
 @Service
-public class PermissionServiceImpl extends AbstractService<Permission> implements PermissionService,ModelLoader{
+public class PermissionServiceImpl extends AbstractDomainService<Permission> implements PermissionService,ModelLoader{
 	
 	@Resource
 	private PermissionRepository permissionRepository;

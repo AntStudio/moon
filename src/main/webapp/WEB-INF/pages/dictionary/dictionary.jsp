@@ -11,26 +11,34 @@
 	<div id="dictionaryTable"></div>
 	
 	<!-- 字典项表单 -->
-	<form id="dictionaryForm" class="hide">
-		<div>
-			<span class="label-text">字典代码:</span> 
-			<input type="text" name="dictionary.code" validate="validate[required]"/>
+	<form id="dictionaryForm" class="form-horizontal hide">
+		<div class="form-group">
+            <label class="col-sm-2 control-label">字典代码:</label>
+            <div class="col-sm-10">
+			    <input type="text" class="form-control" name="dictionary.code" validate="validate[required]"/>
+            </div>
 		</div>
-		<div>
-			<span class="label-text">字典名称:</span> 
-			<input type="text" name="dictionary.name" validate="validate[required]"/>
+		<div class="form-group">
+            <label class="col-sm-2 control-label">字典名称:</label>
+            <div class="col-sm-10">
+			    <input type="text" name="dictionary.name" class="form-control" validate="validate[required]"/>
+            </div>
 		</div>
 	</form>
 	
 	<!-- 字典参数表单 -->
-	<form id="dictionaryParamForm" class="hide">
-		<div>
-			<span class="label-text">字典参数名称:</span> 
-			<input type="text" name="dictionary.name" validate="validate[required]"/>
+	<form id="dictionaryParamForm" class="form-horizontal hide">
+		<div class="form-group">
+            <label class="col-sm-3 control-label">字典参数名称:</label>
+            <div class="col-sm-9">
+			    <input type="text"  class="form-control" name="dictionary.code" validate="validate[required]"/>
+            </div>
 		</div>
-		<div>
-			<span class="label-text">字典参数值:</span> 
-			<input type="text" name="dictionary.code" validate="validate[required]"/>
+		<div class="form-group">
+            <label class="col-sm-3 control-label">字典参数值:</label>
+            <div class="col-sm-9">
+			    <input type="text"  class="form-control" name="dictionary.name" validate="validate[required]"/>
+            </div>
 		</div>
 	</form>
 </body>

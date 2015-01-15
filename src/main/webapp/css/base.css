@@ -1,32 +1,91 @@
 @CHARSET "UTF-8";
 .h-center{
-	text-align: center;
+    text-align: center;
 }
 
 .main-container{
-	position: absolute;
-	top: 42px;
-	right: 0px;
-	bottom: 0px;
-	left: 0px;
-	border: none;
-	overflow: hidden;
+    position: absolute;
+    top: 52px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    border: none;
+    overflow: hidden;
 }
 
-.navbar{
-  background: #000;
+.nav-header{
+    background: #000;
+    border-radius: 0px;
 }
 
 
 .main-container iframe{
-	position: absolute;
-	border: none;
-	width: 100%;
-	height: 100%;
+    border: none;
+    width: 100%;
+    height: 100%;
 }
 
 .app-version{
     color: #E26D6D;
     float: right;
-    line-height: 40px;
+    line-height: 52px;
+    margin-left: 15px;
 }
+
+@media(max-width: 768px){
+    .navbar-inverse-collapse{
+        position: absolute;
+        z-index: 1000;
+        width: 100%;
+        background: rgb(0, 0, 0);
+    }
+}
+
+.no-menu{
+    color: #ccc;
+    text-align: center;
+    display: block;
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+.close-tab{
+    margin-left: 5px;
+    margin-right: -5px;
+}
+.tabbody{
+    position: relative;
+}
+
+.tabcont{
+    position: absolute;
+    right: 0px;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+}
+
+.auto-height{/*主要针对bootstrap的col-xx-x修改其min-height:1px;引起的table高度问题*/
+    min-height: inherit !important;
+}
+
+/*工具样式*/
+.margin-top-md{
+    margin-top:5px;
+}
+
+.no-padding-left{
+    padding-left: 0;
+}
+
+.fill-parent{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+

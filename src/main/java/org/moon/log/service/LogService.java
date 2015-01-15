@@ -1,6 +1,6 @@
 package org.moon.log.service;
 
-import org.moon.base.service.BaseService;
+import org.moon.base.service.BaseDomainService;
 import org.moon.log.domain.Log;
 
 
@@ -10,6 +10,6 @@ import org.moon.log.domain.Log;
  * @version 1.0
  * @date 2013-1-7
  */
-public interface LogService extends BaseService<Log>{
+public interface LogService extends BaseDomainService<Log> {
 
 }

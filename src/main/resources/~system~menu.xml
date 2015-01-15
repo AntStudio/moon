@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <menus>
+    <menu code="platform" name="平台管理"></menu>
 	<menu code="test" name="测试菜单">
         <menu  code="test_1" name="table测试" url="/turn?page=pages/test/table"/>
 		<menu  code="test_2" name="文件上传" url="/turn?page=pages/test/fileupload"/>

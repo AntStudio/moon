@@ -2,6 +2,7 @@ package org.moon.dictionary.action;
 
 import org.moon.base.action.BaseAction;
 import org.moon.dictionary.domain.Dictionary;
+import org.moon.dictionary.repository.DictionaryRepository;
 import org.moon.dictionary.service.DictionaryService;
 import org.moon.message.WebResponse;
 import org.moon.rbac.domain.annotation.MenuMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @author Gavin
@@ -53,8 +55,11 @@ public class DictionaryAction extends BaseAction {
 	}
 
 	@Get("/list")
-	public @ResponseBody WebResponse listDictionary(HttpServletRequest request) throws Exception {
-		return WebResponse.build().setResult(dictionaryService.listForPage(ParamUtils.getParamsAsCerteria(request)));
-	}
+	public @ResponseBody WebResponse listDictionary(HttpServletRequest request,
+        @RequestParam(value = "parentId",required = false)Integer parentId) throws Exception {
+        Map paramMap = ParamUtils.getParamsMapForPager(request);
+        paramMap.put("parentId",parentId);
+		return WebResponse.build().setResult(dictionaryService.listForPage(DictionaryRepository.class,"listWithChildrenStatus",paramMap));
+    }
 
 }

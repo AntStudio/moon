@@ -18,12 +18,67 @@ public class ParamUtils {
 
 	public static  Map<String,Object> getDefaultParamMap(){
 		Map<String,Object> paramMap = new HashMap<String,Object>();
-		paramMap.put("pageIndex", Constants.DEFAULT_PAGESIZE);
-		paramMap.put("pageSize", Constants.DEFAULT_PAGEINDEX);
+		paramMap.put("pageIndex", Constants.DEFAULT_PAGEINDEX);
+		paramMap.put("pageSize", Constants.DEFAULT_PAGESIZE);
 		return paramMap;
 	}
-	
-	public static Map<String,Object> getParamsMap(HttpServletRequest request){
+
+    /**
+     * 获取包括分页参数在内的所有参数,默认忽略空的参数
+     * @param request
+     * @return
+     */
+    public static  Map<String,Object> getAllParamMapFromRequest(HttpServletRequest request){
+        return getAllParamMapFromRequest(request,true);
+    }
+
+    /**
+     * 获取包括分页参数在内的所有参数
+     * @param request
+     * @param ignoreEmptyParam 是否忽略空字符串或者空的参数
+     * @return
+     */
+    public static  Map<String,Object> getAllParamMapFromRequest(HttpServletRequest request,boolean ignoreEmptyParam){
+        Map<String,Object> paramMap = getParamsMapForPager(request);
+        paramMap.putAll(getParamMapFromRequest(request));
+        return paramMap;
+    }
+
+    /**
+     * 获取除了分页参数的所有参数
+     * @param request
+     * @param ignoreEmptyParam 是否忽略空字符串或者空的参数
+     * @return
+     */
+    public static  Map<String,Object> getParamMapFromRequest(HttpServletRequest request,boolean ignoreEmptyParam){
+        Map<String,Object> paramMap = new HashMap<String,Object>();
+        Map<String,String[]> params = request.getParameterMap();
+        for(Map.Entry<String,String[]> entry:params.entrySet()){
+            if(entry.getValue().length == 1){
+                String val = entry.getValue()[0];
+                if(ignoreEmptyParam && Strings.isNullOrEmpty(val)) continue;
+                paramMap.put(entry.getKey(),val);
+            }else{
+                paramMap.put(entry.getKey(),entry.getValue());
+            }
+        }
+        return paramMap;
+    }
+
+    /**
+     * 获取除了分页参数的所有参数 默认忽略空的参数
+     * @param request
+     * @return
+     */
+    public static  Map<String,Object> getParamMapFromRequest(HttpServletRequest request){
+        return getParamMapFromRequest(request,true);
+    }
+    /**
+     * 获取分页参数
+     * @param request
+     * @return
+     */
+	public static Map<String,Object> getParamsMapForPager(HttpServletRequest request){
 		Map<String,Object> paramMap = getDefaultParamMap();
 		String pageIndex =request.getParameter("pageIndex");
 		if(Objects.nonNull(pageIndex)) {
@@ -45,8 +100,8 @@ public class ParamUtils {
         if(sortName!=null){
             paramMap.put("sort",new Order(sortName, "asc".equalsIgnoreCase(sortType)).toSqlString());
         }
-		
-		
+
+
 		return paramMap;
 	}
 

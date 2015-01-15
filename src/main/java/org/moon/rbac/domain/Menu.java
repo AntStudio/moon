@@ -1,7 +1,7 @@
 package org.moon.rbac.domain;
 
 import com.reeham.component.ddd.annotation.Model;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.moon.base.domain.BaseDomain;
 import org.moon.rbac.domain.eventsender.MenuEventSender;
 import org.moon.utils.Objects;
@@ -38,6 +38,7 @@ public class Menu extends BaseDomain {
 	
 	private Integer parentId;
 
+    private boolean isFinal = false;
 	/**
 	 * 是否是叶子菜单，即是否有子菜单
 	 */
@@ -150,6 +151,14 @@ public class Menu extends BaseDomain {
 		this.parentId = parentId;
 	}
 
-	/******************** /getter/setter *******************/
+    public boolean isFinal() {
+        return isFinal;
+    }
+
+    public void setFinal(boolean isFinal) {
+        this.isFinal = isFinal;
+    }
+
+    /******************** /getter/setter *******************/
 
 }

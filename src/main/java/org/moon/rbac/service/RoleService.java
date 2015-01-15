@@ -1,6 +1,6 @@
 package org.moon.rbac.service;
 
-import org.moon.base.service.BaseService;
+import org.moon.base.service.BaseDomainService;
 import org.moon.rbac.domain.Permission;
 import org.moon.rbac.domain.Role;
 import org.moon.utils.Constants;
@@ -8,7 +8,7 @@ import org.moon.utils.Constants;
 import java.util.List;
 import java.util.Map;
 
-public interface RoleService extends BaseService<Role>{
+public interface RoleService extends BaseDomainService<Role> {
 
 	public static final Role systemRole = new Role(Constants.SYSTEM_ROLEID);
 

@@ -4,21 +4,21 @@
 	<select id="login" resultType="Long" parameterType="org.moon.rbac.domain.User">
 		select id 
 		from tab_user
-		where user_name=#{user.userName} and
+		where (userName=#{user.userName} OR phoneNumber=#{user.userName}) and
 		      password=#{user.password}
 	</select>
 
 	<update id="assign" parameterType="Map">
-		update tab_user set role_id = #{rid} where id = #{uid}
+		update tab_user set roleId = #{rid} where id = #{uid}
 	</update>
 
 	<select id="getUsersByCreator" resultType="Long" parameterType="Map">
-		select id from tab_user where create_by = #{uid} and
+		select id from tab_user where createBy = #{uid} and
 		<if test="deleteFlag==null">
-			delete_flag is null
+			deleteFlag is null
 		</if>
 		<if test="deleteFlag!=null">
-			delete_flag = #{deleteFlag}
+            deleteFlag = #{deleteFlag}
 		</if>
 		<if test="orderBy">
 			order by ${orderBy}
@@ -28,18 +28,18 @@
 
 	<select id="getUsersByCreatorCount" resultType="Integer"
 		parameterType="Map">
-		select count(*)from tab_user where create_by = #{uid} and
+		select count(*)from tab_user where createBy = #{uid} and
 		<if test="deleteFlag==null">
-			delete_flag is null
+            deleteFlag is null
 		</if>
 		<if test="deleteFlag!=null">
-			delete_flag = #{deleteFlag}
+            deleteFlag = #{deleteFlag}
 		</if>
 	</select>
 
 	<insert id="addUser" parameterType="org.moon.rbac.domain.User"
 		useGeneratedKeys="true" keyProperty="user.id" keyColumn="id">
-		insert tab_user(user_name,password,real_name,create_by,delete_flag,create_time)
+		insert tab_user(userName,password,realName,createBy,deleteFlag,createTime)
 		values(
 			#{user.userName},#{user.password},#{user.realName},#{user.createBy},false,now()
 		)
@@ -48,8 +48,8 @@
 
 	<update id="updateUser" parameterType="org.moon.rbac.domain.User">
 		update tab_user set
-		user_name=#{user.userName},password=#{user.password},
-		real_name=#{user.realName},delete_flag = #{user.deleteFlag} where
+		userName=#{user.userName},password=#{user.password},
+		realName=#{user.realName},deleteFlag = #{user.deleteFlag} where
 		id=#{user.id}
 	</update>
 
@@ -62,7 +62,7 @@
 	</delete>
 
 	<update id="logicDeleteUser">
-		update tab_user set delete_flag = true where id in (-1,
+		update tab_user set deleteFlag = true where id in (-1,
 		<foreach collection="ids" item="id" separator=",">
 			#{id}
 		</foreach>
@@ -70,20 +70,20 @@
 	</update>
 
 	<select id="isUserNameExists" resultType="Boolean">
-		select count(*)>0 from tab_user where user_name=#{userName}
+		select count(*)>0 from tab_user where userName=#{userName}
 	</select>
 
     <select id="listWithRole" resultType="CamelbakKeyResultMap">
-        SELECT u.*,r.role_name
+        SELECT u.id,u.userName,u.realName,u.active,u.createTime,u.avatar,r.roleName
         FROM tab_user u
         LEFT JOIN tab_role r
-        ON u.role_id = r.id
+        ON u.roleId = r.id
         where
-        <if test="delete_flag == null">
-            u.delete_flag = false
+        <if test="deleteFlag == null">
+            u.deleteFlag = false
         </if>
-        <if test="delete_flag != null">
-            u.delete_flag = #{delete_flag}
+        <if test="deleteFlag != null">
+            u.deleteFlag = #{deleteFlag}
         </if>
         limit ${offset},${pageSize}
     </select>
@@ -91,19 +91,15 @@
     <select id="listWithRole_count" resultType="Integer">
         select count(u.id) from tab_user u
         where
-        <if test="delete_flag == null">
-            u.delete_flag = false
+        <if test="deleteFlag == null">
+            u.deleteFlag = false
         </if>
-        <if test="delete_flag != null">
-            u.delete_flag = #{delete_flag}
+        <if test="deleteFlag != null">
+            u.deleteFlag = #{deleteFlag}
         </if>
     </select>
 
 	<resultMap type="org.moon.rbac.domain.User" id="user">
-		<result column="role_id" property="roleId" />
-		<result column="user_name" property="userName" />
-		<result column="real_name" property="realName" />
-		<result column="delete_flag" property="deleteFlag" />
-		<result column="create_time" property="createTime" />
+
 	</resultMap>
 </mapper>

@@ -11,7 +11,7 @@
 <script type="text/javascript">
 	var from = "${from}";
 </script>
-<title>Moon</title>
+<title>携心医疗</title>
 </head>
 <body class="body">
 
@@ -24,18 +24,17 @@
 <div class="form-container">
    
    <div class="title-container">
-   	<span class="title">Moon</span>
-   	<span class="sub-title">Web Platform</span>
+       <span class="title">携心医疗</span>
    </div>
    <div class="split-line"></div>
    <form id="loginForm" class="loginForm">
      <div class="form-inline">
      	<i class="fa fa-user input-icon"></i>
-     	<input type="text" name="user.userName" value="system_user" validate="validate[minsize(6),maxsize(15)]" errMsg="用户名为6~15个字符"/>
+     	<input type="text" name="userName" value="system_user" validate="validate[minsize(6),maxsize(15)]" errMsg="用户名为6~15个字符"/>
      </div>
      <div class="form-inline">
      	<i class="fa fa-lock input-icon"></i>
-     	<input  name="user.password" type="password" validate="validate[minsize(6)]" errMsg="密码须6位以上"/>
+     	<input  name="password" type="password" validate="validate[minsize(6)]" errMsg="密码须6位以上"/>
      </div> 
      
     <input  type="button" id="submit" class="btn btn-default  btn-info" value="登   录"/>

@@ -1,8 +1,8 @@
 package org.moon.rbac.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.reeham.component.ddd.annotation.Model;
 import com.reeham.component.ddd.message.DomainMessage;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.moon.base.domain.BaseDomain;
 import org.moon.rbac.domain.eventsender.RoleEventSender;
 import org.moon.utils.Constants;
@@ -21,7 +21,6 @@ import java.util.Map;
  */
 @Model
 public class Role extends BaseDomain {
-
 	private static final long serialVersionUID = 2223770816508175289L;
 
 	public Role(Long id) {

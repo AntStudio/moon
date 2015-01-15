@@ -26,19 +26,19 @@ public interface BaseRepository<T> {
 	public void update(@Param("o") T t);
 	
 	@DeleteProvider(type=SQLProvider.class,method="delete")
-	public void delete(@Param("domain")Class<T> t,@Param("ids") Long[] ids);
+	public void delete(@Param("domain") Class<T> t, @Param("ids") Long[] ids);
 	
 	public void logicDelete(@Param("ids") Long[] ids);
 	
 	@SelectProvider(type=SQLProvider.class,method="get")
-    public T get(@Param("domain")Class<T> t,@Param("id")Long id);
+    public T get(@Param("domain") Class<T> t, @Param("id") Long id);
     
     @SelectProvider(type=SQLProvider.class,method="list")
-    public List<Map> list(@Param("domain")Class<T> t,@Param("criteria")Criteria criteria);
+    public List<Map> list(@Param("domain") Class<T> t, @Param("criteria") Criteria criteria);
     
     @SelectProvider(type=SQLProvider.class,method="listIds")
-    public List<Long> listIds(@Param("domain")Class<T> t,@Param("criteria")Criteria criteria);
+    public List<Long> listIds(@Param("domain") Class<T> t, @Param("criteria") Criteria criteria);
     
     @SelectProvider(type=SQLProvider.class,method="count")
-    public Integer count(@Param("domain")Class<T> t,@Param("criteria")Criteria criteria);
+    public Integer count(@Param("domain") Class<T> t, @Param("criteria") Criteria criteria);
 }

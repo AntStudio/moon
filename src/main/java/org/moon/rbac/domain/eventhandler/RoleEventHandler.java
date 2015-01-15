@@ -1,14 +1,11 @@
 package org.moon.rbac.domain.eventhandler;
 
 import com.reeham.component.ddd.annotation.OnEvent;
-import com.reeham.component.ddd.model.ModelContainer;
 import org.moon.base.domain.eventhandler.BaseEventHandler;
 import org.moon.core.orm.mybatis.DataConverter;
-import org.moon.rbac.domain.Menu;
 import org.moon.rbac.domain.Role;
 import org.moon.rbac.repository.RoleRepository;
 import org.moon.rbac.service.RoleService;
-import org.moon.utils.Constants;
 import org.moon.utils.Domains;
 import org.moon.utils.Dtos;
 import org.springframework.stereotype.Component;

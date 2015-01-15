@@ -10,7 +10,7 @@ public class Constants {
 
 	public static String SYSTEM_USERNAME = "system_user";
 	
-	public static Long SYSTEM_USERID = Long.MIN_VALUE+3333;
+	public static Long SYSTEM_USERID = 0L;
 	
 	public static String SYSTEM_PASSWORD = MD5.getMD5(SYSTEM_USERNAME+Dates.getFormatedToday(null));
 	

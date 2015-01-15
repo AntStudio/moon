@@ -48,8 +48,13 @@ public class RestAnnotationHandler extends RequestMappingHandlerMapping{
 				public Class<? extends Annotation> annotationType() {
 					return RequestMapping.class;
 				}
-				
-				@Override
+
+                @Override
+                public String name() {
+                    return "";
+                }
+
+                @Override
 				public String[] value() {
 					return requestMappingValue;
 				}

@@ -34,7 +34,7 @@ public class SQLProvider {
 	private Logger logger = LoggerFactory.getLogger(SQLProvider.class);
 
 	/**
-	 * 持久化域对象,传入的对象需以'o'为key,并且要继承自{@link BaseDomain}
+	 * 持久化域对象,传入的对象需以'o'为key,并且要继承自{@link org.moon.base.domain.BaseDomain}
 	 * @param params
 	 * @return
 	 */
@@ -220,7 +220,7 @@ public class SQLProvider {
 	
 	/**
 	 * <p>
-	 * 获取当前Domain所指向的Table,如果没有{@link Table}注解,默认使用 tab_
+	 * 获取当前Domain所指向的Table,如果没有{@link javax.persistence.Table}注解,默认使用 tab_
 	 * {@link Strings#lowerFirst(domainName)}
 	 * 
 	 * @param domainClass
@@ -239,7 +239,7 @@ public class SQLProvider {
 	}
 
 	/**
-	 * 获取字段名,首先提取{@link Column},如果不存在则使用属性名(的下划线形式)
+	 * 获取字段名,首先提取{@link javax.persistence.Column},如果不存在则使用属性名(的下划线形式)
 	 * 
 	 * @param field
 	 * @return
@@ -250,7 +250,7 @@ public class SQLProvider {
 		if (column != null) {
 			columnName = column.name();
 		} else {
-			columnName = Strings.changeCamelBakToUnderline(field.getName());
+			columnName = field.getName();
 		}
 		return columnName;
 	}

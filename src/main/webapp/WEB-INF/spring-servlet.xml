@@ -27,8 +27,8 @@
 	<bean class="org.moon.rest.handler.RestAnnotationHandler"/>	
 	
 	<bean class="org.moon.core.init.TableCreator"/>
-	<bean class="org.moon.rbac.domain.init.Initializer"/> 
-	<bean class="org.moon.rbac.domain.init.DomainAnnotationScanner"/>
+	<bean class="org.moon.core.init.Initializer"/>
+	<bean class="org.moon.core.init.DomainAnnotationScanner"/>
 	
 	 <bean id="viewResolver"
         class="org.springframework.web.servlet.view.InternalResourceViewResolver">

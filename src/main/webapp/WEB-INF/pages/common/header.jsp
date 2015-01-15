@@ -5,10 +5,10 @@
 <head>
 <%--引入核心js和css --%>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link href="/css/base.css" rel="stylesheet">
 <script type="text/javascript">
      <%-- 上下文路径--%>
      var contextPath = "${pageContext.request.contextPath}";
 </script>
-<m:require src="css/icon/icon.css" type="css"></m:require>
 </head>
 </html>

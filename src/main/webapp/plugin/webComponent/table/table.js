@@ -5,6 +5,7 @@
  * 		3、表格风格优化(done)
  * 		4、表格行选择支持(done)
  * 		5、拖拽式选择(done)
+ *		6、树形表格(done)
  * @author Gavin Cook
  * @Date 2012-08-25
  */
@@ -12,19 +13,28 @@
 
 	var VERSION = "1.0.0";
 	var defaults = {
-		url:"",
-		columns:[],
-	    pageIndex:1,
-		pageSize:10,
-		params:{},
-		formatData:'',
-		showSelectBox:false,//是否显示单选框或者复选框
-		multiSelect:true,//是否允许多选
-		showNumber:true,//是否显示序号(从1开始计数)
-		buttons:[],
-		emptyParent:true,//是否清空容器
-		dragSelect:true,
-		sortType:"asc"//默认排序方式
+		                url : "",
+                      rowId : "id",
+		            columns : [],
+                  pageIndex : 1,
+		           pageSize : 10,
+		             params : {},
+		         formatData : '',//格式化数据
+		      showSelectBox : false,//是否显示单选框或者复选框
+		        multiSelect : true,//是否允许多选
+		         showNumber : true,//是否显示序号(从1开始计数)
+		            buttons : [],//按钮组
+		        emptyParent : true,//是否清空容器
+		         dragSelect : false,//是否启动拖拽选择
+		          treeTable : true,//是否开启树形菜单
+		         treeColumn : "id",//哪一列作为树形表格的处理列
+                     indent : "_TreeColumn",//当表格为树形表格时，哪些列需要缩进 可选值为：{_TreeColumn(树形表格处理列) , _All(所有列) , 具体的列名}
+       childrenPropertyName : "_hasChildren",//树形表格中，子行在父行中的标示名字
+		       childrenData : [],//树形表格处理行，展开时需要渲染的子数据，可为数组或Deferred对象
+		           sortType : "asc",//默认排序方式
+             showPagination : true,//是否显示分页栏
+                  showTitle : true,//是否显示title
+            showTableHeader : true//是否显示表格标题
 	};
 
 	var methods  = {
@@ -40,38 +50,142 @@
 				var $tbody = methods.ce("tbody");
 				tableDataCache[$container.selector]=data;
 				$.each(data,function(index,columnData){
-					var $tr = methods.ce("tr",{"data-number":index,"data-id":"tr_"+columnData[(opts.rowId||{})]});//data-number表示当前行的序号,用户获取选择行使用,从0开始计数
-					if(columnData.checked){//是否选中
-						$tr.addClass("selected");
-					}
-					
-					if(opts.showSelectBox){//处理单选框或复选框
-						var $selectTd = methods.ce("td");
-						var $selectBox = methods.ce("input",{"name":"selectBox","type":(opts.multiSelect?"checkbox":"radio")});
-						$selectTd.append($selectBox);
-						$tr.append($selectTd);
-					}
-
-					if(opts.showNumber){//处理序号列
-						var $seriesTd = methods.ce("td",{"class":"number"}).html(index+1);
-						$tr.append($seriesTd);
-					}
-
-					$.each(opts.columns,function(index,columnDefinition){//处理数据行
-						var $dataTd = methods.ce("td",{"style":"text-align:"+(columnDefinition.align||"left")+";"});//文字默认左对齐
-						if($.isFunction(columnDefinition.render)){
-							$dataTd.html(columnDefinition.render.call($dataTd,columnData));//如果有自定义渲染方法，则调用自定义渲染方法
-						}else{
-							$dataTd.html(columnData[columnDefinition.name]);//没有自定义渲染方法，默认通过column.name取值
-						}
-						$tr.append($dataTd);
-					});
+					var $tr = methods.renderDataRow.call(tableInstance,opts,index,"0-"+index,columnData);
 					$tbody.append($tr);
 				});
 				dfd.resolve($tbody);
 			});
 
 			return dfd.promise();
+		},
+		renderDataRow:function(opts,index,level,columnData){//渲染数据行
+			var tableInstance = this;
+			var $tr = methods.ce("tr",{"data-number":index,"level":level,"data-id":"tr_"+columnData[opts.rowId]||index });//data-number表示当前行的序号,用户获取选择行使用,从0开始计数
+			if(columnData.checked){//是否选中
+				$tr.addClass("selected");
+			}
+			
+			if(opts.showSelectBox){//处理单选框或复选框
+				var $selectTd = methods.ce("td");
+				var $selectBox = methods.ce("input",{"name":"selectBox","type":(opts.multiSelect?"checkbox":"radio")});
+				$selectTd.append($selectBox);
+				$tr.append($selectTd);
+			}
+
+			if(opts.showNumber){//处理序号列
+				var $seriesTd = methods.ce("td",{"class":"number"});
+				if(methods.getLevel(level) == 1){
+					$seriesTd.html(index+1);
+				}
+				$tr.append($seriesTd);
+			}
+			if(opts.treeTable){//树形表格
+				$.each(opts.columns,function(index,columnDefinition){//处理数据行
+					var $dataTd = methods.ce("td",{"style":"text-align:"+(columnDefinition.align||"left")+";"});//文字默认左对齐
+					var isTreeColumn = opts.treeColumn === columnDefinition.name;
+					var $data = methods.ce("span");
+					if(columnData[opts.childrenPropertyName] == true && isTreeColumn){
+						var $icon =methods.ce("i",{"class":"fa fa-plus-square tree-icon"});
+						$icon.click(function(event){
+                            var level = $tr.attr("level");
+							if($icon.prop("expand") === true){
+								$icon.removeClass("fa-minus-square").addClass("fa-plus-square");
+								var $next = $tr.next();
+								while($next &&$next.attr("level") && $next.attr("level").length > level.length){
+									$next.hide();
+									$next = $next.next();
+								}
+								$icon.prop("expand",false);
+							}else{
+								$icon.removeClass("fa-plus-square").addClass("fa-minus-square");
+								if($icon.prop("dataLoaded")){//如果已经加载了数据
+									var $next = $tr.next();
+									while(methods.startWith($next.attr("level"),level)){//这里直接判断是否以父节点的level开头的即可
+										$next.show();
+										$next = $next.next();
+									}
+								}else{
+									methods.renderChildrenData.call(tableInstance,$tr,columnData);
+								}
+								$icon.prop("dataLoaded",true);//设置数据加载标志
+								$icon.prop("expand",true);
+							}
+                            return false;
+						});
+						$data.append($icon);
+					}
+                    var levelNum = methods.getLevel(level);
+                    var indent = opts.indent ;
+                    indent = (indent == "_All") || (indent == "_TreeColumn" && isTreeColumn) ||(indent == columnDefinition.name);
+					while(levelNum>1 && indent){
+						$dataTd.append(methods.ce("div",{"class":"space"}));
+                        levelNum--;
+					}
+					if($.isFunction(columnDefinition.render)){
+						$data.append(columnDefinition.render.call($dataTd,columnData));
+						$dataTd.append($data);//如果有自定义渲染方法，则调用自定义渲染方法
+					}else{
+						$data.append(columnData[columnDefinition.name]);
+						$dataTd.append($data);//没有自定义渲染方法，默认通过column.name取值
+					}
+					$tr.append($dataTd);
+				});
+			}else{
+				$.each(opts.columns,function(index,columnDefinition){//处理数据行
+					var $dataTd = methods.ce("td",{"style":"text-align:"+(columnDefinition.align||"left")+";"});//文字默认左对齐
+					if($.isFunction(columnDefinition.render)){
+						$dataTd.html(columnDefinition.render.call($dataTd,columnData));//如果有自定义渲染方法，则调用自定义渲染方法
+					}else{
+						$dataTd.html(columnData[columnDefinition.name]);//没有自定义渲染方法，默认通过column.name取值
+					}
+					$tr.append($dataTd);
+				});
+			}
+			return $tr;
+		},
+        //判断src是否以prefix开头
+        startWith:function(src,prefix){
+            return prefix && src && prefix == src.substring(0,prefix.length);
+        },
+        getLevel:function(src){
+            var c = 0;
+            var p = 0;
+            while((p = src.indexOf("-",p))!=-1){
+                c++;
+                p++;//找到"-"后往后移动一位
+            }
+            return c;
+        },
+		//渲染树形表格的数据
+		renderChildrenData:function(parentRow,parentRowData){
+			var tableInstance = this;
+			var $tr = methods.ce("tr");
+			var opts = tableInstance.opts;
+			var $dfd = $.Deferred();
+            if(!opts.childrenData){
+                $dfd.resolve([]);
+            }else if($.isArray(opts.childrenData)){
+				$dfd.resolve(opts.childrenData);
+			}else if($.isFunction(opts.childrenData)){
+				var result = opts.childrenData.call(tableInstance,parentRow,parentRowData)||[];
+                if($.isFunction(result.done)) {
+                    result.done(function (data) {
+                        $dfd.resolve(data);
+                    });
+                }else{
+                    $dfd.resolve(result);
+                }
+			}
+
+			$dfd.done(function(childrenData){
+                parentRowData.children = childrenData;
+				$.each(childrenData,function(index,columnData){
+					var level = parentRow.attr("level");//层级
+					var currentLevel = level+"-"+index;
+					var $tr = methods.renderDataRow.call(tableInstance,opts,index,currentLevel,columnData);
+					parentRow.after($tr);
+				});
+			});
 		},
 		//渲染表头
 		renderHeader:function(){
@@ -95,7 +209,7 @@
 
 			$.each(opts.columns,function(index,column){//渲染数据列表头
 				if(column.width){
-					if(typeof column.width=="number"){
+					if(typeof column.width == "number"){
 						column.width +="px";
 					}
 				}
@@ -118,7 +232,10 @@
 			var autoLayout = ($container.height()==0);//是否自适应布局
 			var opts = tableInstance.opts;
 			var $tableDiv = methods.ce("div");//整个table（包含表格标题、按钮组、表头、内容以及分页栏）的容器
-			$tableDiv.addClass("datagrid").append(methods.renderTitle.call(tableInstance));
+			$tableDiv.addClass("datagrid");
+            if(opts.showTitle) {
+                $tableDiv.append(methods.renderTitle.call(tableInstance));
+            }
 			if(!autoLayout){
 				$tableDiv.addClass("fixed-layout");
 			}
@@ -127,7 +244,10 @@
 			$tableContainerDiv.addClass("table-container");
 
 			var $table = methods.ce("table");//表格主体
-			$table.append(methods.renderHeader.call(tableInstance));
+
+            if(opts.showTableHeader) {
+                $table.append(methods.renderHeader.call(tableInstance));
+            }
 			$table.addClass("table table-bordered table-hover");
 			
 			var renderTableDfd = $.Deferred();//渲染表格延时对象，ajax等异步需要使用
@@ -141,8 +261,10 @@
 					$container.empty();
 				}
 				$tableContainerDiv.append($table);
-				$tableDiv.append($tableContainerDiv)
-				$tableDiv.append(methods.renderPagination.call(tableInstance));
+                $tableDiv.append($tableContainerDiv)
+                if(opts.showPagination) {
+                    $tableDiv.append(methods.renderPagination.call(tableInstance));
+                }
 				$tableDiv.append(methods.renderModal.call(tableInstance));
 				$tableDiv.append(methods.renderSelection.call(tableInstance));
 				
@@ -193,14 +315,15 @@
 			return "<div class=\"drag-area hide\" id=\"_datagrid_area_"+tableInstance._id+"\"></div>";
 	    },
 		//刷新
-		refresh:function(){
+		refresh:function(params){
 			var tableInstance = this;
 			var $container = tableInstance.$container;
 			var dfd = $.Deferred();
 			var $refreshBtn = $(".pagination-btn .fa-refresh");
 			var opts = tableInstance.opts;
+            $.extend(tableInstance.opts.params,params);//将新的参数添加到配置中，以供表格中刷新和翻页使用
 
-			$refreshBtn.toggleClass("fa-spin").closest(".datagrid").find(".modal-backdrop").toggleClass("hide").toggleClass("in");
+            $refreshBtn.toggleClass("fa-spin").closest(".datagrid").find(".modal-backdrop").toggleClass("hide").toggleClass("in");
 
 			methods.renderData.call(tableInstance).done(function(tbody){
 				dfd.resolve(tbody);
@@ -208,7 +331,6 @@
 				$("tbody",$table).remove();
 				$table.append(tbody);
 				$refreshBtn.toggleClass("fa-spin").closest(".datagrid").find(".modal-backdrop").toggleClass("hide").toggleClass("in");//关闭loading状态
-				methods.bindEventsForTr.call(tableInstance);//为tbody添加事件
 				methods.bindEventsForDragArea.call(tableInstance);
 				methods.refreshPagination.call(tableInstance);//刷新分页			
 			});
@@ -238,11 +360,29 @@
 			 $("tbody tr",$container).each(function(index,tr){
 				 var $tr=$(tr); 
 				 if($tr.hasClass("selected")){
-					selectedData.push(tableData[$tr.attr("data-number")]);
+                    var level = $tr.attr("level");//如0-2-3
+					selectedData.push(methods.getRowDataByLevel.call(tableInstance,level));
 				 }
 			 });
 			return selectedData;
 		},
+        //根据level节点获取该行的数据
+        getRowDataByLevel:function(level){
+            var tableInstance = this;
+            var $container = tableInstance.$container;
+            var tableData = tableDataCache[$container.selector];
+            var levels = level.substring(2).match(/(\d)/g);//返回[2,3],第一个0-(表示第一级)需要去掉
+            var tempData = tableData;
+            for(var i = 0,l =levels.length;i<l;i++){
+                if(i>0){
+                    tempData = tempData.children[parseInt(levels[i])];//获取树节点的子节点数据
+                }else {
+                    tempData = tempData[parseInt(levels[i])];//获取第一级节点数据
+                }
+
+            }
+            return tempData;
+        },
 		//获取状态改变的行，包含两种情况（1.选中变为未选中; 2.未选中变为选中）
 		getChangedRows:function(){
 			var tableInstance = this;
@@ -297,7 +437,7 @@
 					opts.totalItemsCount = result.totalItemsCount;//默认从totalItemsCount中获取总条数
 					data = result.items||[];
 					if($.isFunction(opts.formatData)){//自定义格式化数据{items:[],totalItemsCount:20}
-						var temp = opts.formatData.call(tableInstance,result);
+						var temp = opts.formatData.call(tableInstance,result)||{};
 						if(temp.items){
 							data = temp.items;
 						}
@@ -333,7 +473,6 @@
 					 }
 				}
 			}
-			console.log(data);
 		},
 		//绑定事件
 		//1.分页按钮点击事件 2.排序事件 3.拖动选择事件
@@ -351,31 +490,43 @@
 					}
 				});
 			}
-			/**
-			**分页按钮点击事件
-			**/
-			$(".pagination-btn",$container).click(function(event){
-				switch($(this).attr("action")){
-					case "refresh": methods.refresh.call(tableInstance);break;
-					case "first"  : opts.pageIndex = 1;
-								    methods.refresh.call(tableInstance);break;
-					case "prev"   : if(opts.pageIndex-1>0){
-										opts.pageIndex=opts.pageIndex-1;
-									}else{
-										opts.pageIndex = 1;
-									}
-					 				methods.refresh.call(tableInstance);break;
-					case "next": 	if(opts.pageIndex+1>opts.pageCount){
-										opts.pageIndex=opts.pageCount;
-									}else{
-										opts.pageIndex = opts.pageIndex+1;
-									}
-									methods.refresh.call(tableInstance);break;
-					case "last":    opts.pageIndex=opts.pageCount;
-						            methods.refresh.call(tableInstance);break;
-				}
-			});
-			
+
+            if(opts.showPagination) {
+                /**
+                 **分页按钮点击事件
+                 **/
+                $(".pagination-btn", $container).click(function (event) {
+                    switch ($(this).attr("action")) {
+                        case "refresh":
+                            methods.refresh.call(tableInstance);
+                            break;
+                        case "first"  :
+                            opts.pageIndex = 1;
+                            methods.refresh.call(tableInstance);
+                            break;
+                        case "prev"   :
+                            if (opts.pageIndex - 1 > 0) {
+                                opts.pageIndex = opts.pageIndex - 1;
+                            } else {
+                                opts.pageIndex = 1;
+                            }
+                            methods.refresh.call(tableInstance);
+                            break;
+                        case "next":
+                            if (opts.pageIndex + 1 > opts.pageCount) {
+                                opts.pageIndex = opts.pageCount;
+                            } else {
+                                opts.pageIndex = opts.pageIndex + 1;
+                            }
+                            methods.refresh.call(tableInstance);
+                            break;
+                        case "last":
+                            opts.pageIndex = opts.pageCount;
+                            methods.refresh.call(tableInstance);
+                            break;
+                    }
+                });
+            }
 			/**
 			**排序事件
 			**/
@@ -426,8 +577,9 @@
 								width:Math.abs(ex-x),
 								height:Math.abs(ey-y)
 							});
-							
-							select();
+							if(Math.abs(ex-x)>10 && Math.abs(ey-y)>10){
+								select();
+							}
 							e.preventDefault();
 						 }
 					 });
@@ -481,44 +633,54 @@
 			/**
 			**tr行选中事件
 			**/
-			$("tbody tr",$container).bind("select",function(){
-			     if(opts.multiSelect){
-					$(this).addClass("selected").find(":checkbox").prop("checked",true);
-					if(opts.showSelectBox&&checkboxNumber==$("td :checkbox[name='selectBox']:checked",$container).length){
-						$("th.select-box :checkbox",$container).prop("checked",true);
+			$container.on("select","tbody tr",function(e){
+				 var $target = $(e.currentTarget);
+				 if($target[0].tagName == "TR"){
+					 if(opts.multiSelect){
+						$target.addClass("selected").find(":checkbox").prop("checked",true);
+						if(opts.showSelectBox&&checkboxNumber==$("td :checkbox[name='selectBox']:checked",$container).length){
+							$("th.select-box :checkbox",$container).prop("checked",true);
+						}
+					}else{
+						$target.addClass("selected").siblings().removeClass("selected");
+						$target.find(":radio").prop("checked",true);
 					}
-				}else{
-					$(this).addClass("selected").siblings().removeClass("selected");
-					$(this).find(":radio").prop("checked",true);
 				}
 			});
 
 			/**
 			**tr行取消选中事件
 			**/
-			$("tbody tr",$container).bind("unselect",function(){
-			     if(opts.multiSelect){
-					$(this).removeClass("selected").find(":checkbox").prop("checked",false);
-					if(opts.showSelectBox){
-						$("th.select-box :checkbox",$container).prop("checked",false);
+			$container.on("unselect","tbody tr",function(e){
+				 var $target = $(e.currentTarget);
+				 if($target[0].tagName == "TR"){
+					 if(opts.multiSelect){
+						$target.removeClass("selected").find(":checkbox").prop("checked",false);
+						if(opts.showSelectBox){
+							$("th.select-box :checkbox",$container).prop("checked",false);
+						}
+					}else{
+						$target.removeClass("selected").siblings().removeClass("selected");
+						$target.find(":radio").prop("checked",false);
 					}
-				}else{
-					$(this).removeClass("selected").siblings().removeClass("selected");
-					$(this).find(":radio").prop("checked",false);
 				}
 			});
 
 			/**
 			**tr点击事件，用于选择行或取消选择行
 			**/
-			$("tbody tr",$container).click(function(){
-				if($(this).hasClass("selected")){
-					$(this).trigger("unselect");
+			$container.on("click","tbody tr",function(e){
+                var target = e.target;
+                if(target.tagName == "A" || target.tagName == "BUTTON" || target.tageName == "INPUT"){
+                    return; //当为a,button,input标签时不执行行选中事件,不能直接返回false,需要将事件继续往上冒泡
+                }
+				var $currentTarget = $(e.currentTarget);
+				if($currentTarget.hasClass("selected")){
+                    $currentTarget.trigger("unselect");
 				}else{
-					$(this).trigger("select");
+                    $currentTarget.trigger("select");
 				}
 			});
-
 		},
 		//表格标题
 		renderTitle:function(){
@@ -526,6 +688,7 @@
 			var $div = methods.ce("div");
 			var $span = methods.ce("span");
 			$span.html(tableInstance.opts.title||'');
+            tableInstance.$title = $span;//保存title到tableInstance中
 			$div.addClass("table-title").append($span).append(methods.renderButtonGroup.call(tableInstance));
 			return $div;
 		},
@@ -560,16 +723,32 @@
 	var _table = {
 			newInstance:function(){
 				var t = new Object();
-				t.refresh = function(){//刷新
-					methods.refresh.call(t);
+				t.refresh = function(params){//刷新
+					methods.refresh.call(t,params);
 				};
 				t.getSelect = function(){//选取选择的数据
 					return methods.getSelect.call(t);
-				}
+				};
 				t.getChangedRows = function(){
-					return methods.getChangedRows.call(t);
-				}
+                    return methods.getChangedRows.call(t);
+                };
+                /**
+                 * 根据tr行获取对应的数据
+                 * @param tr
+                 * @returns {*}
+                 */
+                t.getRowData = function(tr){
+                    return methods.getRowDataByLevel.call(t,$(tr).attr("level"))
+                };
 				t._id = idGenerator.next();
+
+                /**
+                 * 动态设置Title
+                 * @param title
+                 */
+                t.updateTitle = function(title){
+                    this.$title.html(title);
+                }
 				return t;
 			}
 			
@@ -604,7 +783,7 @@
 			tableInstance = _table.newInstance();
 			tableInstance.opts=$.extend({},defaults,opts);
 			tableInstance.$container = $(this);
-            $(this).empty();
+
 			return methods.renderTable.call(tableInstance);
 		}
 	};

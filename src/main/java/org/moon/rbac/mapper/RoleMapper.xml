@@ -4,42 +4,42 @@
 
 	<update id="assign" parameterType="Map">
 		UPDATE tab_user 
-		SET role_id = #{rid} 
+		SET roleId = #{rid}
 		WHERE id = #{uid}
 	</update>
 
 	<select id="getSubRoles" resultType="CamelbakKeyResultMap">
 		SELECT *
 		FROM tab_role 
-		WHERE parent_id
+		WHERE parentId
 		<if test="rid==null">is null</if>
 		<if test="rid!=null">= #{rid}</if>
-		AND delete_flag = false
+		AND deleteFlag = false
 	</select>
 
 	<select id="hasPermission" resultType="Boolean">
 		SELECT COUNT(*) 
 		FROM tab_role_permission trp
 		JOIN tab_permission tp 
-		ON trp.permission_id = tp.id AND tp.code=#{code} AND trp.role_id=#{rid}
+		ON trp.permissionId = tp.id AND tp.code=#{code} AND trp.roleId=#{rid}
 	</select>
 	
 	<select id="hasMenu" resultType="Boolean">
 		SELECT COUNT(*) 
 		FROM tab_role_Menu trm
 		JOIN tab_menu tm 
-		ON trm.menu_id = tm.id	AND	tm.code=#{code} AND trm.role_id=#{rid}
+		ON trm.menuId = tm.id	AND	tm.code=#{code} AND trm.roleId=#{rid}
 	</select>
 
     <select id="getRolesWithStatusForPermission" resultType="CamelbakKeyResultMap">
         SELECT tr.*,
-         CASE WHEN trp.role_id IS NULL THEN FALSE ELSE TRUE END AS checked
+         CASE WHEN trp.roleId IS NULL THEN FALSE ELSE TRUE END AS checked
         FROM tab_role tr
         LEFT JOIN tab_role_permission trp
-        ON tr.id = trp.role_id
-        AND trp.permission_id = #{pid}
+        ON tr.id = trp.roleId
+        AND trp.permissionId = #{pid}
         WHERE
-            <if test="rid==null">tr.parent_id is null</if>
-            <if test="rid!=null">tr.parent_id=#{rid} </if>
+            <if test="rid==null">tr.parentId is null</if>
+            <if test="rid!=null">tr.parentId=#{rid} </if>
     </select>
 </mapper>

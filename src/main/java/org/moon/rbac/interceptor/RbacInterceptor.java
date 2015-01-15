@@ -4,16 +4,13 @@ import com.reeham.component.ddd.model.ModelContainer;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.log4j.Logger;
+import org.moon.core.session.SessionContext;
 import org.moon.log.domain.Log;
 import org.moon.message.WebResponse;
 import org.moon.rbac.domain.Role;
 import org.moon.rbac.domain.User;
-import org.moon.rbac.domain.annotation.LogRecord;
-import org.moon.rbac.domain.annotation.LoginRequired;
-import org.moon.rbac.domain.annotation.MenuMapping;
-import org.moon.rbac.domain.annotation.PermissionMapping;
+import org.moon.rbac.domain.annotation.*;
 import org.moon.rbac.service.UserService;
-import org.moon.core.session.SessionContext;
 import org.moon.utils.Constants;
 import org.moon.utils.Strings;
 import org.springframework.stereotype.Component;
@@ -42,7 +39,7 @@ public class RbacInterceptor implements MethodInterceptor {
 	@Override
 	public Object invoke(MethodInvocation methodInvocation) throws Throwable {
 		boolean hasPermission = true, accessMenu = true;
-		Long currentUserId = (Long)SessionContext.getSession().getAttribute(User.CURRENT_USER_ID);
+		Long currentUserId = (Long) SessionContext.getSession().getAttribute(User.CURRENT_USER_ID);
 		Role currentRole = null;
 		User currentUser = null;
 		HttpServletRequest currentServletRequest = SessionContext.getRequest();
@@ -76,7 +73,9 @@ public class RbacInterceptor implements MethodInterceptor {
 		}
 		// 菜单拦截
         if (method.isAnnotationPresent(MenuMapping.class)) {
-            if (currentRole == null) {
+            if(method.isAnnotationPresent(NoMenuIntercept.class) || method.getDeclaringClass().isAnnotationPresent(NoMenuIntercept.class)){
+                accessMenu = true;
+            }else if (currentRole == null) {
                 SessionContext.getResponse().sendRedirect("user/login?from="+from);
             } else {
                 if (currentRole.hasMenu((method.getAnnotation(MenuMapping.class).code()))) {
@@ -116,7 +115,7 @@ public class RbacInterceptor implements MethodInterceptor {
                                             + ")\n");
                 }
                 log.error(bf);
-                message = Strings.subString(message, 0, 200); 
+                message = Strings.subString(message, 0, 200);
                 
                 if (currentUser == null) {
                    new Log("Not Login", -1L, message, bf.toString(), Constants.SYSTEM_LOG).save();

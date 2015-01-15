@@ -709,7 +709,7 @@ var resultMap = {};
 			return dfd.promise();
 		}
 		//点击msg，msg消失并使相应表单获取焦点
-		$(".easyValidation").live("click",function() {
+		$(document).on("click",".easyValidation",function() {
 			method.hide(this);
 			var index = $(this).attr("id").replace("msg_index_","");
 			if (/^\d+$/.test(index)){

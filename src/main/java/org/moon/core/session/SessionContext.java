@@ -40,8 +40,9 @@ public class SessionContext {
    }
    
    /**
-    * 返回web应用的真实路径
+    * 返回web应用的真实路径,此方法只能创建了Session后才能使用
     * @return
+    * @see {@link org.moon.core.spring.ApplicationContextHelper#getWebAppPath(org.springframework.context.ApplicationContext)}
     */
    public static String getWebAppPath(){
 	   try{

@@ -1,10 +1,9 @@
 package org.moon.rbac.action;
 
-import org.moon.core.Domain.DomainLoader;
+import org.moon.core.domain.DomainLoader;
 import org.moon.core.orm.mybatis.Criteria;
 import org.moon.core.orm.mybatis.DataConverter;
 import org.moon.message.WebResponse;
-import org.moon.rbac.domain.Permission;
 import org.moon.rbac.domain.Role;
 import org.moon.rbac.domain.annotation.MenuMapping;
 import org.moon.rbac.service.PermissionService;
