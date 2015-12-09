@@ -2,4 +2,63 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.moon.log.repository.LogRepository">
 
+    <select id="listWithOperator" resultType="HashMap">
+        select date_format(tl.time,'%Y-%m-%d %H:%i:%s') as time,
+        case when u.realName is null then u.userName else u.realName end as operator,
+        tl.action,
+        tl.id,
+        tl.type
+        from tab_log tl
+        join tab_user u
+        on tl.userId = u.id
+        where 1=1
+        <if test="operator!=null">
+            AND realName like concat('%',#{operator},'%')
+        </if>
+        <if test="type!=null">
+            AND tl.type like concat('%',#{type},'%')
+        </if>
+        <if test="startTime!=null">
+            AND tl.time &gt;DATE_FORMAT(#{startTime},'%y-%m-%d 00:00:00')
+        </if>
+        <if test="endTime!=null">
+            AND tl.time &lt;DATE_FORMAT(#{endTime},'%Y-%m-%d 23:59:59')
+        </if>
+        limit ${pageCondition.offset},${pageCondition.limit}
+    </select>
+
+    <select id="listWithOperator_count" resultType="Integer">
+        select count(*)
+        from tab_log tl
+    </select>
+    
+    <select id="getDetail" resultMap="log">
+        select time,
+        case when u.realName is null then u.userName else u.realName end as operator,
+        tl.userId,
+        tl.action,
+        tl.id,
+        tl.type,
+        tl.detail
+        from tab_log tl
+        join tab_user u
+        on tl.userId = u.id
+        where tl.id = #{id}
+    </select>
+
+    <insert id="save" parameterType="org.moon.log.domain.Log">
+        insert into tab_log(userId,action,time,type,detail)
+        values(#{log.user.id},#{log.action},#{log.time},#{log.type},#{log.detail});
+    </insert>
+
+    <resultMap id="log" type="org.moon.log.domain.Log">
+        <result column="id" property="id" javaType="Long"></result>
+        <result column="userId" property="user.id" javaType="Long"></result>
+        <result column="operator" property="user.realName" javaType="String"></result>
+        <result column="action" property="action" javaType="String"></result>
+        <result column="time" property="time" javaType="Date"></result>
+        <result column="type" property="type" javaType="String"></result>
+        <result column="detail" property="detail" javaType="String" typeHandler="org.moon.core.orm.mybatis.handler.TextTypeHandler"></result>
+        <result column="ip" property="ip" javaType="String"></result>
+    </resultMap>
 </mapper>

@@ -25,7 +25,7 @@ public class SystemUserPassword extends TagSupport{
 	public int doEndTag(){
 		JspWriter out = this.pageContext.getOut();
 		try{
-			out.print(Constants.SYSTEM_PASSWORD);
+			out.print(new String(Constants.getSystemUserPassword()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

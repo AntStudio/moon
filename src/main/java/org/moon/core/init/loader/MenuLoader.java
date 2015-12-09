@@ -5,9 +5,8 @@ import org.moon.rbac.domain.Menu;
 import java.util.List;
 
 
-
 public interface MenuLoader {
 
- public List<Menu> getMenus();
-	
+    List<Menu> getMenus();
+
 }

@@ -4,6 +4,8 @@ import org.moon.exception.ApplicationRunTimeException;
 
 import java.io.*;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.util.Calendar;
 
 /**
  * 文件工具类
@@ -16,8 +18,8 @@ public class FileUtils {
 	/**
 	 * 保存文件
 	 * @param in
-	 * @param path
-	 * @throws java.io.IOException
+	 * @param file
+	 * @throws IOException
 	 */
 	public static void save(InputStream in,File file) throws IOException{
 		if(!file.exists()){
@@ -34,6 +36,21 @@ public class FileUtils {
 		in.close();
 	}
 
+    /**
+     * 将字节数组保存到文件
+     * @param data
+     * @param file
+     * @throws IOException
+     */
+    public static void save(byte[] data,File file) throws IOException{
+        if(!file.exists()){
+            file.createNewFile();
+        }
+        FileOutputStream out = new FileOutputStream(file);
+        out.write(data);
+        out.flush();
+        out.close();
+    }
 	/**
 	 * 获取文件后缀名
 	 * @param file
@@ -90,7 +107,7 @@ public class FileUtils {
 	 * @param path
 	 * @param dir
 	 * @return
-	 * @throws java.io.IOException
+	 * @throws IOException
 	 */
 	public static File createIfNotExists(String path,boolean dir) throws IOException{
 		File file = new File(path);
@@ -109,7 +126,7 @@ public class FileUtils {
      * 将输入流数据写入输出流
      * @param in
      * @param out
-     * @throws java.io.IOException
+     * @throws IOException
      */
     public static void write(InputStream in,OutputStream out) throws IOException {
         try {
@@ -122,7 +139,6 @@ public class FileUtils {
             in.close();
             out.close();
         }
-
     }
 
     /**
@@ -140,4 +156,39 @@ public class FileUtils {
         }
         return FileUtils.class.getResourceAsStream(filePath);
     }
+
+    /**
+     * 根据时间戳和基础路径获取文件夹路径,如
+     * <code>
+     *     getTimestampPath("D:/upload")-->D:/upload/2015/02/10/12/25/30/
+     * </code>
+     * @param baseDir
+     * @return
+     */
+    public static String getTimestampPath(String baseDir){
+        Calendar now = Calendar.getInstance();
+        StringBuilder sb = new StringBuilder();
+        String separator = File.separator;
+        sb.append(baseDir)
+                .append(now.get(Calendar.YEAR)).append(separator)
+                .append(now.get(Calendar.MONTH)+1).append(separator)
+                .append(now.get(Calendar.DAY_OF_MONTH)).append(separator)
+                .append(now.get(Calendar.HOUR_OF_DAY)).append(separator)
+                .append(now.get(Calendar.MINUTE)).append(separator)
+                .append(now.get(Calendar.SECOND)).append(separator);
+        return sb.toString();
+    }
+
+    /**
+     * 获取带单位的文件大小
+     * @param size
+     * @return
+     */
+    public static String getReadableFileSize(Long size){
+        if(size <= 0) return "0";
+        final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
+        int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
+        return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
+
 }

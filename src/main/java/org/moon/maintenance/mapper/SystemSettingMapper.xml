@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.moon.maintenance.repository.SystemSettingRepository">
-    <select id="listSettings" resultType="HashMap">
-        select * from tab_setting
+    <select id="listSettings" resultMap="pair">
+        select name as key_f, value as value_f from tab_setting
         <if test="prefix!=null">
             where name like concat(#{prefix},'%')
         </if>
@@ -16,8 +16,15 @@
         insert into tab_setting(name,value) values (#{name},#{value});
     </insert>
 
-    <select id="getSetting" resultType="HashMap">
-        select * from tab_setting
+    <select id="getSetting" resultMap="pair">
+        select name as key_f, value as value_f from tab_setting
         where name = #{name} limit 0,1
     </select>
+
+    <resultMap id="pair" type="org.moon.utils.Pair">
+        <constructor>
+            <arg column="key_f"></arg>
+            <arg column="value_f"></arg>
+        </constructor>
+    </resultMap>
 </mapper>

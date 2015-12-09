@@ -3,8 +3,8 @@
 <mapper namespace="org.moon.rbac.repository.PermissionRepository">
 
   <insert id="batchSave">
-    insert tab_permission (code,name) values
-    <foreach collection="permissions" separator="," item="permission">( #{permission.code},#{permission.name})</foreach>
+    insert tab_permission (code,name,pointcut) values
+    <foreach collection="permissions" separator="," item="permission">( #{permission.code},#{permission.name},#{permission.pointcut})</foreach>
   </insert>
 
   <insert id="assignAddPermission">

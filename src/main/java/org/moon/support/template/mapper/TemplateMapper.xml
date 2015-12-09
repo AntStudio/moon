@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.moon.support.template.repository.TemplateRepository">
+    <insert id="save">
+        <selectKey keyProperty="id"  resultType="Long" order="AFTER">
+          select LAST_INSERT_ID() as id
+        </selectKey>
+
+        insert into tab_template(name,content,time,lastUpdateTime,userId,cover)
+        values(#{template.name},#{template.content},CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,#{template.user.id},#{template.cover})
+    </insert>
+
+    <update id="update">
+        update tab_template set name = #{template.name},content = #{template.content},
+          lastUpdateTime = CURRENT_TIMESTAMP,cover = #{template.cover}
+        where id = #{template.id}
+    </update>
+
+    <delete id="delete">
+        delete from tab_template where id = #{id}
+    </delete>
+
+    <select id="get" resultMap="template">
+        select * from tab_template where id = #{id}
+    </select>
+
+    <select id="list" resultType="HashMap">
+       select tt.*, case when u.realName is null then u.userName else u.realName end as operator
+       from tab_template  tt
+       join tab_user u
+       on tt.userId = u.id
+    </select>
+
+    <select id="list_count" resultType="Integer">
+        select count(tt.id)
+        from tab_template  tt
+    </select>
+
+    <resultMap id="template" type="org.moon.support.template.domain.Template">
+        <result column="id" property="id" javaType="Long"></result>
+        <result column="name" property="name" javaType="String"></result>
+        <result column="content" property="content" javaType="String"></result>
+        <result column="time" property="time" javaType="LocalDateTime"></result>
+        <result column="lastUpdateTime" property="lastUpdateTime" javaType="LocalDateTime"></result>
+        <result column="userId" property="user.id" javaType="Long"></result>
+        <result column="cover" property="cover" javaType="String"></result>
+    </resultMap>
+</mapper>

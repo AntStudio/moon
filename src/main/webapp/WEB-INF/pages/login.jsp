@@ -22,7 +22,7 @@
 
 
 <div class="form-container">
-   
+
    <div class="title-container">
        <span class="title">携心医疗</span>
    </div>
@@ -35,11 +35,11 @@
      <div class="form-inline">
      	<i class="fa fa-lock input-icon"></i>
      	<input  name="password" type="password" validate="validate[minsize(6)]" errMsg="密码须6位以上"/>
-     </div> 
-     
+     </div>
+
     <input  type="button" id="submit" class="btn btn-default  btn-info" value="登   录"/>
 </form>
-  
+
 </div>
 
 

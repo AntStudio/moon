@@ -2,6 +2,8 @@ package org.moon.utils;
 
 import org.moon.core.orm.mybatis.Criteria;
 import org.moon.core.orm.mybatis.criterion.Order;
+import org.moon.core.session.SessionContext;
+import org.moon.pagination.PageCondition;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +42,7 @@ public class ParamUtils {
      */
     public static  Map<String,Object> getAllParamMapFromRequest(HttpServletRequest request,boolean ignoreEmptyParam){
         Map<String,Object> paramMap = getParamsMapForPager(request);
-        paramMap.putAll(getParamMapFromRequest(request));
+        paramMap.putAll(getParamMapFromRequest(request,ignoreEmptyParam));
         return paramMap;
     }
 
@@ -150,5 +152,64 @@ public class ParamUtils {
 		}
 		return criteria;
 	}
-	
+
+
+    /**
+     * 从请求中获取分页过滤条件
+     * @param request
+     * @return
+     */
+    public static PageCondition getPageConditionFromRequest(HttpServletRequest request){
+        PageCondition.Builder builder = new PageCondition.Builder();
+
+        Map<String,Object> paramMap = getDefaultParamMap();
+        String pageIndex =request.getParameter("pageIndex");
+        if(Objects.nonNull(pageIndex)) {
+            paramMap.put("pageIndex", pageIndex);
+        }
+        String pageSize = request.getParameter("pageSize");
+        if(Objects.nonNull(pageSize)) {
+            paramMap.put("pageSize", pageSize);
+        }
+        int offset = (Integer.valueOf(paramMap.get("pageIndex")+"")-1)*Integer.valueOf(paramMap.get("pageSize")+"");
+        paramMap.put("offset",offset);
+
+        String sortType = request.getParameter("sortType");
+        if(sortType==null){
+            sortType = "asc";
+        }
+
+        String sortName = request.getParameter("sortName");
+        if(sortName!=null){
+            if(sortType.equalsIgnoreCase("asc")){
+                builder.asc(sortName);
+            }else{
+                builder.desc(sortName);
+            }
+        }
+
+        builder.offset(offset).limit(Integer.valueOf(paramMap.get("pageSize")+""));
+        return builder.build();
+    }
+
+    /**
+     * 获取当前请求来自的app版本，如果不是app的请求，返回<code>-1</code>
+     * @return
+     */
+    public static int getAppVersion(){
+        HttpServletRequest request = SessionContext.getRequest();
+        String version = request.getParameter("VERISON");
+        if(Objects.isNull(version)){
+            version = request.getParameter("VERSION");
+        }
+
+        if(Objects.nonNull(version)){
+            try {
+                return Integer.valueOf(version);
+            }catch (Exception e){
+                return -1;
+            }
+        }
+        return -1;
+    }
 }

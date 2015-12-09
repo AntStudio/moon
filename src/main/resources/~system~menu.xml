@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <menus>
-    <menu code="platform" name="平台管理"></menu>
-	<menu code="test" name="测试菜单">
-        <menu  code="test_1" name="table测试" url="/turn?page=pages/test/table"/>
-		<menu  code="test_2" name="文件上传" url="/turn?page=pages/test/fileupload"/>
-	</menu>
-	<menu code="doc" name="文档">
-		<menu  code="doc_1" name="API文档" url="/doc/index.html"/>
-		<menu  code="doc_2" name="Moon说明文档" url="/reference/reference.html"/>
-        <menu  code="doc_3" name="Table文档" url="/reference/table.html"/>
-        <menu  code="doc_4" name="Dialog文档" url="/reference/dialog.html"/>
-	</menu>
+    <menu code="platform" name="平台管理" iconCss="fa fa-paper-plane-o"></menu>
+
+    <menu code="test" name="测试菜单" iconCss="fa fa-code">
+        <menu code="test_1" name="table测试" url="/turn?page=pages/test/table"/>
+        <menu code="test_2" name="文件上传" url="/turn?page=pages/test/fileupload"/>
+    </menu>
+    <menu code="doc" name="文档" iconCss="fa fa-newspaper-o">
+        <menu code="doc_2" name="Moon说明文档" url="/reference/reference.html"/>
+        <menu code="doc_3" name="Table文档" url="/reference/table.html"/>
+        <menu code="doc_4" name="Dialog文档" url="/reference/dialog.html"/>
+    </menu>
 </menus>

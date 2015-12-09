@@ -1,28 +1,39 @@
 package org.moon.rbac.interceptor;
 
+import com.codahale.metrics.Timer;
 import com.reeham.component.ddd.model.ModelContainer;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.apache.log4j.Logger;
+import org.moon.core.domain.DomainLoader;
 import org.moon.core.session.SessionContext;
+import org.moon.exception.ApplicationRunTimeException;
+import org.moon.exception.NoUserLoginException;
 import org.moon.log.domain.Log;
-import org.moon.message.WebResponse;
+import org.moon.maintenance.component.PerformanceMonitorDataHolder;
+import org.moon.rbac.domain.Menu;
 import org.moon.rbac.domain.Role;
 import org.moon.rbac.domain.User;
 import org.moon.rbac.domain.annotation.*;
+import org.moon.rbac.service.MenuService;
 import org.moon.rbac.service.UserService;
-import org.moon.utils.Constants;
-import org.moon.utils.Strings;
+import org.moon.utils.Maps;
+import org.moon.utils.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 拦截器，主要拦截系统级菜单和权限注解
+ *
  * @author Gavin
  * @version 1.0
  * @date 2012-12-22
@@ -30,111 +41,172 @@ import java.lang.reflect.Method;
 @Component
 public class RbacInterceptor implements MethodInterceptor {
 
-	@Resource
-	private UserService userService;
-	@Resource
-	private ModelContainer modelContainer;
-	
-	private Logger log = Logger.getLogger(RbacInterceptor.class);
-	@Override
-	public Object invoke(MethodInvocation methodInvocation) throws Throwable {
-		boolean hasPermission = true, accessMenu = true;
-		Long currentUserId = (Long) SessionContext.getSession().getAttribute(User.CURRENT_USER_ID);
-		Role currentRole = null;
-		User currentUser = null;
-		HttpServletRequest currentServletRequest = SessionContext.getRequest();
-		String from = currentServletRequest.getRequestURL()
-				+(currentServletRequest.getQueryString()==null?"":("?"+currentServletRequest.getQueryString()));
-		Method method = methodInvocation.getMethod();
-		if((method.isAnnotationPresent(LoginRequired.class)||method.getDeclaringClass().isAnnotationPresent(LoginRequired.class))
-				&&currentUserId==null){//需要登录的操作，如果没有登录返回登录页面
-		    SessionContext.getResponse().sendRedirect(SessionContext.getFullPath()+"/user/login?from="+from);
-		    return null;
-		}
-		
-		if(currentUserId!=null){
-			currentUser = userService.get(currentUserId);
-			currentRole = currentUser.getRole();
-		}
-		// 权限拦截
-		if (method.isAnnotationPresent(PermissionMapping.class)) {
-			if(currentRole==null){
-				hasPermission = false;
-			} else {
-				if (currentRole.hasPermission(methodInvocation.getMethod().getAnnotation(PermissionMapping.class)
-						.code())) {
-				    log.debug("当前角色具有"+ methodInvocation.getMethod().getAnnotation(PermissionMapping.class).code() + "权限");
-					hasPermission = true;
-				} else {
-				    log.warn("当前角色没有"+ methodInvocation.getMethod().getAnnotation(PermissionMapping.class).code() + "权限");
-					hasPermission = false;
-				}
-			}
-		}
-		// 菜单拦截
+    @Resource
+    private UserService userService;
+
+    @Resource
+    private MenuService menuService;
+
+    @Resource
+    private ModelContainer modelContainer;
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Resource
+    private PerformanceMonitorDataHolder performanceMonitorDataHolder;
+
+    @Resource
+    private DomainLoader domainLoader;
+
+    @Override
+    public Object invoke(MethodInvocation methodInvocation) throws Throwable {
+        boolean hasPermission = true, accessMenu = true;
+        Long currentUserId = (Long) SessionContext.getSession().getAttribute(User.CURRENT_USER_ID);
+        Role currentRole = null;
+        User currentUser = null;
+        HttpServletRequest currentServletRequest = SessionContext.getRequest();
+        String from = currentServletRequest.getRequestURL()
+                + (currentServletRequest.getQueryString() == null ? "" : ("?" + currentServletRequest.getQueryString()));
+        Method method = methodInvocation.getMethod();
+
+        Class<?> declareClass = method.getDeclaringClass();
+
+        if ((method.isAnnotationPresent(LoginRequired.class) || method.getDeclaringClass().isAnnotationPresent(LoginRequired.class))
+                && currentUserId == null) {//需要登录的操作
+            if(method.isAnnotationPresent(ResponseBody.class) || method.getDeclaringClass().isAnnotationPresent(ResponseBody.class)
+                    || method.getDeclaringClass().isAnnotationPresent(RestController.class)){//如果不是返回页面，则直接抛出异常
+                throw new NoUserLoginException("Current operation need login.");
+            }else{//访问页面，则跳转为登录页面
+                SessionContext.getResponse().sendRedirect(SessionContext.getContextPath() + "/user/login?from=" + from);
+                return null;
+            }
+        }
+
+        if (currentUserId != null) {
+            currentUser = userService.get(currentUserId);
+            currentRole = currentUser.getRole();
+        }
+        // 权限拦截
+        PermissionMapping permissionMapping = null;
+        if (method.isAnnotationPresent(PermissionMapping.class)){
+            permissionMapping = method.getAnnotation(PermissionMapping.class);
+        } else if(declareClass.isAnnotationPresent(PermissionMapping.class)) {
+            permissionMapping = declareClass.getAnnotation(PermissionMapping.class);
+        }
+        if (Objects.nonNull(permissionMapping)) {
+            if (currentRole == null) {
+                hasPermission = false;
+            } else {
+                if (currentRole.hasPermission(permissionMapping.code())) {
+                    logger.debug("Current role can access the permission,code:{}", permissionMapping.code());
+                    hasPermission = true;
+                } else {
+                    logger.debug("Current role can't access the permission,code:{}",permissionMapping.code());
+                    hasPermission = false;
+                }
+            }
+        }
+
+        // 菜单拦截
         if (method.isAnnotationPresent(MenuMapping.class)) {
-            if(method.isAnnotationPresent(NoMenuIntercept.class) || method.getDeclaringClass().isAnnotationPresent(NoMenuIntercept.class)){
+            if (method.isAnnotationPresent(NoMenuIntercept.class) || method.getDeclaringClass().isAnnotationPresent(NoMenuIntercept.class)) {
                 accessMenu = true;
-            }else if (currentRole == null) {
-                SessionContext.getResponse().sendRedirect("user/login?from="+from);
+            } else if (currentRole == null) {
+                SessionContext.getResponse().sendRedirect(SessionContext.getContextPath() + "/user/login?from=" + from);
             } else {
                 if (currentRole.hasMenu((method.getAnnotation(MenuMapping.class).code()))) {
-                    log.debug("当前角色可以访问 " + method.getAnnotation(MenuMapping.class).code() + "菜单");
+                    logger.debug("Current role can access the menu:{}", method.getAnnotation(MenuMapping.class).code());
                     accessMenu = true;
                 } else {
-                    log.warn("当前角色不能访问 " + method.getAnnotation(MenuMapping.class).code() + "菜单");
+                    logger.debug("Current role can't access the menu:{}", method.getAnnotation(MenuMapping.class).code());
                     accessMenu = false;
                 }
             }
         }
-		//日志记录
+
+        //日志记录
         if (method.isAnnotationPresent(LogRecord.class)) {
             if (currentUserId != null) {// 只对登录的用户进行日志处理,主要处理操作日志
                 LogRecord logRecord = method.getAnnotation(LogRecord.class);
-                Log log = new Log(currentUser.getUserName(), currentUserId, logRecord.action());
-                modelContainer.enhanceModel(log).save();
+                new Log(currentUserId, logRecord.action()).save();
             }
-
         }
-			//具有相应的权限和菜单
+
+        //可以访问
         if (hasPermission && accessMenu) {
             Object o = null;
+            Timer timer = performanceMonitorDataHolder.getTimer(getRequestURI());
+            Timer.Context context = timer.time();
             try {
                 o = methodInvocation.proceed();
-            } catch (Exception e) {// 捕获系统级日志,记录详细信息
-                String message = e.getClass().getName() + ":" + e.getLocalizedMessage();
-                StringBuffer bf = new StringBuffer(message + "\n");
-                for (StackTraceElement se : e.getStackTrace()) {
-                    bf.append("at " + se.getClassName()
-                                            + "."
-                                            + se.getMethodName()
-                                            + "("
-                                            + se.getFileName()
-                                            + ":"
-                                            + se.getLineNumber()
-                                            + ")\n");
+            } catch (Exception e) {
+                throw e;
+            } finally {
+                context.stop();
+            }
+            if((o instanceof ModelAndView || (!method.isAnnotationPresent(ResponseBody.class) && o instanceof String))
+                    && Objects.nonNull(currentRole)){
+                List<Menu> menus = domainLoader.load(Role.class, currentRole.getId()).getTopMenus();
+                Map<String,Object> data = Maps.mapIt("menus",menus);
+                data.put("currentUser",currentUser);
+                List<Menu> subMenus;
+                MenuMapping currentMenuMapping = method.getAnnotation(MenuMapping.class);
+                if(Objects.nonNull(currentMenuMapping)){//如果配置了menuMapping的菜单,则可以通过menuMapping获取父菜单
+                   for(Menu m : menus) {
+                       if (Objects.nonNull(currentMenuMapping) && currentMenuMapping.parentCode().equals(m.getCode())) {
+                           subMenus =menuService.getSubMenusForRole(m.getId(), currentRole.getId());
+
+                           data.put("subMenus", subMenus);
+                           data.put("expandMenuCode", m.getCode());
+                           for (Menu menu : subMenus) {
+                               if (currentMenuMapping.code().equals(menu.getCode())) {
+                                   data.put("currentMenu", menu);//当前菜单
+                                   break;
+                               }
+                           }
+                       }
+                   }
+                }else{//通过xml配置的页面（顶级菜单和静态页面）
+                    String url = currentServletRequest.getRequestURI()+"?"+currentServletRequest.getQueryString();
+                    Menu currentMenu = menuService.getSpecialMenuForRole(url,currentRole.getId());
+                    if(Objects.nonNull(currentMenu)){
+                        data.put("currentMenu", currentMenu);
+                        for(Menu m : menus) {
+                            if (m.getId().equals(currentMenu.getParentId())||
+                                    ( Objects.nonNull(m.getCode()) && m.getCode().equals(currentMenu.getParentCode()) )
+                                    ) {
+                                subMenus = modelContainer.enhanceModel(m).getSubMenus();
+                                data.put("subMenus", subMenus);
+                                data.put("expandMenuCode", m.getCode());
+                            }
+                        }
+                    }
                 }
-                log.error(bf);
-                message = Strings.subString(message, 0, 200);
-                
-                if (currentUser == null) {
-                   new Log("Not Login", -1L, message, bf.toString(), Constants.SYSTEM_LOG).save();
-                } else {
-                    new Log(currentUser.getUserName(), currentUserId, message, bf.toString(), Constants.SYSTEM_LOG).save();
+
+
+                ModelAndView result ;
+                if(o instanceof String){
+                    result = new ModelAndView((String) o);
+                }else{
+                    result = (ModelAndView) o;
                 }
-                return WebResponse.build().setPermission(false).setSuccess(false).setThrowable(e);
+                result.addAllObjects(data);
+                o = result;
             }
             return o;
+        }
 
-        }
-		
-		//不具有权限或菜单,返回json数据{"permission":"noPermission"}
-        if (method.isAnnotationPresent(ResponseBody.class)) {
-            SessionContext.getResponse().setContentType("text/plain; charset=UTF-8");
-            SessionContext.getResponse().getWriter().write("{\"permission\":\"noPermission\"}");
-            return null;
-        }
-		return new ModelAndView("pages/accessError","hasPermission",hasPermission).addObject("accessMenu", accessMenu);
-	}
+       throw new ApplicationRunTimeException("Permission denied");
+    }
+
+    /**
+     * 获取当前请求的URI
+     *
+     * @return
+     */
+    private String getRequestURI() {
+        return SessionContext.getRequest().getRequestURI();
+    }
+
 
 }

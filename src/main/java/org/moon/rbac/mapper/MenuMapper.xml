@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.moon.rbac.repository.MenuRepository">
-	<select id="getSubMenusByRole" resultType="CamelbakKeyResultMap" parameterType="Object">
+	<select id="getSubMenusByRole" resultMap="menu" parameterType="Object">
 		select tm.*
         from tab_role_menu trm
         join tab_menu tm
@@ -11,7 +11,7 @@
 		<if test="pid!=null">and tm.parentId=#{pid}</if>
 	</select>
 
-    <select id="getSubMenus" resultType="CamelbakKeyResultMap">
+    <select id="getSubMenus" resultMap="menu">
         select *
         from tab_menu
         where
@@ -44,10 +44,11 @@
 	</insert>
 
 	<delete id="removeMenusFromRole">
-		delete from tab_role_menu where menu_id in (-1
-		<foreach collection="menus" item="menu" open="," separator=",">#{menu.id}
+		delete from tab_role_menu where menuId in
+		<foreach collection="menus" item="menu" open="(" separator="," close=")">
+            #{menu.id}
 		</foreach>
-		) and roleId=#{rid}
+		and roleId=#{rid}
 	</delete>
 
 	<select id="getAllMenus" resultType="Long">
@@ -86,10 +87,33 @@
             SELECT LAST_INSERT_ID() AS id
         </selectKey>
         insert into
-        tab_menu(menuName,url,parentId,deleteFlag,createBy,code,parentCode,isFinal)
+        tab_menu(menuName,url,parentId,deleteFlag,createBy,code,parentCode,isFinal,iconCss)
         values
-        (#{menuName},#{url},#{parentId},false,#{createBy},#{code},#{parentCode},true)
+        (#{menuName},#{url},#{parentId},false,#{createBy},#{code},#{parentCode},true,#{iconCss})
     </insert>
+
+    <select id="getSpecialMenuForRole" resultMap="menu">
+        select tm.*
+        from tab_menu tm
+        <if test="rid!=null">
+            join tab_role_menu trm
+            on trm.menuId = tm.id
+        </if>
+        where tm.url = #{url}
+        <if test="rid!=null">
+            AND trm.roleId=#{rid}
+        </if>
+        limit 1
+    </select>
+
+    <resultMap id="menu" type="org.moon.rbac.domain.Menu">
+        <result property="id" column="id" javaType="Long"></result>
+        <result property="menuName" column="menuName" javaType="String"></result>
+        <result property="url" column="url" javaType="String"></result>
+        <result property="parentId" column="parentId" javaType="Long"></result>
+        <result property="code" column="code" javaType="String"></result>
+        <result property="parentCode" column="parentCode" javaType="String"></result>
+    </resultMap>
 
 	<resultMap type="org.moon.rbac.domain.Menu" id="menuDomain">
 

@@ -1,14 +1,19 @@
 package org.moon.rbac.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.reeham.component.ddd.annotation.Model;
 import org.moon.base.domain.BaseDomain;
+import org.moon.core.orm.mybatis.annotation.IgnoreNull;
 import org.moon.rbac.domain.eventsender.UserEventSender;
 import org.moon.utils.Constants;
 import org.moon.utils.MD5;
+import org.moon.utils.Objects;
 
 import javax.annotation.Resource;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +29,10 @@ import java.util.Map;
 public class User extends BaseDomain{
 
 	private static final long serialVersionUID = -7660365552913856672L;
-	
+
+	@Transient
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
 	/**
 	 * the Identifier for  user in current session 
 	 */
@@ -42,7 +50,9 @@ public class User extends BaseDomain{
 	/**
 	 * the login password for user
 	 */
-	private String password;
+	@JsonIgnore
+	@IgnoreNull
+	private transient String password;
 	
 	/**
 	 * the  id of role which distributed to user
@@ -57,7 +67,7 @@ public class User extends BaseDomain{
 	/**
 	 * the time when user created
 	 */
-	private Date createTime;
+	private Date createTime = new Date();
 	
 	/**
 	 * the time when the user last login
@@ -76,10 +86,25 @@ public class User extends BaseDomain{
 	 */
 	private String contact;
 
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+    private int type;
+
+    private String idNumber;
+
     private String phoneNumber;
 
     private String avatar;
 
+    private Date birthday;
+
+    private String description;
+
+    //三方应用需要使用的名字
+    private String thirdName;
+
+	private String email;
+
+	private boolean isTester;
     /**
 	 * 密码是否加密
 	 */
@@ -87,8 +112,9 @@ public class User extends BaseDomain{
 	private boolean isEncrypt = false;
 	
 	@Resource
-	private UserEventSender userEventSender;
-	
+	private transient UserEventSender userEventSender;
+
+	@JsonIgnore
 	public Role getRole() {
 		if(Constants.SYSTEM_ROLEID.equals(roleId)){
 			return new Role(roleId);
@@ -96,7 +122,7 @@ public class User extends BaseDomain{
 		if(roleId==null||roleId<=0){
 			return null;
 		}
-		return (Role) userEventSender.getRole(this).getEventResult();
+        return (Role) userEventSender.getRole(this).getEventResult();
 	}
 	
 	public Map<String,Object> toMap(){
@@ -122,12 +148,32 @@ public class User extends BaseDomain{
 			m.put("roleName", getRole().getRoleName());
 		}
 		m.put("realName", realName);
+        m.put("idNumber",idNumber);
+        m.put("type",type);
         m.put("phoneNumber",phoneNumber);
         m.put("avatar",avatar);
         m.put("sex",sex);
+        m.put("thirdName",thirdName);
+		m.put("email",email);
+		if(Objects.nonNull(birthday)){
+			m.put("birthday",sdf.format(birthday));
+		}
+        m.put("description",description);
 		return m;
 	}
-	
+
+    /**
+     * 返回不包括隐私信息的数据
+     * @return
+     */
+    public Map<String,Object> toMapWithoutPrivacy(){
+        Map<String,Object> m = toAllMap();
+        m.remove("phoneNumber");
+        m.remove("userName");
+        m.remove("idNumber");
+        return m;
+    }
+
 	public boolean isSysUser(){
 		return Constants.SYSTEM_USERID.equals(id);
 	}
@@ -135,7 +181,7 @@ public class User extends BaseDomain{
 	public User encryptPassword(){
 	    if(this.password!=null&&!isEncrypt){//密码不为空,并且未加密
 	        isEncrypt = true;
-	        this.password = MD5.getMD5(password+"Moon");
+	        this.password = MD5.getCryptographicPassword(password);
 	    }
 	    return this;
 	}
@@ -173,9 +219,10 @@ public class User extends BaseDomain{
 	/**
 	 * @return the password
 	 */
+	@JsonIgnore
 	public String getPassword() {
 		if(Constants.SYSTEM_USERID.equals(id))
-			return Constants.SYSTEM_PASSWORD;
+			return new String(Constants.getSystemUserPassword());
 		return password;
 	}
 
@@ -289,6 +336,22 @@ public class User extends BaseDomain{
 		this.createBy = createBy;
 	}
 
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getIdNumber() {
+        return idNumber;
+    }
+
+    public void setIdNumber(String idNumber) {
+        this.idNumber = idNumber;
+    }
+
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -304,5 +367,46 @@ public class User extends BaseDomain{
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
-    /******************** /setter/getter  ********************/
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getThirdName() {
+        return thirdName;
+    }
+
+    public void setThirdName(String thirdName) {
+        this.thirdName = thirdName;
+    }
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public boolean isTester() {
+		return isTester;
+	}
+
+	public void setIsTester(boolean isTester) {
+		this.isTester = isTester;
+	}
+
+	/******************** /setter/getter  ********************/
 }

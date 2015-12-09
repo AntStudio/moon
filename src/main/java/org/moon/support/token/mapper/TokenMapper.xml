@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.moon.support.token.repository.TokenRepository">
+
+    <insert id="add">
+        <selectKey resultType="Long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        insert into tab_token(token,userId,expiry)
+        values(#{token.token},#{token.userId},#{token.expiry})
+    </insert>
+
+    <update id="update">
+        update tab_token set token = #{token.token},expiry=#{token.expiry}
+        where id = #{token.id}
+    </update>
+
+    <delete id="delete">
+        delete from tab_token where 1=1
+        <if test="token.userId!=null">
+            AND userId = #{token.userId}
+        </if>
+        <if test="token.id!=null">
+            AND id = #{expiry.id}
+        </if>
+    </delete>
+
+    <select id="getTokenForUser" resultMap="token">
+        select * from tab_token
+        where userId = #{userId} limit 1;
+    </select>
+
+    <select id="getToken" resultMap="token">
+        select * from tab_token
+        where token = #{token} limit 1;
+    </select>
+
+    <resultMap id="token" type="org.moon.support.token.Token">
+        <result column="id" property="id" javaType="Long"></result>
+        <result column="userId" property="userId" javaType="Long"></result>
+        <result column="token" property="token" javaType="String"></result>
+        <result column="expiry" property="expiry" javaType="java.util.Date"></result>
+    </resultMap>
+</mapper>

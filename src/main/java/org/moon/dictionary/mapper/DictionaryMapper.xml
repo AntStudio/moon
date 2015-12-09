@@ -35,6 +35,12 @@
         WHERE parentId = (SELECT id FROM tab_dictionary WHERE CODE = #{code})
     </select>
 
+    <select id="listChildrenByCode_count" resultType="Integer">
+        SELECT count(d.id)
+        FROM tab_dictionary d
+        WHERE parentId = (SELECT id FROM tab_dictionary WHERE CODE = #{code})
+    </select>
+
     <insert id="add">
         <selectKey resultType="Long" order="AFTER" keyProperty="id">
             SELECT LAST_INSERT_ID() AS id
@@ -47,6 +53,13 @@
     <select id="getDictionaryByCode" resultType="HashMap">
         select *
         from tab_dictionary dic
-        where dic.code = #{code} and parentId is null
+        where dic.code = #{code}
+        <if test="parentId == null">
+            and parentId is null
+        </if>
+        <if test="parentId != null">
+            and parentId = #{parentId}
+        </if>
     </select>
+
 </mapper>

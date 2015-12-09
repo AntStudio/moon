@@ -10,6 +10,6 @@ public interface Dialect {
 
     public abstract String getCaseSensitiveLike();
 
-    public abstract String getLimitSql(int offset, int limit);
+    public abstract String getLimitSql(int offset,int limit);
 
 }

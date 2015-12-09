@@ -22,18 +22,18 @@ public interface UserRepository{
 	 * @param rid
 	 * @param uid
 	 */
-	public void assign(@Param("rid") Long rid, @Param("uid") Long uid);
+	public void assign(@Param("rid")Long rid,@Param("uid")Long uid);
 	
 	/**
 	 * 登录验证
 	 * @param user
 	 * @return
 	 */
-	public Long login(@Param("user") User user);
+	public Long login(@Param("user")User user);
 	
-	public List<Long> getUsersByCreator(Map<String, Object> paramsMap);
+	public List<Long> getUsersByCreator(Map<String,Object> paramsMap);
 	
-	public Integer getUsersByCreatorCount(Map<String, Object> paramsMap);
+	public Integer getUsersByCreatorCount(Map<String,Object> paramsMap);
 	
 	public Long addUser(@Param("user") User user);
 	
@@ -43,5 +43,7 @@ public interface UserRepository{
 	
 	public void logicDeleteUser(@Param("ids") Long[] ids);
 	
-	public boolean isUserNameExists(@Param("userName") String userName);
+	public boolean isUserNameExists(@Param("userName")String userName);
+
+	public Integer loginRecord(@Param("userId") Long userId,@Param("ip") String ip);
 }

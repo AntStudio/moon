@@ -1,19 +1,25 @@
 package org.moon.maintenance.service;
 
+import org.moon.utils.Pair;
+
 import java.util.Map;
 
 /**
  * 系统设置
- * @author:Gavin
+ * @author GavinCook
  * @date 2014/11/18 0018
  */
-public interface SystemSettingService{
+public interface SystemSettingService {
 
-    public void updateSetting(Map<String, String> settings);
+    void updateSetting(Map<String, Object> settings);
 
-    public Map getSettingMap(String prefix);
+    void updateSetting(String key, String value);
 
-    public Map getSettingMap();
+    Map<String,String> getSettingMap(String prefix);
 
-    public Map getSetting(String name);
+    Map<String,String> getSettingMap();
+
+    Pair<String,String> getSetting(String name);
+
+    String getSetting(String name, String defaultValue);
 }

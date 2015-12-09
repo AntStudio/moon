@@ -35,10 +35,10 @@ public class Pager implements Serializable{
 	/**
 	 * 当前分页数据
 	 */
-	private List<Object> items = new ArrayList<Object>();
+	private List<?> items = new ArrayList<Object>();
 
 	
-	public Pager(int totalItemsCount,List<Object> items,int pageSize,int currentPageIndex){
+	public Pager(int totalItemsCount,List<?> items,int pageSize,int currentPageIndex){
 		this.totalItemsCount = totalItemsCount;
 		this.items = items;
 		this.pageSize = pageSize;
@@ -46,7 +46,7 @@ public class Pager implements Serializable{
 	}
 	
 	
-	public List<Object> getItems() {
+	public List<?> getItems() {
 		return items;
 	}
 

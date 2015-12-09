@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dictionaries>
+    <dictionary code="sex" name="性别">
+        <item code="0" name="男"></item>
+        <item code="1" name="女"></item>
+    </dictionary>
+</dictionaries>

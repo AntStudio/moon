@@ -4,8 +4,9 @@
 	<select id="login" resultType="Long" parameterType="org.moon.rbac.domain.User">
 		select id 
 		from tab_user
-		where (userName=#{user.userName} OR phoneNumber=#{user.userName}) and
+		where userName=#{user.userName} and
 		      password=#{user.password}
+		limit 1
 	</select>
 
 	<update id="assign" parameterType="Map">
@@ -74,7 +75,7 @@
 	</select>
 
     <select id="listWithRole" resultType="CamelbakKeyResultMap">
-        SELECT u.id,u.userName,u.realName,u.active,u.createTime,u.avatar,r.roleName
+        SELECT u.id,u.userName,u.realName,u.active,u.createTime,u.idNumber,u.avatar,r.roleName,u.isTester
         FROM tab_user u
         LEFT JOIN tab_role r
         ON u.roleId = r.id
@@ -98,6 +99,11 @@
             u.deleteFlag = #{deleteFlag}
         </if>
     </select>
+
+	<insert id="loginRecord" >
+		insert into tab_user_login_record(userId,loginTime,ip)
+		VALUES (#{userId},CURRENT_TIMESTAMP ,#{ip})
+	</insert>
 
 	<resultMap type="org.moon.rbac.domain.User" id="user">
 

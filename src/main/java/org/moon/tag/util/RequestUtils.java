@@ -17,7 +17,7 @@ public class RequestUtils {
 	 */
 	public static String getContextPath(PageContext pageContext){
 		ServletRequest request = pageContext.getRequest();
-		return request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+"/"+pageContext.getServletContext().getContextPath()+"/";
+		return request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+pageContext.getServletContext().getContextPath()+"/";
 	}
 	
 }

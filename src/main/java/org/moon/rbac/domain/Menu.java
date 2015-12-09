@@ -36,9 +36,11 @@ public class Menu extends BaseDomain {
 
 	private int menuOrder;
 	
-	private Integer parentId;
+	private Long parentId;
 
     private boolean isFinal = false;
+
+    private String iconCss;
 	/**
 	 * 是否是叶子菜单，即是否有子菜单
 	 */
@@ -46,7 +48,7 @@ public class Menu extends BaseDomain {
 	private boolean leaf = false;
 
 	@Resource
-	private MenuEventSender menuEventSender;
+	private transient MenuEventSender menuEventSender;
 
 	public Menu() {}
 
@@ -143,11 +145,11 @@ public class Menu extends BaseDomain {
 		this.menuOrder = menuOrder;
 	}
 
-	public Integer getParentId() {
+	public Long getParentId() {
 		return parentId;
 	}
 
-	public void setParentId(Integer parentId) {
+	public void setParentId(Long parentId) {
 		this.parentId = parentId;
 	}
 
@@ -157,6 +159,14 @@ public class Menu extends BaseDomain {
 
     public void setFinal(boolean isFinal) {
         this.isFinal = isFinal;
+    }
+
+    public String getIconCss() {
+        return iconCss;
+    }
+
+    public void setIconCss(String iconCss) {
+        this.iconCss = iconCss;
     }
 
     /******************** /getter/setter *******************/

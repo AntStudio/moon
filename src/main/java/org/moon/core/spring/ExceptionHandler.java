@@ -1,17 +1,17 @@
 package org.moon.core.spring;
 
-import org.moon.log.domain.Log;
-import org.moon.rbac.domain.User;
-import org.moon.rbac.service.UserService;
-import org.moon.utils.Constants;
-import org.springframework.stereotype.Component;
+import org.moon.exception.ApplicationRunTimeException;
+import org.moon.message.WebResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * 平台异常处理,主要用于日志的记录
@@ -19,30 +19,28 @@ import javax.servlet.http.HttpServletResponse;
  * @version 1.0
  * @date 2013-1-9
  */
-@Component
-public class ExceptionHandler extends SimpleMappingExceptionResolver  implements HandlerExceptionResolver   {
+public class ExceptionHandler extends SimpleMappingExceptionResolver implements HandlerExceptionResolver {
 
-	@Resource
-	private UserService userService;
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Override
-	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-		System.out.println(determineViewName(ex, request)+"...................");
-		User  currentUser = userService.getCurrentUser(request);
-			
-		//捕获系统级日志,记录详细信息
-		 String message = ex.getClass().getName()+":"+ex.getLocalizedMessage();
-		 StringBuffer bf = new StringBuffer(message+"\n");
-		 for(StackTraceElement se:ex.getStackTrace()){
-			 bf.append("at "+se.getClassName()+"."+se.getMethodName()+"("+se.getFileName()+":"+se.getLineNumber()+")\n");
-		 }
-		 if(currentUser!=null) {
-		  new Log(currentUser.getUserName(),currentUser.getId(),message,bf.toString(),Constants.SYSTEM_LOG).save();
-		 }  else {
-			 new Log("NOT LOGINED",-1L,message,"当前用户未登录,The Session id is "+request.getSession().getId()+"\n"+bf.toString(),Constants.SYSTEM_LOG).save();
-		 }
-	
-		return null;
-	}
-
+    @Override
+    public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+        logger.error("error",ex);
+        if (handler instanceof HandlerMethod) {
+            HandlerMethod handlerMethod = (HandlerMethod) handler;
+            Class<?> resultClass = handlerMethod.getReturnType().getParameterType();
+            if (resultClass == WebResponse.class) {
+                response.setContentType("text/plain; charset=UTF-8");
+                try {
+                    response.getWriter().write(WebResponse.fail(ex.getClass().getName() + ":" + ex.getMessage()).toString());
+                    return new ModelAndView();
+                } catch (IOException e) {
+                    throw new ApplicationRunTimeException(e);
+                }
+            } else {
+                return new ModelAndView("pages/accessError", "errorMsg", ex.getLocalizedMessage());
+            }
+        }
+        return null;
+    }
 }

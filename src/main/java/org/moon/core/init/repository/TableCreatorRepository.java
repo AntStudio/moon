@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TableCreatorRepository {
 
-	public void createTableIfNecessary();
-	
+    void createTableIfNecessary();
+
 }

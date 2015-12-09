@@ -1,10 +1,12 @@
 package org.moon.log.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.reeham.component.ddd.annotation.Model;
 import org.moon.base.domain.BaseDomain;
 import org.moon.core.annotation.NoLogicDeleteSupport;
 import org.moon.core.orm.mybatis.annotation.IgnoreNull;
 import org.moon.core.session.SessionContext;
+import org.moon.rbac.domain.User;
 import org.moon.utils.Constants;
 
 import javax.persistence.Table;
@@ -13,122 +15,116 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 
 /**
  * 日志领域
+ *
  * @author Gavin
  * @version 1.0
  * @date 2013-1-7
  */
 @Model
-@Table(name="tab_log")
+@Table(name = "tab_log")
 @NoLogicDeleteSupport
-public class Log extends BaseDomain{
+public class Log extends BaseDomain {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String userName;
-	
-	private Long userId;
-	
-	private String action;
-	
-	@IgnoreNull
-	private Date time ;
-	
-	private String type;
-	
-	private String detail;
-	
-	private String ip;
+    private User user;
 
-	@Transient
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-	
-	public Log(){}
-	
-	public Log(String userName,Long userId,String action){
-		this(userName,userId,action,action,Constants.OPERATE_LOG);
-	}
-	
-	public Log(String userName,Long userId,String action,String detail){
-		this(userName,userId,action,detail,Constants.OPERATE_LOG);
-	}
-	
-	public Log(String userName,Long userId,String action,String detail,String type){
-		this.userName = userName;
-		this.userId = userId;
-		this.action = action;
-		this.type = type;
-		this.detail = detail;
-		this.ip = SessionContext.getRequest().getRemoteAddr();
-	}
-	
-	public Map<String,Object> toMap(){
-		Map<String,Object> m = new HashMap<String,Object>();
-        m.put("userName", userName);
-		m.put("userId", userId);
-		m.put("time",sdf.format(time));
-		m.put("action",  action);
-		m.put("id", id);
-		m.put("type", type);
-		m.put("ip", ip);
-		return m;
-	}
-	
-	public Map<String,Object> toDetailMap(){
-		Map<String,Object> m = toMap();
-		m.put("detail", detail==null?"":new String(detail));
-		return m;
-	}
-	
-	
-	/***********************properties getter and setter********************************/
-	public String getUserName() {
-		return userName;
-	}
+    private String action;
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-	public Long getUserId() {
-		return userId;
-	}
+    @IgnoreNull
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,shape = JsonFormat.Shape.ANY , timezone = "GMT+8")
+    private Date time;
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
+    private String type;
 
-	public String getAction() {
-		return action;
-	}
+    private String detail;
 
-	public void setAction(String action) {
-		this.action = action;
-	}
+    private String ip;
 
-	public Date getTime() {
-		return time;
-	}
+    @Transient
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
-	public void setTime(Date time) {
-		this.time = time;
-	}
+    public Log(){}
 
-	/**
-	 * @return the type
-	 */
-	public String getType() {
-		return type;
-	}
+    public Log(Long userId, String action) {
+        this(Constants.OPERATE_LOG, userId, action, action);
+    }
 
-	/**
-	 * @param type the type to set
-	 */
-	public void setType(String type) {
-		this.type = type;
-	}
+    public Log(Long userId, String action, String detail) {
+        this(Constants.OPERATE_LOG,userId, action, detail);
+    }
+
+    public Log(String type, Long userId, String action, String detail) {
+        this.user = new User();
+        this.user.setId(userId);
+        this.action = action;
+        this.type = type;
+        this.detail = detail;
+        this.ip = SessionContext.getRequest().getRemoteAddr();
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> m = new HashMap<String, Object>();
+        m.put("user", user);
+        m.put("time", sdf.format(time));
+        m.put("action", action);
+        m.put("id", id);
+        m.put("type", type);
+        m.put("ip", ip);
+        return m;
+    }
+
+    public Map<String, Object> toDetailMap() {
+        Map<String, Object> m = toMap();
+        m.put("detail", detail == null ? "" : new String(detail));
+        return m;
+    }
+
+    /**
+     * ********************properties getter and setter*******************************
+     */
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+    /**
+     * @return the type
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getDetail() {
         return detail;
@@ -145,7 +141,7 @@ public class Log extends BaseDomain{
     public void setIp(String ip) {
         this.ip = ip;
     }
-	
-	/***********************properties getter and setter********************************/
-	
+
+    /***********************properties getter and setter********************************/
+
 }

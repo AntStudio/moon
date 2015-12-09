@@ -1,9 +1,12 @@
 package org.moon.log.action;
 
 import com.reeham.component.ddd.model.ModelContainer;
+import org.moon.log.repository.LogRepository;
 import org.moon.log.service.LogService;
 import org.moon.message.WebResponse;
 import org.moon.rbac.domain.annotation.MenuMapping;
+import org.moon.rbac.domain.annotation.PermissionMapping;
+import org.moon.rbac.helper.Permissions;
 import org.moon.rest.annotation.Get;
 import org.moon.utils.Dtos;
 import org.moon.utils.ParamUtils;
@@ -23,35 +26,43 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Controller
 @RequestMapping("/log")
+@PermissionMapping(code = Permissions.LOG_MANAGEMENT, name = Permissions.LOG_MANAGEMENT_DESCRIPTION)
 public class LogAction {
 
-	@Resource
-	private LogService logService;
+    @Resource
+    private LogService logService;
 
     @Resource
     ModelContainer modelContainer;
-	/**
-	 * 查看日志
-	 * @return
-	 */
-	@Get("")
-	@MenuMapping(code="platform_6",name="日志列表",parentCode="platform",url="/log")
-	public ModelAndView showPage(){
-		return new ModelAndView("pages/log/log");
-	}
 
-	@Get("/list")
-	public @ResponseBody WebResponse list(HttpServletRequest request){
-        return WebResponse.build().setResult(logService.listForPage(ParamUtils.getParamsAsCerteria(request), Dtos.newUnderlineToCamelBakConverter(false,"detail")));
+    /**
+     * 查看日志
+     *
+     * @return
+     */
+    @Get("")
+    @MenuMapping(code = "platform_6", name = "日志列表", parentCode = "platform", url = "/log")
+    public ModelAndView showPage() {
+        return new ModelAndView("pages/log/log");
     }
 
-	/**
-	 * 根据日志id获取日志详情
-	 * @param id
-	 * @return
-	 */
-	@Get("/get/{id}")
-	public @ResponseBody WebResponse getLogDetail(@PathVariable("id")Long id){
-		return WebResponse.build().setResult(logService.get(id).toDetailMap());
-	}
+    @Get("/list")
+    public
+    @ResponseBody
+    WebResponse list(HttpServletRequest request) {
+        return WebResponse.build().setResult(logService.listForPage(LogRepository.class, "listWithOperator",ParamUtils.getParamMapFromRequest(request)));
+    }
+
+    /**
+     * 根据日志id获取日志详情
+     *
+     * @param id
+     * @return
+     */
+    @Get("/get/{id}")
+    public
+    @ResponseBody
+    WebResponse getLogDetail(@PathVariable("id") Long id) {
+        return WebResponse.build().setResult(logService.getDetail(id));
+    }
 }

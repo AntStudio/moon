@@ -14,11 +14,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
- * {@link org.moon.core.spring.MoonServlet} 将Spring的{@link org.springframework.web.servlet.DispatcherServlet}进行了
+ * {@link MoonServlet} 将Spring的{@link DispatcherServlet}进行了
  * <p>简单的包装，增添了一层数据库的检测.
- * <p>使用时，需要用{@link org.moon.core.spring.MoonServlet}代替{@link org.springframework.web.servlet.DispatcherServlet}在web.xml中的配置,如：
+ * <p>使用时，需要用{@link MoonServlet}代替{@link DispatcherServlet}在web.xml中的配置,如：
  * <code>
  * <pre>
  * &lt;servlet&gt;
@@ -40,7 +41,10 @@ public class MoonServlet extends DispatcherServlet{
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		this.config = config;
-		dbChecker = (DBChecker) config.getServletContext().getAttribute(DBChecker.DBCHECKER);
+		dbChecker = (DBChecker) config.getServletContext().getAttribute(DBChecker.DB_CHECKER);
+		if(Objects.isNull(dbChecker)){
+			dbChecker = new DBChecker(config.getServletContext());
+		}
 		if(dbChecker.isDBValid()){
 			super.init(config);
 		}else{
@@ -77,7 +81,7 @@ public class MoonServlet extends DispatcherServlet{
 	
 	/**
 	 * 初始化Spring Servlet
-	 * @throws javax.servlet.ServletException
+	 * @throws ServletException
 	 */
 	private void initSpring() throws ServletException{
 		new MoonContextListener().initWebApplicationContext(config.getServletContext());

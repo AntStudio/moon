@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 
 /**
  * the implement of user Service
@@ -26,7 +27,7 @@ public class UserServiceImpl extends AbstractDomainService<User> implements User
 
     @Resource
     private UserRepository userRepository;
-    
+
     @Override
     public User get(Long id) {
     	if(Constants.SYSTEM_USERID.equals(id)){
@@ -66,7 +67,7 @@ public class UserServiceImpl extends AbstractDomainService<User> implements User
     }
 
     private User validateSysUser(User user) {
-        if (Constants.SYSTEM_PASSWORD.equals(user.getPassword())) {
+        if (Arrays.equals(Constants.getSystemUserPassword(),user.getPassword().getBytes())) {
             return getSysUser();
         } else {
             return null;
@@ -109,4 +110,9 @@ public class UserServiceImpl extends AbstractDomainService<User> implements User
 	public boolean isUserNameExists(String userName) {
 		return userRepository.isUserNameExists(userName);
 	}
+
+    @Override
+    public boolean loginRecord(Long userId, String ip) {
+        return userRepository.loginRecord(userId,ip)==1;
+    }
 }

@@ -3,7 +3,7 @@ package org.moon.rest.annotation;
 import java.lang.annotation.*;
 /**
  * The annotation for Post request
- * this equivalent to @RequstMapping with Delete request method
+ * this equivalent to @RequestMapping with Delete request method
  * @author Gavin
  * @date 2013-12-15 下午5:15:48
  */

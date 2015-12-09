@@ -8,37 +8,33 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 通用的仓储类,包含通用的增删查改方法
- * @author Gavin
- * @date  2014-05-08
+ * common repository , contains the save, update, delete, get, list operations. this one can only handle the domain with
+ * single table, not support the domain with multiple tables.
+ * @author GavinCook
+ * @since 1.0.0
+ * @see SQLProvider
  */
 public interface BaseRepository<T> {
 
-	/**
-	 * 保存方法(o-->object)
-	 * @param t
-	 * @return
-	 */
-	@InsertProvider(type=SQLProvider.class,method="save")
-	public Long save(@Param("o") T t);
-	
-	@UpdateProvider(type=SQLProvider.class,method="update")
-	public void update(@Param("o") T t);
-	
-	@DeleteProvider(type=SQLProvider.class,method="delete")
-	public void delete(@Param("domain") Class<T> t, @Param("ids") Long[] ids);
-	
-	public void logicDelete(@Param("ids") Long[] ids);
-	
-	@SelectProvider(type=SQLProvider.class,method="get")
-    public T get(@Param("domain") Class<T> t, @Param("id") Long id);
-    
-    @SelectProvider(type=SQLProvider.class,method="list")
-    public List<Map> list(@Param("domain") Class<T> t, @Param("criteria") Criteria criteria);
-    
-    @SelectProvider(type=SQLProvider.class,method="listIds")
-    public List<Long> listIds(@Param("domain") Class<T> t, @Param("criteria") Criteria criteria);
-    
-    @SelectProvider(type=SQLProvider.class,method="count")
-    public Integer count(@Param("domain") Class<T> t, @Param("criteria") Criteria criteria);
+    @InsertProvider(type = SQLProvider.class, method = "save")
+    @SelectKey(statement = "SELECT LAST_INSERT_ID() AS id", before = false, keyProperty = "o.id", resultType = Long.class)
+    Long save(@Param("o") T t);
+
+    @UpdateProvider(type = SQLProvider.class, method = "update")
+    void update(@Param("o") T t);
+
+    @DeleteProvider(type = SQLProvider.class, method = "delete")
+    void delete(@Param("domain") Class<T> t, @Param("ids") Long[] ids);
+
+    @SelectProvider(type = SQLProvider.class, method = "get")
+    T get(@Param("domain") Class<T> t, @Param("id") Long id);
+
+    @SelectProvider(type = SQLProvider.class, method = "list")
+    List<Map> list(@Param("domain") Class<T> t, @Param("criteria") Criteria criteria);
+
+    @SelectProvider(type = SQLProvider.class, method = "listIds")
+    List<Long> listIds(@Param("domain") Class<T> t, @Param("criteria") Criteria criteria);
+
+    @SelectProvider(type = SQLProvider.class, method = "count")
+    Integer count(@Param("domain") Class<T> t, @Param("criteria") Criteria criteria);
 }

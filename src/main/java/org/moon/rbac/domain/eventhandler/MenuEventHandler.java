@@ -37,9 +37,9 @@ public class MenuEventHandler extends BaseEventHandler<Menu, MenuService>{
 	public List<Menu> getTopMenusForRole(Long roleId){
 
 		if(Constants.SYSTEM_ROLEID.equals(roleId)){
-            return Dtos.convert(menuRepository.getSubMenus(null), dataConverter);
+            return menuRepository.getSubMenus(null);
         }
-		return Dtos.convert(menuRepository.getSubMenusByRole(null, roleId), dataConverter);
+		return menuRepository.getSubMenusByRole(null, roleId);
 	}
 	
 	@OnEvent("menu/getByCode")
@@ -49,7 +49,7 @@ public class MenuEventHandler extends BaseEventHandler<Menu, MenuService>{
 	
 	@OnEvent("menu/getSubMenus")
 	public List<Menu> getSubMenus(Long parentMenuId){
-		return Dtos.convert(menuRepository.getSubMenus(parentMenuId), dataConverter);
+		return menuRepository.getSubMenus(parentMenuId);
 	}
 	
 }

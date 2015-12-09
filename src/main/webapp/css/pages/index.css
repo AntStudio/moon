@@ -1,0 +1,58 @@
+.right-divider{
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-left-color: rgb(17, 20, 21);
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-right-color: rgb(100, 102, 104);
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-top-style: solid;
+    border-top-width: 1px;
+    box-sizing: border-box;
+    color: rgb(51, 51, 51);
+    display: block;
+    float: left;
+    font-size: 14px;
+    height: 58px;
+    line-height: 58px;
+    list-style-image: none;
+    list-style-position: outside;
+    list-style-type: none;
+    opacity: 0.5;
+    position: relative;
+    text-align: left;
+}
+
+.bell-container{
+    position: relative;
+    padding: 0 9px;
+}
+
+.bell-container .fa-bell{
+    font-size: 20px;
+}
+
+.bell-container .msg-num{
+    padding: 0px 6px;
+    background: #aaa;
+    border-radius: 4px;
+    display: inline-block;
+    color: #777;
+    margin-left: 2px;
+}
+
+.bell-container .msg-num.new-msg {
+    color: #fff;
+    background-color: #d84c31;
+}
+
+.msg-notice .msg-sender{
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.msg-notice .no-msg{
+    text-align: center;
+    color: #ccc;
+}

@@ -271,4 +271,34 @@ public class Strings {
     public static boolean isNullOrEmpty(String src){
         return src == null || src.isEmpty() || src.trim().isEmpty();
     }
+
+    /**
+     * 将数组对象每个元素加上前缀,目前用于#{@link org.moon.core.cache.annotation.CacheBatchEvict}的key表达式
+     * @param prefix
+     * @param elements
+     * @return
+     */
+    public static String[] concatPrefix(String prefix , Object[] elements){
+        int length = elements.length;
+        String[] results = new String[length];
+        for(int p = 0; p < length; p++){
+            results[p] = prefix.concat(castToString(elements[p]));
+        }
+        return results;
+    }
+
+    /**
+     * 将对象转换为String
+     * @param o
+     * @return
+     */
+    public static String castToString(Object o){
+        if(Objects.isNull(o)){
+            return null;
+        }else if(o instanceof String){
+            return (String)o;
+        }else {
+            return o.toString();
+        }
+    }
 }

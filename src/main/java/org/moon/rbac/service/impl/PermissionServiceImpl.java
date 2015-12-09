@@ -11,10 +11,7 @@ import org.moon.rbac.service.PermissionService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 权限服务实现类
@@ -33,7 +30,7 @@ public class PermissionServiceImpl extends AbstractDomainService<Permission> imp
 	
 	
 	@Override
-	public void batchSave(List<Permission> permissions) {
+	public void batchSave(Collection<Permission> permissions) {
 		if(permissions.size()!=0)
 		permissionRepository.batchSave(permissions);
 	}
@@ -66,10 +63,10 @@ public class PermissionServiceImpl extends AbstractDomainService<Permission> imp
                 }
             }
             if (adds.size() > 0) {
-                permissionRepository.assignAddPermission(adds.toArray(new Long[0]), rids);
+                permissionRepository.assignAddPermission(adds.toArray(new Long[adds.size()]), rids);
             }
             if (deletes.size() > 0) {
-                permissionRepository.assignDeletePermission(deletes.toArray(new Long[0]), rids);
+                permissionRepository.assignDeletePermission(deletes.toArray(new Long[deletes.size()]), rids);
             }
         }else{//给角色分配权限 1权限--》多角色
             for (int i = 0, j = status.length; i < j; i++) {
@@ -82,10 +79,10 @@ public class PermissionServiceImpl extends AbstractDomainService<Permission> imp
                 }
             }
             if (adds.size() > 0) {
-                permissionRepository.assignAddPermission(pids, adds.toArray(new Long[0]));
+                permissionRepository.assignAddPermission(pids, adds.toArray(new Long[adds.size()]));
             }
             if (deletes.size() > 0) {
-                permissionRepository.assignDeletePermission(pids, deletes.toArray(new Long[0]));
+                permissionRepository.assignDeletePermission(pids, deletes.toArray(new Long[deletes.size()]));
             }
         }
        

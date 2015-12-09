@@ -9,7 +9,14 @@
  		<setting name="callSettersOnNulls" value="true"/><!-- 用于映射value为空的字段 -->
  	</settings>
     <typeAliases>
-    <typeAlias alias="CamelbakKeyResultMap" type="org.moon.core.orm.mybatis.result.CamelbakKeyResultMap"/>
+        <typeAlias alias="CamelbakKeyResultMap" type="org.moon.core.orm.mybatis.result.CamelbakKeyResultMap"/>
+        <typeAlias alias="LocalDateTime" type="java.time.LocalDateTime"/>
+        <typeAlias alias="InEpochSecondsHandler" type="org.moon.core.orm.mybatis.handler.LocalDateTimeInEpochSecondsHandler"/>
     </typeAliases>
+    <typeHandlers>
+        <typeHandler handler="org.moon.core.orm.mybatis.handler.LocalDateTimeHandler"></typeHandler>
+        <typeHandler handler="org.moon.core.orm.mybatis.handler.LocalDateHandler"></typeHandler>
+        <typeHandler handler="org.moon.core.orm.mybatis.handler.LocalDateTimeInEpochSecondsHandler"></typeHandler>
+    </typeHandlers>
     <objectWrapperFactory type="org.moon.core.orm.mybatis.wrapper.CamelbakKeyMapWrapperFactory"></objectWrapperFactory>
  </configuration>

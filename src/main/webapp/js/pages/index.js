@@ -37,6 +37,7 @@ var moon = moon||{};
                 });
             }
         });
+
         $(document).on("click",".dropdown-menu a:not(.no-tab)",function(e){
             var $menu = $(e.target);
             moon.addTab($menu.html(),$menu.attr("href"));

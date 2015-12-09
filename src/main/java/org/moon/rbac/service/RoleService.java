@@ -25,4 +25,10 @@ public interface RoleService extends BaseDomainService<Role> {
 	 * @return
 	 */
 	public List<Map> getTopRoles();
+
+	/**
+	 * 获取所有的角色列表
+	 * @return
+	 */
+	public List<Map<String,Object>> getAllRoles();
 }

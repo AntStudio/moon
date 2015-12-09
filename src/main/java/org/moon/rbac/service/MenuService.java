@@ -19,7 +19,7 @@ public interface MenuService extends BaseDomainService<Menu> {
 	 * @param rid 如果为<code>Constants.SYSTEM_ROLEID</code>,则表示不考虑角色的菜单分配，直接获取子菜单
 	 * @return
 	 */
-	public List<Map> getSubMenusForRole(Long parentMenuId, Long rid);
+	public List<Menu> getSubMenusForRole(Long parentMenuId,Long rid);
 	
 	/**
 	 * 获取带有是否分配给对应角色状态的菜单(这里会返回所有的菜单)，用于管理分配菜单时使用
@@ -27,13 +27,13 @@ public interface MenuService extends BaseDomainService<Menu> {
 	 * @param rid 角色id
 	 * @return
 	 */
-	public List<Map<String,Object>> getMenusWithStatus(Long pid, Long rid);
+	public List<Map<String,Object>> getMenusWithStatus(Long pid,Long rid);
 
 	/**
 	 * 获取顶级菜单
 	 * @return
 	 */
-	public List<Map> getTopMenus();
+	public List<Menu> getTopMenus();
 
     /**
      * 给角色分配菜单
@@ -41,14 +41,14 @@ public interface MenuService extends BaseDomainService<Menu> {
      * @param checkStatus 状态数组,<code>true</code>表示分配,<code>false</code>表示取消分配
      * @param rid
      */
-	public void assignMenuToRole(Long[] menuIds, Boolean[] checkStatus, Long rid);
+	public void assignMenuToRole(Long[] menuIds,Boolean[] checkStatus,Long rid);
 	
 	/**
 	 * 对菜单进行排序
 	 * @param parentId 需要排序的菜单的父菜单id
 	 * @param childrenIds 需要排序菜单id数组
 	 */
-	public void sortMenus(Long parentId, Long[] childrenIds);
+	public void sortMenus(Long parentId,Long[] childrenIds);
 	
 	public Menu getMenuByCode(String code);
 
@@ -68,5 +68,12 @@ public interface MenuService extends BaseDomainService<Menu> {
      * 添加菜单，会获取到插入记录的id
      * @param params
      */
-    public void add(Map<String, Object> params);
+    public void add(Map<String,Object> params);
+
+    /**
+     * 根据url获取该角色的菜单,如果不存在或者没有权限则返回null
+     * @param url 菜单url
+     * @param rid 角色id
+     */
+    public Menu getSpecialMenuForRole(String url,Long rid);
 }

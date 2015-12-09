@@ -8,17 +8,22 @@ import org.springframework.beans.factory.BeanFactoryAware;
 
 import javax.annotation.Resource;
 
+/**
+ * table creator, simply execute the sql in classpath:~schema.config
+ *
+ * @author GavinCook
+ * @since 1.0.0
+ */
+public class TableCreator implements BeanFactoryAware {
+    private Logger log = Logger.getLogger(getClass());
+    @Resource
+    private DBManager dbManager;
 
-
-public class TableCreator implements BeanFactoryAware{
-	private Logger log = Logger.getLogger(getClass());
-	@Resource
-	private DBManager dbManager;
-	@Override
-	public void setBeanFactory(BeanFactory arg0) throws BeansException {
-		log.debug("[spring-rbac]create platform table if necessary");
-		dbManager.createTableIfNecessary();
-		log.info("[spring-rbac]create platform table successfully.");
-	}
+    @Override
+    public void setBeanFactory(BeanFactory arg0) throws BeansException {
+        log.debug("[moon]create platform table if necessary");
+        dbManager.createTableIfNecessary();
+        log.info("[moon]create platform table successfully.");
+    }
 
 }

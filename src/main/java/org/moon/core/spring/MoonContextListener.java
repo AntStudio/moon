@@ -8,9 +8,9 @@ import org.springframework.web.context.ContextLoaderListener;
 import javax.servlet.ServletContextEvent;
 
 /**
- * {@link org.moon.core.spring.MoonContextListener} 将Spring的{@link org.springframework.web.context.ContextLoaderListener}进行了
+ * {@link MoonContextListener} 将Spring的{@link ContextLoaderListener}进行了
  * <p>简单的包装，增添了一层数据库的检测.
- * <p>使用时，需要用{@link org.moon.core.spring.MoonContextListener}代替{@link org.springframework.web.context.ContextLoaderListener}在web.xml中的配置,如：
+ * <p>使用时，需要用{@link MoonContextListener}代替{@link ContextLoaderListener}在web.xml中的配置,如：
  * <code>
  * <pre>
  *  &lt;listener&gt;

@@ -3,7 +3,9 @@ package org.moon.core.annotation;
 import java.lang.annotation.*;
 
 /**
- * 不支持逻辑删除标示
+ * mark the class(mainly for domain class) not support the logically delete.
+ * cause the the common operations would handle the <code>deleteFlag</code> which used for logically delete. so need annotate
+ * the class with {@link NoLogicDeleteSupport} which not support the logically delete
  * @author Gavin
  * Jul 2, 2014
  */

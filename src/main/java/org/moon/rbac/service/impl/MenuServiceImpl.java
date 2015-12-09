@@ -18,7 +18,7 @@ public class MenuServiceImpl extends AbstractDomainService<Menu> implements Menu
 	private MenuRepository menuRepository;
 
 	@Override
-	public List<Map> getSubMenusForRole(Long parentId, Long rid) {
+	public List<Menu> getSubMenusForRole(Long parentId, Long rid) {
 		if(Constants.SYSTEM_ROLEID.equals(rid)){
 			return menuRepository.getSubMenus(parentId);
 		}
@@ -35,12 +35,12 @@ public class MenuServiceImpl extends AbstractDomainService<Menu> implements Menu
 	
 	
 	@Override
-	public List<Map> getTopMenus() {
+	public List<Menu> getTopMenus() {
 		return getSubMenus(null);
 	}
 	
 
-	private List<Map> getSubMenus(Long parentId){
+	private List<Menu> getSubMenus(Long parentId){
 		return menuRepository.getSubMenus(parentId);
 	}
 	
@@ -119,5 +119,13 @@ public class MenuServiceImpl extends AbstractDomainService<Menu> implements Menu
     @Override
     public void add(Map<String, Object> params) {
         menuRepository.add(params);
+    }
+
+    @Override
+    public Menu getSpecialMenuForRole(String url, Long rid) {
+        if(Constants.SYSTEM_ROLEID.equals(rid)){
+            rid = null;
+        }
+        return menuRepository.getSpecialMenuForRole(url,rid);
     }
 }

@@ -9,9 +9,10 @@
  <m:require src="css/base.css" type="css"></m:require>
 <title>主页</title>
 
- 
+
 </head>
 <body class="index">
+<c:set var="ss" value="log/log.jsp"></c:set>
 	<div class="navbar navbar-inverse nav-header">
 		<div class="container-fluid">
 			<div class="navbar-header">
@@ -56,11 +57,11 @@
 	</div>
 	<%-- <div class="mainContainer">
 		<div class="mainIframeContainer  fade in left ">
-			<iframe id="main" class="mainIframe" src="${pageContext.request.contextPath}/user"></iframe>   
-		</div> 
+			<iframe id="main" class="mainIframe" src="${pageContext.request.contextPath}/user"></iframe>
+		</div>
 		<div class="mainIframeContainer  fade in right current" >
-			<iframe id="main" class="mainIframe" src="${pageContext.request.contextPath}/user"></iframe>   
-		</div> 
+			<iframe id="main" class="mainIframe" src="${pageContext.request.contextPath}/user"></iframe>
+		</div>
 	</div> --%>
 	<div class="main-container">
 		<%--<iframe src="user" id="main" name="main" allowfullscreen="true"></iframe>--%>

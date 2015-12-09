@@ -1,8 +1,10 @@
 package org.moon.core.orm.mybatis;
 
+import com.reeham.component.ddd.annotation.Model;
 import org.apache.ibatis.jdbc.SQL;
 import org.moon.base.domain.BaseDomain;
 import org.moon.core.orm.mybatis.annotation.IgnoreNull;
+import org.moon.exception.ApplicationRunTimeException;
 import org.moon.utils.Iterators;
 import org.moon.utils.Objects;
 import org.moon.utils.Strings;
@@ -19,6 +21,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
@@ -33,8 +36,9 @@ public class SQLProvider {
 
 	private Logger logger = LoggerFactory.getLogger(SQLProvider.class);
 
+    private SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 	/**
-	 * 持久化域对象,传入的对象需以'o'为key,并且要继承自{@link org.moon.base.domain.BaseDomain}
+	 * 持久化域对象,传入的对象需以'o'为key,并且要继承自{@link BaseDomain}
 	 * @param params
 	 * @return
 	 */
@@ -43,7 +47,7 @@ public class SQLProvider {
 		final SQL sql = new SQL().INSERT_INTO(getTable(bd.getClass()));
 		String sqlString;
 		
-		ReflectionUtils.doWithFields(bd.getClass(), new FieldCallback() {
+		ReflectionUtils.doWithFields(getDomainClass(bd.getClass()), new FieldCallback() {
 			@Override
 			public void doWith(Field field) throws IllegalArgumentException,
 					IllegalAccessException {
@@ -74,7 +78,7 @@ public class SQLProvider {
 		final SQL sql = new SQL().UPDATE(getTable(bd.getClass()));
 		String sqlString;
 		
-		ReflectionUtils.doWithFields(bd.getClass(), new FieldCallback() {
+		ReflectionUtils.doWithFields(getDomainClass(bd.getClass()), new FieldCallback() {
 			@Override
 			public void doWith(Field field) throws IllegalArgumentException,
 					IllegalAccessException {
@@ -82,7 +86,9 @@ public class SQLProvider {
 				if(field.getName().equals("id")){
 					sql.WHERE(equal(getColumn(field), wrapColumnValue(field.get(bd))));
 				}
-				sql.SET(equal(getColumn(field), wrapColumnValue(field.get(bd))));
+				if(!(field.isAnnotationPresent(IgnoreNull.class)&&Objects.isNull(field.get(bd)))) {//过滤掉@IgnoreNull的空值字段
+					sql.SET(equal(getColumn(field), wrapColumnValue(field.get(bd))));
+				}
 			}
 		}, new FieldFilter() {//只提取没有对应注解的非静态字段
 			@Override
@@ -117,7 +123,7 @@ public class SQLProvider {
 		});
 		idsCondition.append(")");
 		
-		sql.DELETE_FROM(tableName).WHERE("id in "+idsCondition.toString());
+		sql.DELETE_FROM(tableName).WHERE("id in " + idsCondition.toString());
 		
 		sqlString = sql.toString();
 		logger.debug("{} : {}" ,logger.getName(), sqlString);
@@ -210,7 +216,7 @@ public class SQLProvider {
 		Class domainClass = (Class<? extends BaseDomain>) params.get("domain");
 		String tableName = getTable(domainClass);
 		String sqlString;
-		SQL sql = new SQL().SELECT("*").FROM(tableName).WHERE("id="+id);
+		SQL sql = new SQL().SELECT("*").FROM(tableName).WHERE("id=" + id);
 		
 		sqlString = sql.toString();
 		logger.debug("{} : {}" ,logger.getName(), sqlString);
@@ -220,14 +226,23 @@ public class SQLProvider {
 	
 	/**
 	 * <p>
-	 * 获取当前Domain所指向的Table,如果没有{@link javax.persistence.Table}注解,默认使用 tab_
-	 * {@link Strings#lowerFirst(domainName)}
+	 * 获取当前Domain所指向的Table,如果没有{@link Table}注解,默认使用 tab_
+	 * {@link Strings#lowerFirst(String)}
 	 * 
 	 * @param domainClass
 	 * @return
 	 */
 	private String getTable(Class<? extends BaseDomain> domainClass) {
-		Table domainTable = (Table) domainClass.getAnnotation(Table.class);
+		Class<?> targetClass = domainClass;
+		while(Objects.isNull(targetClass.getDeclaredAnnotation(Model.class))){
+			targetClass = targetClass.getSuperclass();
+			if(targetClass == Object.class){
+				throw new ApplicationRunTimeException("neither "+this.getClass().getName()
+						+" nor it's super class is annotated by Model annotation");
+			}
+		}
+
+		Table domainTable = targetClass.getAnnotation(Table.class);
 		String tableName;
 		if (domainTable == null) {
 			tableName = "tab_"
@@ -238,8 +253,9 @@ public class SQLProvider {
 		return tableName;
 	}
 
+
 	/**
-	 * 获取字段名,首先提取{@link javax.persistence.Column},如果不存在则使用属性名(的下划线形式)
+	 * 获取字段名,首先提取{@link Column},如果不存在则使用属性名(的下划线形式)
 	 * 
 	 * @param field
 	 * @return
@@ -262,11 +278,13 @@ public class SQLProvider {
 	 */
 	private String wrapColumnValue(Object value){
 		if(  value instanceof String
-		   ||value instanceof Date){
+		   ){
 			return "'"+value+"'";
 		}else if(value instanceof byte[]){
 			return new String("'"+new String((byte[])value)+"'");
-		}
+		}else if(value instanceof Date){
+            return "'"+sdf.format((Date)value)+"'";
+        }
 		return value+"";
 	}
 	
@@ -279,5 +297,19 @@ public class SQLProvider {
 	 */
 	private String equal(String column,Object value){
 		return column+"="+value;
+	}
+
+	/**
+	 * 获取领域类，因为领域事件基于领域类名创建的主题
+	 * @return
+	 */
+	private Class<?> getDomainClass(Class<?> targetClass){
+		while(java.util.Objects.isNull(targetClass.getDeclaredAnnotation(Model.class))){
+			targetClass = targetClass.getSuperclass();
+			if(targetClass == Object.class){
+				throw new ApplicationRunTimeException("neither "+this.getClass().getName()+" nor it's super class is annotated by Model annotation");
+			}
+		}
+		return targetClass;
 	}
 }

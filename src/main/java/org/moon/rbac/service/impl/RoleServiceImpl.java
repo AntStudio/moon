@@ -42,4 +42,9 @@ public class RoleServiceImpl extends AbstractDomainService<Role> implements Role
         return roleRepository.getSubRoles(null, false);
 	}
 
+	@Override
+	public List<Map<String, Object>> getAllRoles() {
+		return roleRepository.getAllRoles();
+	}
+
 }

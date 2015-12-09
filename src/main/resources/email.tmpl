@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>	情况汇总</title>
+    <style>
+        .table{
+            border-collapse: collapse;
+        }
+        .table th,.table td{
+            border:solid 1px #DDD;
+            padding:10px;
+            font-size: 16px;
+        }
+
+        .row{
+            padding:10px 0px;
+        }
+
+        .red{
+            color:#f00;
+        }
+
+        .green{
+            color:#00B809;
+        }
+
+        .content{
+            font-size: 16px;
+            padding:20px;
+            font-family: 'Helvetica Neue', Helvetica, 'Microsoft Yahei', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', sans-serif;
+        }
+
+        a{
+            color: #428bca;
+            text-decoration: none;
+        }
+
+        .description{
+            color: #CCC;
+        }
+
+        .user-statistics{
+            border-left: solid 5px #FF5252;
+            padding-left: 9px;
+        }
+
+        .sms-statistics{
+            border-left: solid 5px #57B0F0;
+            padding-left: 9px;
+        }
+
+        .article-statistics{
+            border-left: solid 5px #00B62C;
+            padding-left: 9px;
+        }
+    </style>
+</head>
+<body>
+<div class="content">
+    <h1 class="user-statistics">用户统计</h1>
+    <div class="row">目前注册人数总计：<span class="red">${totalRegister}</span>人，认证医生人数：<span class="red">${totalAuth}</span>人，认证比例：<span class="red">${totalAuth/totalRegister*100,numberFormat="##.##"}%</span></div>
+    <div class="row">本月注册人数：<span class="red">${currentMonthRegister}</span>人</div>
+    <div>
+        <div class="row">本周注册情况：</div>
+        <table class="table">
+            <tr>
+                <th>周一</th>
+                <th>周二</th>
+                <th>周三</th>
+                <th>周四</th>
+                <th>周五</th>
+                <th>周六</th>
+                <th>周天</th>
+            </tr>
+            <tr>
+                <th>${currentWeekRegisterInfo["info1"]!0}</th>
+                <th>${currentWeekRegisterInfo["info2"]!0}</th>
+                <th>${currentWeekRegisterInfo["info3"]!0}</th>
+                <th>${currentWeekRegisterInfo["info4"]!0}</th>
+                <th>${currentWeekRegisterInfo["info5"]!0}</th>
+                <th>${currentWeekRegisterInfo["info6"]!0}</th>
+                <th>${currentWeekRegisterInfo["info7"]!0}</th>
+            </tr>
+        </table>
+        <div class="row">本周共注册：<span class="red">${currentWeekRegisterNum}</span>人，较上周${lastWeekRegisterNum}注册人数，
+            <%if(currentWeekRegisterNum >= lastWeekRegisterNum){%>
+            环比上涨<span class="red">${(currentWeekRegisterNum-lastWeekRegisterNum)/lastWeekRegisterNum*100,numberFormat="##.##"}%</span></div>
+            <%}else{%>
+            环比下降<span class="green">${(lastWeekRegisterNum-currentWeekRegisterNum)/lastWeekRegisterNum*100,numberFormat="##.##"}%</span></div>
+            <%}%>
+    </div>
+
+    <h1 class="sms-statistics">短信统计</h1>
+    <div class="row">截止今天，共发送了${totalSMSNum,numberFormat="###"}条验证短信，其中本周发送了${currentWeekSMSNum,numberFormat="###"}条验证短信，账户余额：￥${balance}
+        <%if(currentWeekSMSNum>0){%>
+        ，按照本周验证码发送量预计还可用${balance*20/currentWeekSMSNum,numberFormat="###"}周.
+        <%}%>
+    </div>
+
+    <h1 class="article-statistics">文章阅读统计</h1>
+    <div class="row">目前阅读量前十的文章：</div>
+    <table class="table">
+        <tr>
+            <th>标题</th>
+            <th>阅读人次</th>
+            <th>阅读人数</th>
+        </tr>
+
+        <%
+        for(info in articleReadingInfo){
+        %>
+        <tr>
+            <td>${info["title"]}</td>
+            <td>${info["readNum"]}</td>
+            <td>${info["readUserNum"]}</td>
+        </tr>
+        <%}%>
+    </table>
+    <div class="row">文章阅读详情请登录系统查看：<a href="http://app.xheart.cn/statistics/articleReading.html" target="_blank">立即登录查看</a></div>
+
+    <div class="row description">注：本邮件由系统自动发出，如不愿接收此类邮件，请直接回复本邮件退订，主题为：退订系统统计邮件。</div>
+</div>
+</body>
+</html>

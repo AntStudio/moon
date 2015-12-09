@@ -1,6 +1,8 @@
 package org.moon.rbac.action;
 
 import org.moon.core.domain.DomainLoader;
+import org.moon.core.session.SessionContext;
+import org.moon.maintenance.service.SystemSettingService;
 import org.moon.rbac.domain.Menu;
 import org.moon.rbac.domain.Role;
 import org.moon.rbac.domain.User;
@@ -19,6 +21,7 @@ import java.util.List;
 
 /**
  * the action controller for index page
+ *
  * @author Gavin
  * @version 1.0
  * @date 2012-12-4
@@ -26,29 +29,44 @@ import java.util.List;
 @Controller
 @LoginRequired
 public class IndexAction {
-	@Resource
-	private DomainLoader domainLoader;
-	
-	/**
-	 * show the index page
-	 * @param user
-	 * @return
-	 * @throws Exception 
-	 */
-	@RequestMapping("/index")
-	public ModelAndView index(@WebUser User user) throws Exception{
+    @Resource
+    private DomainLoader domainLoader;
+
+    @Resource
+    private SystemSettingService systemSettingService;
+
+    /**
+     * show the index page
+     *
+     * @param user
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/index")
+    public ModelAndView index(@WebUser User user, HttpServletResponse response) throws Exception {
 
         List<Menu> menus = new ArrayList<Menu>();
-        if(Objects.nonNull(user.getRoleId())){
+        if (Objects.nonNull(user.getRoleId())) {
             menus = domainLoader.load(Role.class, user.getRoleId()).getTopMenus();
         }
-		return new ModelAndView("pages/index")
-		.addObject("currentUser",user)
-		.addObject("menus",menus);
-	}
-	
-	@RequestMapping("/")
-	public void home(HttpServletResponse response) throws Exception{
-		response.sendRedirect("index");
-	}
+        String index = systemSettingService.getSetting("user.index.userType"+user.getType(), SessionContext.getContextPath()+"/index");
+        if(!index.toLowerCase().startsWith("http://")){
+            index = SessionContext.getContextPath()+index;
+        }
+
+        if(index.equalsIgnoreCase(SessionContext.getContextPath()+"/index")) {
+            return new ModelAndView("pages/index")
+                    .addObject("currentUser", user)
+                    .addObject("menus", menus);
+        }else{
+            response.sendRedirect(index);
+            return null;
+        }
+    }
+
+    @RequestMapping("/")
+    public void home(HttpServletResponse response) throws Exception {
+
+        response.sendRedirect(SessionContext.getContextPath()+"/index");
+    }
 }

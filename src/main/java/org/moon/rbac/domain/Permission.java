@@ -22,14 +22,17 @@ public class Permission extends BaseDomain {
 
     public Permission() { }
 
-    public Permission(String code, String name) {
+    public Permission(String code, String name,String pointcut) {
         this.code = code;
         this.name = name;
+        this.pointcut = pointcut;
     }
 
     private String name;
 
     private String code;
+
+    private String pointcut;
 
     public String getName() {
         return name;
@@ -47,11 +50,20 @@ public class Permission extends BaseDomain {
         this.code = code;
     }
 
+    public String getPointcut() {
+        return pointcut;
+    }
+
+    public void setPointcut(String pointcut) {
+        this.pointcut = pointcut;
+    }
+
     public Map<String, Object> toMap() {
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("name", name);
         m.put("id", id);
         m.put("code", code);
+        m.put("pointcut",pointcut);
         return m;
     }
 }

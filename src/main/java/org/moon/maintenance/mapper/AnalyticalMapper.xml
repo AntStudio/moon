@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.moon.maintenance.repository.AnalyticalRepository">
+    <select id="countRegisterByDate" resultType="HashMap">
+        SELECT COUNT(u.id) AS number, (SELECT DATE_FORMAT(u.createTime,'%Y-%m'))  AS registerTime
+        FROM tab_user u
+        WHERE 1=1
+        <if test="startMonth != null">
+            AND u.createTime > #{startMonth}
+        </if>
+        <if test="endMonth != null">
+            AND u.createTime $gt; #{endMonth}
+        </if>
+        GROUP BY (SELECT DATE_FORMAT(u.createTime,'%Y-%m'));
+    </select>
+
+    <select id="countRegisterByMonth" resultType="HashMap">
+        SELECT COUNT('u.id') AS number, (SELECT DATE_FORMAT(u.createTime,'%e'))  AS registerTime
+        FROM tab_user u
+        WHERE  DATE_FORMAT(u.createTime,'%Y-%m') = #{date}
+        GROUP BY (SELECT DATE_FORMAT(u.createTime,'%d'));
+    </select>
+
+    <select id="countRegisterByType" resultType="HashMap">
+        SELECT COUNT('u.id') AS number, u.`type`  AS registerType
+        FROM tab_user u WHERE 1=1 GROUP BY u.type;
+    </select>
+
+    <select id="countRegisterDoctorByStatus" resultType="HashMap">
+        SELECT COUNT(d.id) AS number, d.status
+        FROM xh_doctor d
+        where d.status is not null
+        GROUP BY d.status
+    </select>
+
+    <select id="countRegisterByWeek" resultMap="pair">
+        SELECT COUNT('u.id') AS value_f,  CAST(DATE_FORMAT(u.createTime,'%w') AS SIGNED )  as key_f
+        FROM tab_user u
+        WHERE  u.createTime > #{startRegisterTime}
+        <if test="endRegisterTime">
+            AND u.createTime &lt; #{endRegisterTime}
+        </if>
+        GROUP BY DATE_FORMAT(u.createTime,'%w')
+    </select>
+
+    <resultMap id="pair" type="org.moon.utils.Pair">
+        <constructor>
+            <arg column="key_f"></arg>
+            <arg column="value_f"></arg>
+        </constructor>
+    </resultMap>
+</mapper>

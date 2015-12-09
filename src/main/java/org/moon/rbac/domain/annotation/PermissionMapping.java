@@ -8,7 +8,7 @@ import java.lang.annotation.*;
  * @version 1.0
  * @date 2012-12-14
  */
-@Target({ElementType.METHOD})
+@Target({ElementType.METHOD,ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface PermissionMapping {

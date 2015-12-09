@@ -23,14 +23,14 @@ public interface BaseDomainService<T> extends ModelLoader,BaseService{
 	 * @param id
 	 * @return
 	 */
-	public T get(Long id);
+	T get(Long id);
 	
 	/**
 	 * 从数据库或者其它地方加载领域
 	 * @param id
 	 * @return
 	 */
-	public T load(Long id);
+	T load(Long id);
 	
 	/**
 	 * 根据类型获取领域
@@ -38,46 +38,46 @@ public interface BaseDomainService<T> extends ModelLoader,BaseService{
 	 * @param id
 	 * @return
 	 */
-	public <K> K loadDomain(Class<K> c, Long id);
+	<K> K loadDomain(Class<K> c,Long id);
 	
 	/**
 	 * 获取数据列表
 	 * @return
 	 */
-	public List<Map> list();
+	List<Map> list();
 	
 	/**
 	 * 根据限制criteria查询数据列表
 	 * @param criteria
 	 * @return
 	 */
-	public List<Map> list(Criteria criteria);
+	List<Map> list(Criteria criteria);
 	
 	/**
 	 * 获取分页结果
 	 * @param criteria
 	 * @return
 	 */
-	public Pager listForPage(Criteria criteria);
+	Pager listForPage(Criteria criteria);
 
 	/**
 	 * 获取分页结果
 	 * @param criteria
 	 * @return
 	 */
-	public Pager listForPage(Criteria criteria, DataConverter<Map> dataConverter);
+	Pager listForPage(Criteria criteria,DataConverter<Map> dataConverter);
 	
 	/**
 	 * 将查询结果转换为域模型
 	 * @param criteria
 	 * @return
 	 */
-	public List<T> listForDomain(Criteria criteria);
+	List<T> listForDomain(Criteria criteria);
 
 	/**
 	 * 根据id删除,logicFlag标示当前是否为逻辑删除
 	 * @param ids
 	 * @param logicFlag
 	 */
-	public void delete(Long[] ids, boolean logicFlag);
+	void delete(Long[] ids,boolean logicFlag);
 }
