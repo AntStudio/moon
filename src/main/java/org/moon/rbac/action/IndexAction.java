@@ -8,12 +8,18 @@ import org.moon.rbac.domain.Role;
 import org.moon.rbac.domain.User;
 import org.moon.rbac.domain.annotation.LoginRequired;
 import org.moon.rbac.domain.annotation.WebUser;
+import org.moon.support.theme.Theme;
+import org.moon.support.theme.ThemeManager;
 import org.moon.utils.Objects;
+import org.moon.utils.Themes;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +41,8 @@ public class IndexAction {
     @Resource
     private SystemSettingService systemSettingService;
 
+    @Autowired(required = false)
+    private ThemeManager themeManager;
     /**
      * show the index page
      *
@@ -55,7 +63,7 @@ public class IndexAction {
         }
 
         if(index.equalsIgnoreCase(SessionContext.getContextPath()+"/index")) {
-            return new ModelAndView("pages/index")
+            return new ModelAndView(Objects.safeGetValue(()->Themes.getThemeIfPresent(themeManager).getIndexPage(),"pages/index"))
                     .addObject("currentUser", user)
                     .addObject("menus", menus);
         }else{
@@ -66,7 +74,11 @@ public class IndexAction {
 
     @RequestMapping("/")
     public void home(HttpServletResponse response) throws Exception {
-
         response.sendRedirect(SessionContext.getContextPath()+"/index");
+    }
+
+    @RequestMapping("/cookie")
+    public void home(@RequestParam("cookie")String cookie,HttpServletResponse response) throws Exception {
+        response.addCookie(new Cookie("MOON_THEME",cookie));
     }
 }

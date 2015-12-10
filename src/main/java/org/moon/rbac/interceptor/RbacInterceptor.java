@@ -16,10 +16,15 @@ import org.moon.rbac.domain.User;
 import org.moon.rbac.domain.annotation.*;
 import org.moon.rbac.service.MenuService;
 import org.moon.rbac.service.UserService;
+import org.moon.support.theme.Theme;
+import org.moon.support.theme.ThemeManager;
+import org.moon.utils.HttpUtils;
 import org.moon.utils.Maps;
 import org.moon.utils.Objects;
+import org.moon.utils.Themes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,6 +62,10 @@ public class RbacInterceptor implements MethodInterceptor {
 
     @Resource
     private DomainLoader domainLoader;
+
+    @Autowired(required = false)
+    private ThemeManager themeManager;
+
 
     @Override
     public Object invoke(MethodInvocation methodInvocation) throws Throwable {
@@ -190,7 +199,17 @@ public class RbacInterceptor implements MethodInterceptor {
                 }else{
                     result = (ModelAndView) o;
                 }
+                Theme theme = Themes.getThemeIfPresent(themeManager);
+                if(theme != null){
+                    data.put("theme", theme.getName());
+                    data.put("content", result.getViewName());
+                    if(theme.getThemeHandlePage() != null && !result.getViewName().equals(theme.getIndexPage())){
+                        result.setViewName(theme.getThemeHandlePage());
+                    }
+                }
+
                 result.addAllObjects(data);
+
                 o = result;
             }
             return o;
@@ -201,12 +220,9 @@ public class RbacInterceptor implements MethodInterceptor {
 
     /**
      * 获取当前请求的URI
-     *
-     * @return
      */
     private String getRequestURI() {
         return SessionContext.getRequest().getRequestURI();
     }
-
 
 }

@@ -50,6 +50,44 @@
     <!--国际化资源-->
     <bean class="org.moon.message.ResourceBundleHolder"/>
 
+    <bean class="org.moon.support.theme.DefaultThemeManager">
+        <property name="themes">
+            <list>
+                <bean class="org.moon.support.theme.Theme">
+                    <constructor-arg name="name" value="tab"/>
+                    <constructor-arg name="description" value="tab"/>
+                    <constructor-arg name="indexPage" value="pages/tab_index"/>
+                    <constructor-arg name="themeResources">
+                        <list>
+                            <bean class="org.moon.support.theme.ThemeResource">
+                                <constructor-arg name="type" value="CSS"/>
+                                <constructor-arg name="path" value="css/tab_base.css"/>
+                            </bean>
+                        </list>
+                    </constructor-arg>
+                    <constructor-arg name="isDefault" value="true"/>
+                    <property name="themeHandlePage" value="pages/tab_common"/>
+                </bean>
+
+                <bean class="org.moon.support.theme.Theme">
+                    <constructor-arg name="name" value="blue"/>
+                    <constructor-arg name="description" value="blue"/>
+                    <constructor-arg name="indexPage" value="pages/blue_index"/>
+                    <constructor-arg name="themeResources">
+                        <list>
+                            <bean class="org.moon.support.theme.ThemeResource">
+                                <constructor-arg name="type" value="CSS"/>
+                                <constructor-arg name="path" value="css/blue_base.css"/>
+                            </bean>
+                        </list>
+                    </constructor-arg>
+                    <constructor-arg name="isDefault" value="false"/>
+                    <property name="themeHandlePage" value="pages/blue_common"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
 	 <bean id="viewResolver"
         class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
