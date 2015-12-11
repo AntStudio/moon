@@ -1,5 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-         pageEncoding="utf-8" %>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
+<%@ include file="tags.jsp"%>
+<m:require src="layer"/>
 <script type="text/javascript">
     $(function(){
         $('.collapse').collapse({
@@ -35,7 +36,7 @@
     <div class="navbar-header">
         <a href="/" class="logo-con">
             <i class="fa fa-heartbeat font-logo"></i>
-            <span class="title">携心医疗</span>
+            <span class="title">moon</span>
         </a>
     </div>
     <div class="navbar-right">
@@ -46,6 +47,9 @@
             </div>
             <c:if test="${currentUser.realName!=null}">${currentUser.realName}</c:if>
             <c:if test="${currentUser.realName==null}">${currentUser.userName}</c:if>
+        </a>
+        <a href="javascript:void(0)"  data-content="设置" class="theme-setting">
+            <i class="fa fa-gear"></i>
         </a>
         <a href="${pageContext.request.contextPath}/user/loginOut"  data-content="注销">
             <i class="fa fa-sign-out"></i>

@@ -9,44 +9,52 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Arrays;
 
 /**
  * 设置应用上下文,供如标签库使用
+ *
  * @author Gavin
  * @date May 30, 2014
  */
 @Component
-public class ApplicationContextHelper implements ApplicationContextAware{
+public class ApplicationContextHelper implements ApplicationContextAware {
 
-	private static ApplicationContext applicationContext;
-	
-	@SuppressWarnings("static-access")
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException {
-		this.applicationContext = applicationContext;
-	}
+    private static ApplicationContext applicationContext;
 
-	public static ApplicationContext getApplicationContext() {
-		Assert.notNull(applicationContext, "applicationContext should not null");
-		return applicationContext;
-	}
+    @SuppressWarnings("static-access")
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext)
+            throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 
-	public static <T> T getBean(Class<T> c){
-		return getApplicationContext().getBean(c);
-	}
+    public static ApplicationContext getApplicationContext() {
+        Assert.notNull(applicationContext, "applicationContext should not null");
+        return applicationContext;
+    }
+
+    public static <T> T getBean(Class<T> c) {
+        ApplicationContext context = getApplicationContext();
+        if (context.getBeanNamesForType(c).length == 1) {
+            return getApplicationContext().getBean(c);
+        }
+
+        return null;
+    }
 
     /**
      * 获取web真实路径，此方法在applicationcontext初始化完后即可调用.
+     *
      * @param applicationContext
      * @return
      * @see {@link org.moon.core.session.SessionContext#getWebAppPath()}
      */
-    public static String getWebAppPath(ApplicationContext applicationContext){
-        try{
+    public static String getWebAppPath(ApplicationContext applicationContext) {
+        try {
             WebApplicationContext context = (WebApplicationContext) applicationContext;
             return URLDecoder.decode(context.getServletContext().getRealPath("/"), "UTF-8");
-        }catch(UnsupportedEncodingException e){
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return "";
         }

@@ -1,10 +1,14 @@
 var moon = moon||{};
 (function(w){
-
     $(document).ready(function () {
-        moon.tabs = $(".tab").KandyTabs({
-            trigger:"click",
-            scroll:true
+
+        $(".theme-setting").click(function(){
+            layer.open({
+                type:2,
+                title:"主题设置",
+                content:fullServerPath+"/theme",
+                area:["400px"]
+            });
         });
 
         $(document).on("click",".tabbtn i",function(e){

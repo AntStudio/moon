@@ -49,7 +49,8 @@ public class FileUtils {
         FileOutputStream out = new FileOutputStream(file);
         out.write(data);
         out.flush();
-        out.close();
+		out.getFD().sync();
+		out.close();
     }
 	/**
 	 * 获取文件后缀名

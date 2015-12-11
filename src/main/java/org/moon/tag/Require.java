@@ -1,10 +1,13 @@
 package org.moon.tag;
 
 import org.apache.log4j.Logger;
+import org.moon.support.theme.Theme;
+import org.moon.tag.util.Constants;
 import org.moon.tag.util.RequestUtils;
 import org.moon.utils.HttpUtils;
 import org.moon.utils.Objects;
 import org.moon.utils.PropertiesUtils;
+import org.moon.utils.Themes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -35,7 +38,7 @@ public class Require extends TagSupport {
     private Pattern pattern = Pattern.compile("^\\s*\\{.*\\}\\s*$");
     private String cssDefaultFolder, jsDefaultFolder;
 
-    private String themeName, themeCookieName;
+    private String themeName;
     {
         try {
             p = PropertiesUtils.loadPropertiesFile("~system~requireTag.properties");
@@ -43,7 +46,6 @@ public class Require extends TagSupport {
             cssDefaultFolder = p.getProperty("default.css.folder", "css/pages/");
             jsDefaultFolder = p.getProperty("default.js.folder", "js/pages/");
             themeName = p.getProperty("theme.name", "moonTheme");
-            themeCookieName = p.getProperty("theme.cookie.name", "moonTheme");
         } catch (FileNotFoundException e) {
             log.error("require初始化失败,未找到配置文件");
             e.printStackTrace();
@@ -57,18 +59,16 @@ public class Require extends TagSupport {
     @Override
     public int doEndTag() throws JspException {
         JspWriter out = this.pageContext.getOut();
-        HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
-        //Get the website theme, default use 'default' theme
-        String theme = Objects.safeGetValue(()-> HttpUtils.getCookie(request, themeCookieName).getValue(),"default");
 
+        Theme theme = Themes.getThemeIfPresent();
 
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(Constants.REQUIRE_START);
         String contextPath = RequestUtils.getContextPath(pageContext);
         if (type == null || "js".equals(type)) {//for js
             for (String s : src.split(",")) {
 
                 if(s.equals(themeName)){
-                    importThemeResources(contextPath, theme);
+                    sb.append(Objects.safeGetValue(()->theme.generateResourceImportString(null),""));
                     continue;
                 }
 
@@ -97,6 +97,7 @@ public class Require extends TagSupport {
             }
         }
         try {
+            sb.append(Constants.REQUIRE_END);
             out.print(sb);
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,0 +1,341 @@
+@CHARSET "UTF-8";
+html,body{
+    height: 100%;
+    background-color: #f5f7fa;
+    color:#656565;
+    font-family: "Hiragino Sans GB", "Microsoft YaHei", sans-serif !important;
+}
+
+.h-center{
+	text-align: center;
+}
+
+.float-right{
+    float: right;    
+}
+
+.right-text-align{
+    text-align: right;
+}
+
+.main-container{
+	position: absolute;
+	top: 55px;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+	border: none;
+	overflow: hidden;
+}
+
+.nav-header{
+  background: #000;
+  border-radius: 0px;
+}
+
+
+.main-container iframe{
+	border: none;
+	width: 100%;
+	height: 100%;
+}
+
+.app-version{
+    color: #E26D6D;
+    float: right;
+    line-height: 52px;
+    margin-left: 10px;
+}
+
+@media(max-width: 768px){
+    .navbar-inverse-collapse{
+        position: absolute;
+        z-index: 1000;
+        width: 100%;
+        background: rgb(0, 0, 0);
+    }
+}
+
+.no-menu{
+    color: #ccc;
+    text-align: center;
+    display: block;
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+.moon-top-loading{
+    position: fixed;
+    top: 10px;
+    z-index: 1000;
+    font-size: 20px;
+    color: #FFF;
+    text-align: center;
+    width: 100%;
+}
+.close-tab{
+    margin-left: 5px;
+    margin-right: -5px;
+}
+.tabbody{
+    position: relative;
+}
+
+.tabcont{
+    position: absolute;
+    right: 0px;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+}
+
+.auto-height{/*主要针对bootstrap的col-xx-x修改其min-height:1px;引起的table高度问题*/
+    min-height: inherit !important;
+}
+
+/*工具样式*/
+.margin-top-md{
+    margin-top:5px;
+}
+
+.no-padding-left{
+    padding-left: 0;
+}
+
+.fill-parent{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.top-navbar{
+    background: #31BBE6;
+    color: #FFFFFF;
+    height: 55px;
+    line-height: 55px;
+    position: relative;
+    z-index: 100;
+}
+
+/*字体logo*/
+.top-navbar .font-logo{
+    font-size: 24px;
+    color:#FFFFFF;
+}
+
+.top-navbar .title{
+    color:#FFFFFF;
+    font-size: 18px;
+    line-height: 55px;
+}
+
+.top-navbar .navbar-header{
+    width: 220px;
+    text-align: center;
+}
+
+.top-navbar .logo-con:hover{
+    text-decoration: none;
+}
+
+.top-navbar .navbar-right{
+    float: right;
+    height: 56px;
+    font-size: 16px;
+    margin-right:20px;
+}
+
+.top-navbar .navbar-right a{
+    line-height: 56px;
+    width: 30px;
+    text-align: center;
+    cursor: pointer;
+    color:#FFFFFF;
+    margin-right: 20px;
+}
+
+.top-navbar .navbar-right a:hover{
+    color: #117391;
+    text-decoration: none;
+}
+/*头像容器*/
+.top-navbar .avatar-container{
+    height: 40px;
+    width: 40px;
+    display: inline-block;
+    border-radius: 50%;
+    overflow: hidden;
+    text-align: center;
+    vertical-align: middle;
+    border: solid 1px #AEAEAE;
+}
+
+/*覆盖popover样式*/
+.top-navbar .avatar-container img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.top-navbar .popover.bottom>.arrow:after{
+    border-bottom-color: #444;
+}
+
+.top-navbar .popover.bottom>.arrow{
+    top:-8px;
+}
+
+.top-navbar .popover {
+    background-color: #444;
+}
+
+.top-navbar .popover-content{
+    background-color: #444;
+    padding: 5px 14px;
+    font-size: 12px;
+}
+
+.aside{
+    position: absolute;
+    left: 0;
+    width: 220px;
+    top: 0;
+    background-color: #FFFFFF;
+    padding-top: 55px;
+    z-index: 99;
+    min-height: 100%;
+}
+
+.aside .silder-subnav-header{
+    height: 45px;
+    line-height: 45px;
+    padding-left: 10px;
+}
+
+.aside a{
+    color:#23b7e5;
+    top:0;
+    padding-top: 55px;
+    bottom: 0;
+}
+.aside .nav a{
+    display: block;
+    position: relative;
+    padding: 12px 24px;
+    font-weight: 400;
+    color: #515253;
+    cursor: pointer;
+    border-left: solid 4px transparent;
+}
+
+.aside .nav a:hover,.aside .nav a:focus{
+    background-color: #F0F0F0;
+    color:#23b7e5;
+    text-decoration:none;
+    border-left-color:#23b7e5;
+}
+
+.aside i{
+    padding-right: 10px;
+}
+
+.aside .sidebar-subnav{
+    list-style: none;
+    padding-left: 0;
+}
+
+.aside .sidebar-subnav a{
+    padding-left: 48px;
+}
+
+/*菜单选中样式*/
+.aside li.active>a{
+    color: #23b7e5;
+    background-color: #F0F0F0;
+    border-left-color:#23b7e5;
+}
+/*分割线*/
+.aside:after{
+    content: "";
+    background: rgba(0,0,0,.15);
+    position: absolute;
+    display: block;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 1px;
+    -webkit-transform: translateZ(0);
+}
+
+.aside .sidebar-subnav>i{
+    padding: 0;
+}
+
+.wrapper{
+    position: relative;
+    min-height: 100%;
+    background-color: #f5f7fa;
+}
+
+.content-section{
+    margin-left: 220px;
+    background-color: #f5f7fa;
+}
+
+.layer .content-section {
+    margin-left: 0;
+}
+
+.wrapper .datagrid{
+    background-color: #FFFFFF;
+    margin: 20px 20px 0 20px;
+    padding: 10px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    border-color: #cfdbe2;
+    border-top-width: 3px;
+}
+
+.wrapper .datagrid .table-title{
+    background-color:#FFFFFF;
+}
+
+.wrapper .datagrid .grid-pagination{
+    background-color:#FFFFFF;
+    border-color:transparent;
+    margin: 10px 0;
+    padding: 10px 5px;
+}
+
+.wrapper .datagrid.fixed-layout .grid-pagination{
+    margin: 0;
+}
+
+.wrapper .datagrid.fixed-layout .table-container{
+    width: auto;
+    left: 10px;
+    right: 10px;
+    top: 60px;
+}
+
+.wrapper .table>thead>tr>th {
+    border-bottom: none;
+}
+
+.content-section .header-title{
+    line-height: 1.1;
+    font-size: 24px;
+    color: #929292;
+    margin-top: 0;
+    padding: 20px;
+    font-weight: 400;
+    background-color: #fafbfc;
+    border-bottom: 1px solid #cfdbe2;
+    margin-bottom: 20px;
+}
+

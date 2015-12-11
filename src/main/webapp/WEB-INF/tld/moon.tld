@@ -110,4 +110,13 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
+
+    <tag>
+        <description>
+            优化资源引入
+        </description>
+        <name>optimizeStructure</name>
+        <tag-class>org.moon.tag.OptimizeStructure</tag-class>
+        <body-content>JSP</body-content>
+    </tag>
 </taglib>

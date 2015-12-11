@@ -1,4 +1,4 @@
-package org.moon.rbac.action;
+package org.moon.common.action;
 
 import org.moon.core.domain.DomainLoader;
 import org.moon.core.session.SessionContext;
@@ -8,7 +8,10 @@ import org.moon.rbac.domain.Role;
 import org.moon.rbac.domain.User;
 import org.moon.rbac.domain.annotation.LoginRequired;
 import org.moon.rbac.domain.annotation.WebUser;
+import org.moon.support.theme.ThemeManager;
 import org.moon.utils.Objects;
+import org.moon.utils.Themes;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -35,6 +38,9 @@ public class IndexAction {
     @Resource
     private SystemSettingService systemSettingService;
 
+    @Autowired(required = false)
+    private ThemeManager themeManager;
+
     /**
      * show the index page
      *
@@ -49,16 +55,16 @@ public class IndexAction {
         if (Objects.nonNull(user.getRoleId())) {
             menus = domainLoader.load(Role.class, user.getRoleId()).getTopMenus();
         }
-        String index = systemSettingService.getSetting("user.index.userType"+user.getType(), SessionContext.getContextPath()+"/index");
-        if(!index.toLowerCase().startsWith("http://")){
-            index = SessionContext.getContextPath()+index;
+        String index = systemSettingService.getSetting("user.index.userType" + user.getType(), SessionContext.getContextPath() + "/index");
+        if (!index.toLowerCase().startsWith("http://")) {
+            index = SessionContext.getContextPath() + index;
         }
 
-        if(index.equalsIgnoreCase(SessionContext.getContextPath()+"/index")) {
-            return new ModelAndView("pages/index")
+        if (index.equalsIgnoreCase(SessionContext.getContextPath() + "/index")) {
+            return new ModelAndView(Objects.safeGetValue(() -> Themes.getThemeIfPresent(themeManager).getIndexPage(), "pages/index"))
                     .addObject("currentUser", user)
                     .addObject("menus", menus);
-        }else{
+        } else {
             response.sendRedirect(index);
             return null;
         }
@@ -66,7 +72,6 @@ public class IndexAction {
 
     @RequestMapping("/")
     public void home(HttpServletResponse response) throws Exception {
-
-        response.sendRedirect(SessionContext.getContextPath()+"/index");
+        response.sendRedirect(SessionContext.getContextPath() + "/index");
     }
 }

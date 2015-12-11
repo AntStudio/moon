@@ -32,6 +32,22 @@
     margin-left: 15px;
 }
 
+.theme-setting{
+    color:#9d9d9d;
+    cursor: pointer;
+    float: right;
+    line-height: 52px;
+    margin-left: 15px;
+}
+
+.theme-setting:hover{
+    color:#FFF;
+}
+
+.theme-setting .fa{
+    line-height: 52px;
+}
+
 @media(max-width: 768px){
     .navbar-inverse-collapse{
         position: absolute;
